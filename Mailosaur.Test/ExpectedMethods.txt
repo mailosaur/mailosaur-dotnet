@@ -1,0 +1,8 @@
+Email[] GetEmails(String searchPattern)
+Email[] GetEmailsByRecipient(String recipientEmail)
+Email GetEmail(String emailId)
+Void DeleteAllEmail()
+Void DeleteEmail(String emailId)
+Byte[] GetAttachment(String attachmentId)
+Byte[] GetRawEmail(String rawId)
+String GenerateEmailAddress()

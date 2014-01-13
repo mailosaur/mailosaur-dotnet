@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mailosaur", "Mailosaur\Mailosaur.csproj", "{9AAD8088-926B-4336-BC0C-1F558AC3CBC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mailosaur.Test", "Mailosaur.Test\Mailosaur.Test.csproj", "{5F1F5B5F-959E-47E6-8DB1-AA8519B74144}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F1F5B5F-959E-47E6-8DB1-AA8519B74144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F1F5B5F-959E-47E6-8DB1-AA8519B74144}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F1F5B5F-959E-47E6-8DB1-AA8519B74144}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F1F5B5F-959E-47E6-8DB1-AA8519B74144}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AAD8088-926B-4336-BC0C-1F558AC3CBC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AAD8088-926B-4336-BC0C-1F558AC3CBC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AAD8088-926B-4336-BC0C-1F558AC3CBC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AAD8088-926B-4336-BC0C-1F558AC3CBC0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Mailosaur\Mailosaur.csproj
+		description = Mailosaur C# Library
+		version = 1.0.0
+	EndGlobalSection
+EndGlobal

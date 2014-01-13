@@ -149,3 +149,11 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+
+Mailosaur.Test.csproj-Debug*.xml
+Mailosaur.Test.csproj-Debug-*.xml
+/Mailosaur.userprefs
+/Mailosaur.Test/test-results/Clickity.Test.csproj.test-cache
+Mailosaur.Test.csproj.test-cache
+/Mailosaur.Test/test-results/Mailosaur.Test.csproj.test-cache
+test-results
