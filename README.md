@@ -7,7 +7,7 @@ For more info go to [mailosaur.com](https://mailosaur.com/)
 
 ## Installation
 
-  gem install mailosaur
+  nuget install mailosaur
 
 ## Usage
 ```csharp
