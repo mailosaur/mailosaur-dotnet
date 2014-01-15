@@ -1,4 +1,4 @@
-# Mailosaur Ruby bindings
+# Mailosaur .NET bindings
 
 Mailosaur allows you to automate tests that require email. You can also use it for manual testing as it gives you unlimited test email addresses or use it as a fake/dummy SMTP service.
 
@@ -10,15 +10,12 @@ For more info go to [mailosaur.com](https://mailosaur.com/)
   gem install mailosaur
 
 ## Usage
-```ruby
-require 'mailosaur'
-require "test/unit"
+```csharp
+var mailbox = new MailboxApi(mailbox, apikey);
 
-mailbox = MailboxApi.new(mailbox,apikey)
+var emails = mailbox.GetEmailsByRecipient("anything.1eaaeef6@mailosaur.in");
 
-emails = mailbox.getEmailsByRecipient('anything.1eaaeef6@mailosaur.in')
-
-assert_equal('something', emails[0].Subject, 'The subject should be something')
+Assert.AreEqual("something", emails[0].Subject, "The subject should be something");
 ```
 ##Api
 
