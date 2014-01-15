@@ -72,3 +72,10 @@ Generates a random email address which can be used to send emails into the mailb
     - **fileName** - Attachment file name
     - **length** - Attachment file size (in bytes)
     - **contentType** - Attachment mime type (e.g. "image/png")
+
+
+    
+##License
+
+Copyright (c) 2013 Clickity Ltd
+Distributed under MIT license.
