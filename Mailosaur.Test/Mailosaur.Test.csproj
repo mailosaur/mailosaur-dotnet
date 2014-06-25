@@ -66,6 +66,13 @@
     </None>
     <None Include="EmailsSearch.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <DependentUpon>EmailsSearch.json</DependentUpon>
+    </None>
+    <None Include="logo-m-circle-sm.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="logo-m.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>

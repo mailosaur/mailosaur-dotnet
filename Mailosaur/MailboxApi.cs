@@ -11,7 +11,7 @@ namespace Mailosaur
 {
   public class MailboxApi
   {
-    private const string BASE_URI = "https://api.clickity.io/v2";
+    private const string BASE_URI = "https://mailosaur.com/v2";
     private readonly string MAILBOX;
     private readonly string API_KEY;
 
