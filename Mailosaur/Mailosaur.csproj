@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9AAD8088-926B-4336-BC0C-1F558AC3CBC0}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Clickity</RootNamespace>
-    <AssemblyName>Clickity</AssemblyName>
+    <RootNamespace>Mailosaur</RootNamespace>
+    <AssemblyName>Mailosaur</AssemblyName>
     <ReleaseVersion>1.0.0</ReleaseVersion>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
