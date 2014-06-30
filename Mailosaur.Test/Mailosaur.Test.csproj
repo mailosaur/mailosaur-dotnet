@@ -58,16 +58,6 @@
     <None Include="mailbox.settings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Emails.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="EmailByRecipient.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="EmailsSearch.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <DependentUpon>EmailsSearch.json</DependentUpon>
-    </None>
     <None Include="logo-m-circle-sm.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
