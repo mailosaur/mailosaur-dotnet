@@ -83,11 +83,11 @@ namespace Mailosaur
       return result;
     }
 
-    private string BuildUrlPath(params string[] args)
+    private string BuildUrlPath(bool encode, params string[] args)
     {
       StringBuilder sb = new StringBuilder();
       foreach (string arg in args)
-        sb.AppendFormat("/{0}", HttpUtility.UrlEncode(arg));
+        sb.AppendFormat("/{0}", encode ? HttpUtility.UrlEncode(arg) : arg);
 
       return sb.ToString();
     }
@@ -133,7 +133,7 @@ namespace Mailosaur
     {
       try
       {
-        return JsonConvert.DeserializeObject<Email>(GetResponse("GET", BuildUrlPath("email", emailId)));
+        return JsonConvert.DeserializeObject<Email>(GetResponse("GET", BuildUrlPath(true, "email", emailId)));
       } catch (Exception e)
       {
         throw new MailosaurException("Unable to parse API response", e);
@@ -157,7 +157,7 @@ namespace Mailosaur
     {
       try
       {
-        GetResponse("POST", BuildUrlPath("email", emailId, "delete"));
+        GetResponse("POST", BuildUrlPath(true, "email", emailId, "delete"));
       } catch (Exception e)
       {
         throw new MailosaurException("Unable to parse API response", e);
@@ -166,7 +166,7 @@ namespace Mailosaur
 
     private Stream GetAttachmentAsStream(string attachmentId)
     {
-      return GetResponseStream("GET", BuildUrlPath("attachment", attachmentId));
+      return GetResponseStream("GET", BuildUrlPath(false, "attachment", attachmentId));
     }
         
     public byte[] GetAttachment(string attachmentId)
@@ -179,7 +179,7 @@ namespace Mailosaur
 
     private Stream GetRawEmailAsStream(string rawId)
     {
-      return GetResponseStream("GET", BuildUrlPath("raw", rawId));
+      return GetResponseStream("GET", BuildUrlPath(false, "raw", rawId));
     }
 
     public byte[] GetRawEmail(string rawId)
