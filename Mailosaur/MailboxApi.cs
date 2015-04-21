@@ -193,7 +193,7 @@ namespace Mailosaur
     public string GenerateEmailAddress()
     {
       string guid = System.Guid.NewGuid().ToString();
-      return string.Format("%s.%s@clickity.me", guid, MAILBOX); 
+      return string.Format("%s.%s@mailosaur.in", guid, MAILBOX); 
     }
   }
 }
