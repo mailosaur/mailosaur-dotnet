@@ -9,4 +9,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCopyright("Clickity Ltd 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("2.0.1")]
+[assembly: AssemblyVersion("2.0.4")]

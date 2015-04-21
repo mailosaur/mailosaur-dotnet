@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Mailosaur</id>
+    <title>Mailosaur</title>
+    <version>2.0.4</version>
+    <authors>mailosaur.com</authors>
+    <owners>Clickity.ltd</owners>
+    <licenseUrl>https://raw.githubusercontent.com/mailosaurapp/mailosaur-dotnet/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/mailosaurapp/mailosaur-dotnet</projectUrl>
+    <iconUrl>https://avatars0.githubusercontent.com/u/3448774?v=3&amp;s=400</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Mailosaur .NET binding.
+
+Mailosaur allows you to automate tests that require email. You can use it with tools like Selenium, Ranorex, Robot framework etc...
+
+You can also use it for manual testing as it gives you unlimited test email addresses or use it as a fake/dummy SMTP service.
+
+For more info go to mailosaur.com</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright Clickity Ltd 2015</copyright>
+    <tags>selenium robotframework testing nunit mstest automation</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="6.0.8" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin/Debug/Mailosaur.dll" target="lib" />
+  </files>
+</package>

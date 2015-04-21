@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9AAD8088-926B-4336-BC0C-1F558AC3CBC0}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -32,11 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Json.Net\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,11 +53,9 @@
   <ItemGroup>
     <Folder Include="Model\" />
     <Folder Include="Exception\" />
-    <Folder Include="Json.Net\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Json.Net\Newtonsoft.Json.dll" />
-    <None Include="Json.Net\Newtonsoft.Json.pdb" />
-    <None Include="Json.Net\Newtonsoft.Json.xml" />
+    <None Include="packages.config" />
+    <None Include="Mailosaur.nuspec" />
   </ItemGroup>
 </Project>
