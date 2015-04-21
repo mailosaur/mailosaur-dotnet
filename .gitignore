@@ -158,3 +158,4 @@ Mailosaur.Test.csproj.test-cache
 /Mailosaur.Test/test-results/Mailosaur.Test.csproj.test-cache
 test-results
 packages
+*.nupkg
