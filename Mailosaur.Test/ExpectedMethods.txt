@@ -1,3 +1,5 @@
+String get_BaseUri()
+Void set_BaseUri(String value)
 Email[] GetEmails(String searchPattern)
 Email[] GetEmailsByRecipient(String recipientEmail)
 Email GetEmail(String emailId)

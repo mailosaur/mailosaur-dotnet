@@ -11,9 +11,14 @@ namespace Mailosaur
 {
   public class MailboxApi
   {
-    private const string BASE_URI = "https://mailosaur.com/v2";
     private readonly string MAILBOX;
     private readonly string API_KEY;
+		public static string BaseUri { get; set;}
+
+		static MailboxApi(){
+			BaseUri = "https://api.mailosaur.com/v2";
+		}
+	
 
     public MailboxApi(string mailbox, string apiKey)
     {
@@ -58,7 +63,7 @@ namespace Mailosaur
 
     private Uri BuildUrl(string path, NameValueCollection queryParams)
     {
-      return new Uri(string.Format("{0}{1}?{2}", BASE_URI, path, BuildQueryString(queryParams)));
+      return new Uri(string.Format("{0}{1}?{2}", BaseUri, path, BuildQueryString(queryParams)));
     }
 
     private Stream GetResponseStream(string method, string path, NameValueCollection queryParams = null)
