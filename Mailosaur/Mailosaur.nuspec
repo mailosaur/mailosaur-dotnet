@@ -3,7 +3,7 @@
   <metadata>
     <id>Mailosaur</id>
     <title>Mailosaur</title>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <authors>mailosaur.com</authors>
     <owners>Clickity.ltd</owners>
     <licenseUrl>https://raw.githubusercontent.com/mailosaurapp/mailosaur-dotnet/master/LICENSE</licenseUrl>
@@ -21,7 +21,7 @@ For more info go to mailosaur.com</description>
     <copyright>Copyright Clickity Ltd 2016</copyright>
     <tags>selenium robotframework testing nunit mstest automation</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="8.0.x" />
+      <dependency id="Newtonsoft.Json" version="8.0.0" />
     </dependencies>
   </metadata>
   <files>
