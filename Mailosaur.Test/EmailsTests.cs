@@ -7,8 +7,37 @@ using System.Collections.Generic;
 
 namespace Mailosaur.Test
 {
-    [Collection("Mailosaur Client")]
-    public class EmailsTests
+    public class EmailsFixture : IDisposable
+    {
+        public MailosaurClient client { get; set; }
+
+        public string server { get; set; }
+        
+        public IList<MessageSummary> emails { get; set; }
+
+        public EmailsFixture()
+        {
+            var baseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
+            var apiKey  = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
+            server = Environment.GetEnvironmentVariable("MAILOSAUR_SERVER");
+
+            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server)) {
+                throw new Exception("Missing necessary environment variables - refer to README.md");
+            }
+
+            client = new MailosaurClient(apiKey, baseUrl);
+
+            client.Messages.DeleteAll(server);
+
+            Mailer.SendEmails(client, server, 5);
+
+            emails = client.Messages.List(server).Items;
+        }
+
+        public void Dispose() { }
+    }
+
+    public class EmailsTests : IClassFixture<EmailsFixture>
     {
         EmailsFixture fixture;
         
@@ -24,9 +53,9 @@ namespace Mailosaur.Test
         public void GetTest()
         {
             var emailToRetrieve = this.fixture.emails[0];
-            Message email = this.fixture.m_Client.Messages.Get(emailToRetrieve.Id);
+            Message email = this.fixture.client.Messages.Get(emailToRetrieve.Id);
             ValidateEmail(email);
-            ValidateHeaders(emailToRetrieve, email);
+            ValidateHeaders(email);
         }
 
         [Fact]
@@ -34,7 +63,7 @@ namespace Mailosaur.Test
         {
             // Should throw if email is not found
             Assert.Throws<MailosaurException>(delegate {
-                this.fixture.m_Client.Messages.Get(new Guid());
+                this.fixture.client.Messages.Get(new Guid());
             });
         }
 
@@ -42,12 +71,12 @@ namespace Mailosaur.Test
         public void WaitForTest()
         {
             var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.io";
-            var testEmailAddress = string.Format("wait_for_test.{0}@{1}", fixture.s_Server, host);
+            var testEmailAddress = string.Format("wait_for_test.{0}@{1}", fixture.server, host);
             
-            fixture.SendEmail(fixture.s_Server, testEmailAddress);
+            Mailer.SendEmail(fixture.client, fixture.server, testEmailAddress);
 
-            Message email = this.fixture.m_Client.Messages
-                .WaitFor(this.fixture.s_Server, new SearchCriteria() {
+            Message email = this.fixture.client.Messages
+                .WaitFor(this.fixture.server, new SearchCriteria() {
                 SentTo = testEmailAddress
             });
 
@@ -58,8 +87,8 @@ namespace Mailosaur.Test
         public void SearchNoCriteriaErrorTest()
         {
             Assert.Throws<MailosaurException>(delegate {
-                this.fixture.m_Client.Messages
-                    .Search(this.fixture.s_Server, new SearchCriteria());
+                this.fixture.client.Messages
+                    .Search(this.fixture.server, new SearchCriteria());
             });
         }
 
@@ -68,13 +97,13 @@ namespace Mailosaur.Test
         {
             var targetEmail = this.fixture.emails[1];
             
-            IList<Message> results = this.fixture.m_Client.Messages
-                .Search(this.fixture.s_Server, new SearchCriteria() {
-                SentTo = targetEmail.To[0].Address
-            });
+            var results = this.fixture.client.Messages
+                .Search(this.fixture.server, new SearchCriteria() {
+                SentTo = targetEmail.To[0].Email
+            }).Items;
 
             Assert.Equal(1, results.Count);
-            Assert.Equal(targetEmail.To[0].Address, results[0].To[0].Address);
+            Assert.Equal(targetEmail.To[0].Email, results[0].To[0].Email);
             Assert.Equal(targetEmail.Subject, results[0].Subject);
         }
 
@@ -86,8 +115,8 @@ namespace Mailosaur.Test
             };
 
             Assert.Throws<MailosaurException>(delegate {
-                this.fixture.m_Client.Messages
-                    .Search(this.fixture.s_Server, criteria);
+                this.fixture.client.Messages
+                    .Search(this.fixture.server, criteria);
             });
         }
 
@@ -97,12 +126,12 @@ namespace Mailosaur.Test
             var targetEmail = this.fixture.emails[1];
             var uniqueString = targetEmail.Subject.Substring(0, 10);
             
-            var results = this.fixture.m_Client.Messages.Search(this.fixture.s_Server, new SearchCriteria() {
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
                 Body = uniqueString + " html"
-            });
+            }).Items;
 
             Assert.Equal(1, results.Count);
-            Assert.Equal(targetEmail.To[0].Address, results[0].To[0].Address);
+            Assert.Equal(targetEmail.To[0].Email, results[0].To[0].Email);
             Assert.Equal(targetEmail.Subject, results[0].Subject);
         }
 
@@ -112,12 +141,12 @@ namespace Mailosaur.Test
             var targetEmail = this.fixture.emails[1];
             var uniqueString = targetEmail.Subject.Substring(0, 10);
 
-            var results = this.fixture.m_Client.Messages.Search(this.fixture.s_Server, new SearchCriteria() {
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
                 Subject = uniqueString
-            });
+            }).Items;
 
             Assert.Equal(1, results.Count);
-            Assert.Equal(targetEmail.To[0].Address, results[0].To[0].Address);
+            Assert.Equal(targetEmail.To[0].Email, results[0].To[0].Email);
             Assert.Equal(targetEmail.Subject, results[0].Subject);
         }
 
@@ -125,10 +154,8 @@ namespace Mailosaur.Test
         public void SpamAnalysisTest()
         {
             var targetId = this.fixture.emails[0].Id;
-            SpamCheckResult result = this.fixture.m_Client.Analysis.Spam(targetId);
-            Assert.Equal(targetId, result.EmailId);
-
-            foreach (SpamAssassinRule rule in result.SpamAssassin)
+            SpamAnalysisResult result = this.fixture.client.Analysis.Spam(targetId);
+            foreach (SpamAssassinRule rule in result.SpamFilterResults.SpamAssassin)
             {
                 Assert.NotEmpty(rule.Rule);
                 Assert.NotEmpty(rule.Description);
@@ -141,11 +168,11 @@ namespace Mailosaur.Test
             var targetEmailId = this.fixture.emails[4].Id;
             var self = this;
 
-            this.fixture.m_Client.Messages.Delete(targetEmailId);
+            this.fixture.client.Messages.Delete(targetEmailId);
         
             // Attempting to delete again should fail
             Assert.Throws<MailosaurException>(delegate {
-                self.fixture.m_Client.Messages.Delete(targetEmailId);
+                self.fixture.client.Messages.Delete(targetEmailId);
             });
         }
 
@@ -157,10 +184,10 @@ namespace Mailosaur.Test
             ValidateText(email);
         }
 
-        private void ValidateEmailSummary(Message email)
+        private void ValidateEmailSummary(MessageSummary email)
         {
             ValidateMetadata(email);
-            ValidateAttachmentMetadata(email);
+            Assert.Equal(2, email.Attachments);
         }
 
         private void ValidateHtml(Message email)
@@ -195,35 +222,44 @@ namespace Mailosaur.Test
             Assert.Equal( email.Text.Links[1].Href, email.Text.Links[1].Text);
         }
 
-        private void ValidateHeaders(Message expected, Message actual)
+        private void ValidateHeaders(Message email)
         {
-            var expectedFromHeader = string.Format("\"{0}\" <{1}>", expected.From[0].Name, expected.From[0].Address);
-            var expectedToHeader = string.Format("\"{0}\" <{1}>", expected.To[0].Name, expected.To[0].Address);
+            var expectedFromHeader = string.Format("\"{0}\" <{1}>", email.From[0].Name, email.From[0].Email);
+            var expectedToHeader = string.Format("\"{0}\" <{1}>", email.To[0].Name, email.To[0].Email);
 
             // Fallback casing is used, as header casing is determined by sending server
-            Assert.Equal(expectedFromHeader, actual.Headers.ContainsKey("From") ?
-                actual.Headers["From"].ToString() : actual.Headers["from"].ToString());
+            // Assert.Equal(expectedFromHeader, actual.Headers.ContainsKey("From") ?
+            //     actual.Headers["From"].ToString() : actual.Headers["from"].ToString());
             
-            Assert.Equal(expectedToHeader, actual.Headers.ContainsKey("To") ?
-                actual.Headers["To"].ToString() : actual.Headers["to"].ToString());
+            // Assert.Equal(expectedToHeader, actual.Headers.ContainsKey("To") ?
+            //     actual.Headers["To"].ToString() : actual.Headers["to"].ToString());
             
-            Assert.Equal(expected.Subject, actual.Headers.ContainsKey("Subject") ?
-                actual.Headers["Subject"].ToString() : actual.Headers["subject"].ToString());
+            // Assert.Equal(expected.Subject, actual.Headers.ContainsKey("Subject") ?
+            //     actual.Headers["Subject"].ToString() : actual.Headers["subject"].ToString());
         }
 
-        private void ValidateMetadata(Message email)
+        private void ValidateMetadata(Message email) {
+            ValidateMetadata(new MessageSummary() {
+                From = email.From,
+                To = email.To,
+                Cc = email.Cc,
+                Bcc = email.Bcc,
+                Subject = email.Subject,
+                Received = email.Received
+            });
+        }
+
+        private void ValidateMetadata(MessageSummary email)
         {
             Assert.Equal(1, email.From.Count);
             Assert.Equal(1, email.To.Count);
-            Assert.NotEmpty(email.From[0].Address);
+            Assert.NotEmpty(email.From[0].Email);
             Assert.NotEmpty(email.From[0].Name);
-            Assert.NotEmpty(email.To[0].Address);
+            Assert.NotEmpty(email.To[0].Email);
             Assert.NotEmpty(email.To[0].Name);
             Assert.NotEmpty(email.Subject);
-            Assert.NotEmpty(email.Senderhost);
-            Assert.NotEmpty(email.Server);
 
-            Assert.Equal(this.fixture.s_DateIsoString, email.Received.ToString("yyyy-MM-dd"));
+            Assert.Equal(DateTime.Now.ToString("yyyy-MM-dd"), email.Received.Value.ToString("yyyy-MM-dd"));
         }
 
         private void ValidateAttachmentMetadata(Message email)
@@ -233,15 +269,15 @@ namespace Mailosaur.Test
             var file1 = email.Attachments[0];
             Assert.NotNull(file1.Id);
             Assert.Equal(82138, file1.Length);
+            Assert.NotNull(file1.Url);
             Assert.Equal("ii_1435fadb31d523f6", file1.FileName);
-            Assert.Equal(this.fixture.s_DateIsoString, ((DateTime)file1.CreationDate).ToString("yyyy-MM-dd"));
             Assert.Equal("image/png", file1.ContentType);
 
             var file2 = email.Attachments[1];
             Assert.NotNull(file2.Id);
             Assert.Equal(212080, file2.Length);
+            Assert.NotNull(file2.Url);
             Assert.Equal("Resources/dog.png", file2.FileName);
-            Assert.Equal(this.fixture.s_DateIsoString, ((DateTime)file2.CreationDate).ToString("yyyy-MM-dd"));
             Assert.Equal("image/png", file2.ContentType);
         }
     }

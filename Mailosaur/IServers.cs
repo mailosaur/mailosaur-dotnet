@@ -37,7 +37,7 @@ namespace Mailosaur
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<IList<Server>>> ListWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ServerListResult>> ListWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Create a server
         /// </summary>
@@ -120,7 +120,7 @@ namespace Mailosaur
         /// </summary>
         /// <remarks>
         /// Permanently deletes a server. This operation cannot be undone. Also
-        /// deletes all emails and associated attachments within the server.
+        /// deletes all messages and associated attachments within the server.
         /// </remarks>
         /// <param name='id'>
         /// The identifier of the server to be deleted.

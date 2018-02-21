@@ -24,19 +24,38 @@ namespace Mailosaur.Models
         /// <summary>
         /// Initializes a new instance of the Message class.
         /// </summary>
-        public Message(System.DateTime received, System.Guid id, EmailData html = default(EmailData), EmailData text = default(EmailData), IDictionary<string, object> headers = default(IDictionary<string, object>), string subject = default(string), IList<EmailAddress> fromProperty = default(IList<EmailAddress>), IList<EmailAddress> to = default(IList<EmailAddress>), IList<Attachment> attachments = default(IList<Attachment>), string senderhost = default(string), string server = default(string))
+        /// <param name="id">Unique identifier for the message.</param>
+        /// <param name="fromProperty">The sender of the message.</param>
+        /// <param name="to">The message’s recipient.</param>
+        /// <param name="cc">Carbon-copied recipients for email
+        /// messages.</param>
+        /// <param name="bcc">Blind carbon-copied recipients for email
+        /// messages.</param>
+        /// <param name="received">The datetime that this message was received
+        /// by Mailosaur.</param>
+        /// <param name="subject">The message’s subject.</param>
+        /// <param name="html">Message content that was sent in HTML
+        /// format.</param>
+        /// <param name="text">Message content that was sent in plain text
+        /// format.</param>
+        /// <param name="attachments">An array of attachment metadata for any
+        /// attached files.</param>
+        /// <param name="server">Identifier for the server in which the message
+        /// is located.</param>
+        public Message(System.Guid? id = default(System.Guid?), IList<MessageAddress> fromProperty = default(IList<MessageAddress>), IList<MessageAddress> to = default(IList<MessageAddress>), IList<MessageAddress> cc = default(IList<MessageAddress>), IList<MessageAddress> bcc = default(IList<MessageAddress>), System.DateTime? received = default(System.DateTime?), string subject = default(string), MessageContent html = default(MessageContent), MessageContent text = default(MessageContent), IList<Attachment> attachments = default(IList<Attachment>), Metadata metadata = default(Metadata), string server = default(string))
         {
-            Html = html;
-            Text = text;
-            Headers = headers;
-            Subject = subject;
+            Id = id;
             From = fromProperty;
             To = to;
-            Attachments = attachments;
+            Cc = cc;
+            Bcc = bcc;
             Received = received;
-            Senderhost = senderhost;
+            Subject = subject;
+            Html = html;
+            Text = text;
+            Attachments = attachments;
+            Metadata = metadata;
             Server = server;
-            Id = id;
             CustomInit();
         }
 
@@ -46,78 +65,78 @@ namespace Mailosaur.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets unique identifier for the message.
         /// </summary>
-        [JsonProperty(PropertyName = "html")]
-        public EmailData Html { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public System.Guid? Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the sender of the message.
         /// </summary>
-        [JsonProperty(PropertyName = "text")]
-        public EmailData Text { get; set; }
+        [JsonProperty(PropertyName = "from")]
+        public IList<MessageAddress> From { get; set; }
 
         /// <summary>
+        /// Gets or sets the message’s recipient.
         /// </summary>
-        [JsonProperty(PropertyName = "headers")]
-        public IDictionary<string, object> Headers { get; set; }
+        [JsonProperty(PropertyName = "to")]
+        public IList<MessageAddress> To { get; set; }
 
         /// <summary>
+        /// Gets or sets carbon-copied recipients for email messages.
+        /// </summary>
+        [JsonProperty(PropertyName = "cc")]
+        public IList<MessageAddress> Cc { get; set; }
+
+        /// <summary>
+        /// Gets or sets blind carbon-copied recipients for email messages.
+        /// </summary>
+        [JsonProperty(PropertyName = "bcc")]
+        public IList<MessageAddress> Bcc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the datetime that this message was received by
+        /// Mailosaur.
+        /// </summary>
+        [JsonProperty(PropertyName = "received")]
+        public System.DateTime? Received { get; set; }
+
+        /// <summary>
+        /// Gets or sets the message’s subject.
         /// </summary>
         [JsonProperty(PropertyName = "subject")]
         public string Subject { get; set; }
 
         /// <summary>
+        /// Gets or sets message content that was sent in HTML format.
         /// </summary>
-        [JsonProperty(PropertyName = "from")]
-        public IList<EmailAddress> From { get; set; }
+        [JsonProperty(PropertyName = "html")]
+        public MessageContent Html { get; set; }
 
         /// <summary>
+        /// Gets or sets message content that was sent in plain text format.
         /// </summary>
-        [JsonProperty(PropertyName = "to")]
-        public IList<EmailAddress> To { get; set; }
+        [JsonProperty(PropertyName = "text")]
+        public MessageContent Text { get; set; }
 
         /// <summary>
+        /// Gets or sets an array of attachment metadata for any attached
+        /// files.
         /// </summary>
         [JsonProperty(PropertyName = "attachments")]
         public IList<Attachment> Attachments { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "received")]
-        public System.DateTime Received { get; set; }
+        [JsonProperty(PropertyName = "metadata")]
+        public Metadata Metadata { get; set; }
 
         /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "senderhost")]
-        public string Senderhost { get; set; }
-
-        /// <summary>
+        /// Gets or sets identifier for the server in which the message is
+        /// located.
         /// </summary>
         [JsonProperty(PropertyName = "server")]
         public string Server { get; set; }
 
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        public System.Guid Id { get; set; }
-
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="Microsoft.Rest.ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Attachments != null)
-            {
-                foreach (var element in Attachments)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-        }
     }
 }

@@ -47,10 +47,10 @@ namespace Mailosaur
         public MailosaurClient Client { get; private set; }
 
         /// <summary>
-        /// Perform a spam check
+        /// Perform a spam test
         /// </summary>
         /// <remarks>
-        /// Perform a spam analysis on the specified email
+        /// Perform spam testing on the specified email
         /// </remarks>
         /// <param name='email'>
         /// The identifier of the email to be analyzed.
@@ -70,7 +70,7 @@ namespace Mailosaur
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<SpamCheckResult>> SpamWithHttpMessagesAsync(System.Guid email, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<SpamAnalysisResult>> SpamWithHttpMessagesAsync(System.Guid email, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -159,7 +159,7 @@ namespace Mailosaur
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<SpamCheckResult>();
+            var _result = new HttpOperationResponse<SpamAnalysisResult>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -168,7 +168,7 @@ namespace Mailosaur
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<SpamCheckResult>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<SpamAnalysisResult>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

@@ -9,23 +9,25 @@ namespace Mailosaur.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class EmailAddress
+    public partial class MessageHeader
     {
         /// <summary>
-        /// Initializes a new instance of the EmailAddress class.
+        /// Initializes a new instance of the MessageHeader class.
         /// </summary>
-        public EmailAddress()
+        public MessageHeader()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the EmailAddress class.
+        /// Initializes a new instance of the MessageHeader class.
         /// </summary>
-        public EmailAddress(string address = default(string), string name = default(string))
+        /// <param name="field">Header key.</param>
+        /// <param name="value">Header value.</param>
+        public MessageHeader(string field = default(string), string value = default(string))
         {
-            Address = address;
-            Name = name;
+            Field = field;
+            Value = value;
             CustomInit();
         }
 
@@ -35,14 +37,16 @@ namespace Mailosaur.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets header key.
         /// </summary>
-        [JsonProperty(PropertyName = "address")]
-        public string Address { get; set; }
+        [JsonProperty(PropertyName = "field")]
+        public string Field { get; set; }
 
         /// <summary>
+        /// Gets or sets header value.
         /// </summary>
-        [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        [JsonProperty(PropertyName = "value")]
+        public string Value { get; set; }
 
     }
 }

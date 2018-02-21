@@ -20,14 +20,14 @@ namespace Mailosaur
             /// Download an attachment
             /// </summary>
             /// <remarks>
-            /// Returns a list of your emails. The emails are returned sorted by received
-            /// date, with the most recently-received emails appearing first.
+            /// Downloads a single attachment. Simply supply the unique identifier for the
+            /// required attachment.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='id'>
-            /// The identifier of the file to be retrieved.
+            /// The identifier of the attachment to be downloaded.
             /// </param>
             public static Stream GetAttachment(this IFiles operations, System.Guid id)
             {
@@ -38,14 +38,14 @@ namespace Mailosaur
             /// Download an attachment
             /// </summary>
             /// <remarks>
-            /// Returns a list of your emails. The emails are returned sorted by received
-            /// date, with the most recently-received emails appearing first.
+            /// Downloads a single attachment. Simply supply the unique identifier for the
+            /// required attachment.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='id'>
-            /// The identifier of the file to be retrieved.
+            /// The identifier of the attachment to be downloaded.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
@@ -58,17 +58,17 @@ namespace Mailosaur
             }
 
             /// <summary>
-            /// Download raw
+            /// Download EML
             /// </summary>
             /// <remarks>
-            /// Returns a list of your emails. The emails are returned sorted by received
-            /// date, with the most recently-received emails appearing first.
+            /// Downloads an EML file representing the specified email. Simply supply the
+            /// unique identifier for the required email.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='id'>
-            /// The identifier of the file to be retrieved.
+            /// The identifier of the email to be downloaded.
             /// </param>
             public static Stream GetEmail(this IFiles operations, System.Guid id)
             {
@@ -76,17 +76,17 @@ namespace Mailosaur
             }
 
             /// <summary>
-            /// Download raw
+            /// Download EML
             /// </summary>
             /// <remarks>
-            /// Returns a list of your emails. The emails are returned sorted by received
-            /// date, with the most recently-received emails appearing first.
+            /// Downloads an EML file representing the specified email. Simply supply the
+            /// unique identifier for the required email.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='id'>
-            /// The identifier of the file to be retrieved.
+            /// The identifier of the email to be downloaded.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.

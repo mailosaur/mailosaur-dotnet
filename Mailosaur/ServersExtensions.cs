@@ -7,8 +7,6 @@
 namespace Mailosaur
 {
     using Models;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -27,7 +25,7 @@ namespace Mailosaur
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            public static IList<Server> List(this IServers operations)
+            public static ServerListResult List(this IServers operations)
             {
                 return operations.ListAsync().GetAwaiter().GetResult();
             }
@@ -45,7 +43,7 @@ namespace Mailosaur
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<Server>> ListAsync(this IServers operations, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ServerListResult> ListAsync(this IServers operations, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ListWithHttpMessagesAsync(null, cancellationToken).ConfigureAwait(false))
                 {
@@ -182,7 +180,7 @@ namespace Mailosaur
             /// </summary>
             /// <remarks>
             /// Permanently deletes a server. This operation cannot be undone. Also deletes
-            /// all emails and associated attachments within the server.
+            /// all messages and associated attachments within the server.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -200,7 +198,7 @@ namespace Mailosaur
             /// </summary>
             /// <remarks>
             /// Permanently deletes a server. This operation cannot be undone. Also deletes
-            /// all emails and associated attachments within the server.
+            /// all messages and associated attachments within the server.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.

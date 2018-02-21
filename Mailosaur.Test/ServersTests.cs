@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace Mailosaur.Test
 {
-    [Collection("Mailosaur Client")]
     public class ServersTests
     {
         private MailosaurClient m_Client;
@@ -26,7 +25,7 @@ namespace Mailosaur.Test
         [Fact]
         public void ListTest()
         {
-            IList<Server> servers = m_Client.Servers.List();
+            IList<Server> servers = m_Client.Servers.List().Items;
             Assert.True(servers.Count() > 1);
         }
 
@@ -51,7 +50,7 @@ namespace Mailosaur.Test
             Assert.Equal(serverName, createdServer.Name);
             Assert.NotNull(createdServer.Password);
             Assert.NotNull(createdServer.Users);
-            Assert.Equal(0, createdServer.Emails);
+            Assert.Equal(0, createdServer.Messages);
             Assert.NotNull(createdServer.ForwardingRules);
 
             // Retrieve a server and confirm it has expected content
@@ -60,7 +59,7 @@ namespace Mailosaur.Test
             Assert.Equal(createdServer.Name, retrievedServer.Name);
             Assert.NotNull(retrievedServer.Password);
             Assert.NotNull(retrievedServer.Users);
-            Assert.Equal(0, retrievedServer.Emails);
+            Assert.Equal(0, retrievedServer.Messages);
             Assert.NotNull(retrievedServer.ForwardingRules);
 
             // Update a server and confirm it has changed
@@ -70,7 +69,7 @@ namespace Mailosaur.Test
             Assert.Equal(retrievedServer.Name, updatedServer.Name);
             Assert.Equal(retrievedServer.Password, updatedServer.Password);
             Assert.Equal(retrievedServer.Users, updatedServer.Users);
-            Assert.Equal(retrievedServer.Emails, updatedServer.Emails);
+            Assert.Equal(retrievedServer.Messages, updatedServer.Messages);
             Assert.Equal(retrievedServer.ForwardingRules, updatedServer.ForwardingRules);
 
             m_Client.Servers.Delete(retrievedServer.Id);
@@ -91,7 +90,7 @@ namespace Mailosaur.Test
             });
 
             Assert.Equal("Operation returned an invalid status code 'BadRequest'", ex.Message);
-            Assert.Equal("UnknownError", ex.MailosaurError.Type);
+            Assert.Equal("ValidationError", ex.MailosaurError.Type);
             Assert.Equal(1, ex.MailosaurError.Messages.Count);
             Assert.NotEmpty(ex.MailosaurError.Messages["name"]);
         }

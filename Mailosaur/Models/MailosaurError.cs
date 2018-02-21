@@ -24,8 +24,9 @@ namespace Mailosaur.Models
         /// <summary>
         /// Initializes a new instance of the MailosaurError class.
         /// </summary>
-        /// <param name="type">Possible values include: 'AuthenticationError',
-        /// 'ValidationError', 'ResourceNotFoundError', 'UnknownError'</param>
+        /// <param name="type">Possible values include: 'None',
+        /// 'ValidationError', 'AuthenticationError', 'PermissionDeniedError',
+        /// 'ResourceNotFoundError'</param>
         public MailosaurError(string type = default(string), IDictionary<string, string> messages = default(IDictionary<string, string>), object model = default(object))
         {
             Type = type;
@@ -40,8 +41,9 @@ namespace Mailosaur.Models
         partial void CustomInit();
 
         /// <summary>
-        /// Gets or sets possible values include: 'AuthenticationError',
-        /// 'ValidationError', 'ResourceNotFoundError', 'UnknownError'
+        /// Gets or sets possible values include: 'None', 'ValidationError',
+        /// 'AuthenticationError', 'PermissionDeniedError',
+        /// 'ResourceNotFoundError'
         /// </summary>
         [JsonProperty(PropertyName = "type")]
         public string Type { get; set; }

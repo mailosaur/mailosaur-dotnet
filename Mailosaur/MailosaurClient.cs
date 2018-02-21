@@ -28,14 +28,15 @@ namespace Mailosaur
     /// which are understood
     /// by off-the-shelf HTTP clients.
     ///
-    /// [Official client libraries](#) available for most popular languages.
+    /// [Official client libraries](/docs/client-libraries/) available for most
+    /// popular languages.
     ///
     /// # Authentication
     ///
     /// Authenticate your account when using the API by including your API key
     /// in the request.
-    /// You can manage your API keys in the Mailosaur UI. Your API key carrys
-    /// many privileges,
+    /// You can [manage your API keys](/app/account/api-access/) in the
+    /// Mailosaur UI. Your API key carrys many privileges,
     /// so be sure to keep it secret! Do not share your API key in
     /// publicly-accessible areas such
     /// GitHub, client-side code, and so on.
@@ -117,11 +118,6 @@ namespace Mailosaur
         /// Gets the IAnalysis.
         /// </summary>
         public virtual IAnalysis Analysis { get; private set; }
-
-        /// <summary>
-        /// Gets the IEmails.
-        /// </summary>
-        public virtual IEmails Emails { get; private set; }
 
         /// <summary>
         /// Gets the IFiles.
@@ -340,11 +336,10 @@ namespace Mailosaur
         private void Initialize()
         {
             Analysis = new Analysis(this);
-            Emails = new Emails(this);
             Files = new Files(this);
             Messages = new Messages(this);
             Servers = new Servers(this);
-            BaseUri = new System.Uri("https://next.mailosaur.com");
+            BaseUri = new System.Uri("https://mailosaur.com");
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,

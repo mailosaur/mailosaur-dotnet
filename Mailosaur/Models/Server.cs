@@ -24,19 +24,23 @@ namespace Mailosaur.Models
         /// <summary>
         /// Initializes a new instance of the Server class.
         /// </summary>
-        /// <param name="id">Unique identifier for the server.</param>
-        /// <param name="password">The password used for SMTP
-        /// authentication.</param>
+        /// <param name="id">Unique identifier for the server. Used as username
+        /// for SMTP/POP3 authentication.</param>
+        /// <param name="password">SMTP/POP3 password.</param>
         /// <param name="name">A name used to identify the server.</param>
-        /// <param name="emails">The current count of emails held within the
+        /// <param name="users">Users (excluding administrators) who have
+        /// access to the server.</param>
+        /// <param name="messages">The number of messages currently in the
         /// server.</param>
-        public Server(string id = default(string), string password = default(string), string name = default(string), IList<System.Guid?> users = default(IList<System.Guid?>), long? emails = default(long?), IList<ForwardingRule> forwardingRules = default(IList<ForwardingRule>))
+        /// <param name="forwardingRules">The rules used to manage email
+        /// forwarding for this server.</param>
+        public Server(string id = default(string), string password = default(string), string name = default(string), IList<System.Guid?> users = default(IList<System.Guid?>), int? messages = default(int?), IList<ForwardingRule> forwardingRules = default(IList<ForwardingRule>))
         {
             Id = id;
             Password = password;
             Name = name;
             Users = users;
-            Emails = emails;
+            Messages = messages;
             ForwardingRules = forwardingRules;
             CustomInit();
         }
@@ -47,13 +51,14 @@ namespace Mailosaur.Models
         partial void CustomInit();
 
         /// <summary>
-        /// Gets or sets unique identifier for the server.
+        /// Gets or sets unique identifier for the server. Used as username for
+        /// SMTP/POP3 authentication.
         /// </summary>
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the password used for SMTP authentication.
+        /// Gets or sets SMTP/POP3 password.
         /// </summary>
         [JsonProperty(PropertyName = "password")]
         public string Password { get; set; }
@@ -65,17 +70,21 @@ namespace Mailosaur.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets users (excluding administrators) who have access to
+        /// the server.
         /// </summary>
         [JsonProperty(PropertyName = "users")]
         public IList<System.Guid?> Users { get; set; }
 
         /// <summary>
-        /// Gets or sets the current count of emails held within the server.
+        /// Gets or sets the number of messages currently in the server.
         /// </summary>
-        [JsonProperty(PropertyName = "emails")]
-        public long? Emails { get; set; }
+        [JsonProperty(PropertyName = "messages")]
+        public int? Messages { get; set; }
 
         /// <summary>
+        /// Gets or sets the rules used to manage email forwarding for this
+        /// server.
         /// </summary>
         [JsonProperty(PropertyName = "forwardingRules")]
         public IList<ForwardingRule> ForwardingRules { get; set; }

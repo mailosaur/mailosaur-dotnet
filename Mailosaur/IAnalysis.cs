@@ -19,10 +19,10 @@ namespace Mailosaur
     public partial interface IAnalysis
     {
         /// <summary>
-        /// Perform a spam check
+        /// Perform a spam test
         /// </summary>
         /// <remarks>
-        /// Perform a spam analysis on the specified email
+        /// Perform spam testing on the specified email
         /// </remarks>
         /// <param name='email'>
         /// The identifier of the email to be analyzed.
@@ -39,6 +39,6 @@ namespace Mailosaur
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<SpamCheckResult>> SpamWithHttpMessagesAsync(System.Guid email, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<SpamAnalysisResult>> SpamWithHttpMessagesAsync(System.Guid email, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

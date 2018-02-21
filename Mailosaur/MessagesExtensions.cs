@@ -7,8 +7,6 @@
 namespace Mailosaur
 {
     using Models;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -18,17 +16,17 @@ namespace Mailosaur
     public static partial class MessagesExtensions
     {
             /// <summary>
-            /// Retrieve an message
+            /// Retrieve a message
             /// </summary>
             /// <remarks>
-            /// Retrieves the detail for a single message. Simply supply the unique
+            /// Retrieves the detail for a single email message. Simply supply the unique
             /// identifier for the required message.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='id'>
-            /// The identifier of the message to be retrieved.
+            /// The identifier of the email message to be retrieved.
             /// </param>
             public static Message Get(this IMessages operations, System.Guid id)
             {
@@ -36,17 +34,17 @@ namespace Mailosaur
             }
 
             /// <summary>
-            /// Retrieve an message
+            /// Retrieve a message
             /// </summary>
             /// <remarks>
-            /// Retrieves the detail for a single message. Simply supply the unique
+            /// Retrieves the detail for a single email message. Simply supply the unique
             /// identifier for the required message.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='id'>
-            /// The identifier of the message to be retrieved.
+            /// The identifier of the email message to be retrieved.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
@@ -60,10 +58,10 @@ namespace Mailosaur
             }
 
             /// <summary>
-            /// Delete an message
+            /// Delete a message
             /// </summary>
             /// <remarks>
-            /// Permanently deletes an message. This operation cannot be undone. Also
+            /// Permanently deletes a message. This operation cannot be undone. Also
             /// deletes any attachments related to the message.
             /// </remarks>
             /// <param name='operations'>
@@ -78,10 +76,10 @@ namespace Mailosaur
             }
 
             /// <summary>
-            /// Delete an message
+            /// Delete a message
             /// </summary>
             /// <remarks>
-            /// Permanently deletes an message. This operation cannot be undone. Also
+            /// Permanently deletes a message. This operation cannot be undone. Also
             /// deletes any attachments related to the message.
             /// </remarks>
             /// <param name='operations'>
@@ -102,8 +100,9 @@ namespace Mailosaur
             /// List all messages
             /// </summary>
             /// <remarks>
-            /// Returns a list of your messages. The messages are returned sorted by
-            /// received date, with the most recently-received messages appearing first.
+            /// Returns a list of your messages in summary form. The summaries are returned
+            /// sorted by received date, with the most recently-received messages appearing
+            /// first.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -111,24 +110,25 @@ namespace Mailosaur
             /// <param name='server'>
             /// The identifier of the server hosting the messages.
             /// </param>
-            /// <param name='pagenumber'>
-            /// Used in conjunction with `itemsperpage` to support pagination.
+            /// <param name='page'>
+            /// Used in conjunction with `itemsPerPage` to support pagination.
             /// </param>
-            /// <param name='itemsperpage'>
-            /// A limit on the number of results to be returned. Can be set between 1 and
-            /// 1000 items, the default is 50.
+            /// <param name='itemsPerPage'>
+            /// A limit on the number of results to be returned per page. Can be set
+            /// between 1 and 1000 items, the default is 50.
             /// </param>
-            public static IList<Message> List(this IMessages operations, string server, int? pagenumber = default(int?), int? itemsperpage = default(int?))
+            public static MessageListResult List(this IMessages operations, string server, int? page = default(int?), int? itemsPerPage = default(int?))
             {
-                return operations.ListAsync(server, pagenumber, itemsperpage).GetAwaiter().GetResult();
+                return operations.ListAsync(server, page, itemsPerPage).GetAwaiter().GetResult();
             }
 
             /// <summary>
             /// List all messages
             /// </summary>
             /// <remarks>
-            /// Returns a list of your messages. The messages are returned sorted by
-            /// received date, with the most recently-received messages appearing first.
+            /// Returns a list of your messages in summary form. The summaries are returned
+            /// sorted by received date, with the most recently-received messages appearing
+            /// first.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -136,19 +136,19 @@ namespace Mailosaur
             /// <param name='server'>
             /// The identifier of the server hosting the messages.
             /// </param>
-            /// <param name='pagenumber'>
-            /// Used in conjunction with `itemsperpage` to support pagination.
+            /// <param name='page'>
+            /// Used in conjunction with `itemsPerPage` to support pagination.
             /// </param>
-            /// <param name='itemsperpage'>
-            /// A limit on the number of results to be returned. Can be set between 1 and
-            /// 1000 items, the default is 50.
+            /// <param name='itemsPerPage'>
+            /// A limit on the number of results to be returned per page. Can be set
+            /// between 1 and 1000 items, the default is 50.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<Message>> ListAsync(this IMessages operations, string server, int? pagenumber = default(int?), int? itemsperpage = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<MessageListResult> ListAsync(this IMessages operations, string server, int? page = default(int?), int? itemsPerPage = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ListWithHttpMessagesAsync(server, pagenumber, itemsperpage, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.ListWithHttpMessagesAsync(server, page, itemsPerPage, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -199,9 +199,9 @@ namespace Mailosaur
             /// Search for messages
             /// </summary>
             /// <remarks>
-            /// Returns a list of messages matching the specified search criteria. The
-            /// messages are returned sorted by received date, with the most
-            /// recently-received messages appearing first.
+            /// Returns a list of messages matching the specified search criteria, in
+            /// summary form. The messages are returned sorted by received date, with the
+            /// most recently-received messages appearing first.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -212,25 +212,25 @@ namespace Mailosaur
             /// <param name='criteria'>
             /// The search criteria to match results against.
             /// </param>
-            /// <param name='pagenumber'>
-            /// Used in conjunction with `itemsperpage` to support pagination.
+            /// <param name='page'>
+            /// Used in conjunction with `itemsPerPage` to support pagination.
             /// </param>
-            /// <param name='itemsperpage'>
-            /// A limit on the number of results to be returned. Can be set between 1 and
-            /// 1000 items, the default is 50.
+            /// <param name='itemsPerPage'>
+            /// A limit on the number of results to be returned per page. Can be set
+            /// between 1 and 1000 items, the default is 50.
             /// </param>
-            public static IList<Message> Search(this IMessages operations, string server, SearchCriteria criteria, int? pagenumber = default(int?), int? itemsperpage = default(int?))
+            public static MessageListResult Search(this IMessages operations, string server, SearchCriteria criteria, int? page = default(int?), int? itemsPerPage = default(int?))
             {
-                return operations.SearchAsync(server, criteria, pagenumber, itemsperpage).GetAwaiter().GetResult();
+                return operations.SearchAsync(server, criteria, page, itemsPerPage).GetAwaiter().GetResult();
             }
 
             /// <summary>
             /// Search for messages
             /// </summary>
             /// <remarks>
-            /// Returns a list of messages matching the specified search criteria. The
-            /// messages are returned sorted by received date, with the most
-            /// recently-received messages appearing first.
+            /// Returns a list of messages matching the specified search criteria, in
+            /// summary form. The messages are returned sorted by received date, with the
+            /// most recently-received messages appearing first.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -241,19 +241,19 @@ namespace Mailosaur
             /// <param name='criteria'>
             /// The search criteria to match results against.
             /// </param>
-            /// <param name='pagenumber'>
-            /// Used in conjunction with `itemsperpage` to support pagination.
+            /// <param name='page'>
+            /// Used in conjunction with `itemsPerPage` to support pagination.
             /// </param>
-            /// <param name='itemsperpage'>
-            /// A limit on the number of results to be returned. Can be set between 1 and
-            /// 1000 items, the default is 50.
+            /// <param name='itemsPerPage'>
+            /// A limit on the number of results to be returned per page. Can be set
+            /// between 1 and 1000 items, the default is 50.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<Message>> SearchAsync(this IMessages operations, string server, SearchCriteria criteria, int? pagenumber = default(int?), int? itemsperpage = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<MessageListResult> SearchAsync(this IMessages operations, string server, SearchCriteria criteria, int? page = default(int?), int? itemsPerPage = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.SearchWithHttpMessagesAsync(server, criteria, pagenumber, itemsperpage, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.SearchWithHttpMessagesAsync(server, criteria, page, itemsPerPage, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -263,8 +263,8 @@ namespace Mailosaur
             /// Wait for a specific message
             /// </summary>
             /// <remarks>
-            /// Returns as soon as an message matching the specified search criteria is
-            /// found.
+            /// Returns as soon as a message matching the specified search criteria is
+            /// found. This is the most efficient method of looking up a message.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -284,8 +284,8 @@ namespace Mailosaur
             /// Wait for a specific message
             /// </summary>
             /// <remarks>
-            /// Returns as soon as an message matching the specified search criteria is
-            /// found.
+            /// Returns as soon as a message matching the specified search criteria is
+            /// found. This is the most efficient method of looking up a message.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.

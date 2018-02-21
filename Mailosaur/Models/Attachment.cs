@@ -22,14 +22,14 @@ namespace Mailosaur.Models
         /// <summary>
         /// Initializes a new instance of the Attachment class.
         /// </summary>
-        public Attachment(System.Guid id, string contentType = default(string), string fileName = default(string), string contentId = default(string), long? length = default(long?), System.DateTime? creationDate = default(System.DateTime?))
+        public Attachment(System.Guid id, string contentType = default(string), string fileName = default(string), string contentId = default(string), int? length = default(int?), string url = default(string))
         {
             Id = id;
             ContentType = contentType;
             FileName = fileName;
             ContentId = contentId;
             Length = length;
-            CreationDate = creationDate;
+            Url = url;
             CustomInit();
         }
 
@@ -61,12 +61,12 @@ namespace Mailosaur.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "length")]
-        public long? Length { get; set; }
+        public int? Length { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "creationDate")]
-        public System.DateTime? CreationDate { get; set; }
+        [JsonProperty(PropertyName = "url")]
+        public string Url { get; set; }
 
         /// <summary>
         /// Validate the object.

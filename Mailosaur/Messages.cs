@@ -47,14 +47,14 @@ namespace Mailosaur
         public MailosaurClient Client { get; private set; }
 
         /// <summary>
-        /// Retrieve an message
+        /// Retrieve a message
         /// </summary>
         /// <remarks>
-        /// Retrieves the detail for a single message. Simply supply the unique
+        /// Retrieves the detail for a single email message. Simply supply the unique
         /// identifier for the required message.
         /// </remarks>
         /// <param name='id'>
-        /// The identifier of the message to be retrieved.
+        /// The identifier of the email message to be retrieved.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -189,10 +189,10 @@ namespace Mailosaur
         }
 
         /// <summary>
-        /// Delete an message
+        /// Delete a message
         /// </summary>
         /// <remarks>
-        /// Permanently deletes an message. This operation cannot be undone. Also
+        /// Permanently deletes a message. This operation cannot be undone. Also
         /// deletes any attachments related to the message.
         /// </remarks>
         /// <param name='id'>
@@ -313,18 +313,19 @@ namespace Mailosaur
         /// List all messages
         /// </summary>
         /// <remarks>
-        /// Returns a list of your messages. The messages are returned sorted by
-        /// received date, with the most recently-received messages appearing first.
+        /// Returns a list of your messages in summary form. The summaries are returned
+        /// sorted by received date, with the most recently-received messages appearing
+        /// first.
         /// </remarks>
         /// <param name='server'>
         /// The identifier of the server hosting the messages.
         /// </param>
-        /// <param name='pagenumber'>
-        /// Used in conjunction with `itemsperpage` to support pagination.
+        /// <param name='page'>
+        /// Used in conjunction with `itemsPerPage` to support pagination.
         /// </param>
-        /// <param name='itemsperpage'>
-        /// A limit on the number of results to be returned. Can be set between 1 and
-        /// 1000 items, the default is 50.
+        /// <param name='itemsPerPage'>
+        /// A limit on the number of results to be returned per page. Can be set
+        /// between 1 and 1000 items, the default is 50.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -347,7 +348,7 @@ namespace Mailosaur
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<Message>>> ListWithHttpMessagesAsync(string server, int? pagenumber = default(int?), int? itemsperpage = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<MessageListResult>> ListWithHttpMessagesAsync(string server, int? page = default(int?), int? itemsPerPage = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (server == null)
             {
@@ -361,8 +362,8 @@ namespace Mailosaur
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("server", server);
-                tracingParameters.Add("pagenumber", pagenumber);
-                tracingParameters.Add("itemsperpage", itemsperpage);
+                tracingParameters.Add("page", page);
+                tracingParameters.Add("itemsPerPage", itemsPerPage);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "List", tracingParameters);
             }
@@ -374,13 +375,13 @@ namespace Mailosaur
             {
                 _queryParameters.Add(string.Format("server={0}", System.Uri.EscapeDataString(server)));
             }
-            if (pagenumber != null)
+            if (page != null)
             {
-                _queryParameters.Add(string.Format("pagenumber={0}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(pagenumber, Client.SerializationSettings).Trim('"'))));
+                _queryParameters.Add(string.Format("page={0}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(page, Client.SerializationSettings).Trim('"'))));
             }
-            if (itemsperpage != null)
+            if (itemsPerPage != null)
             {
-                _queryParameters.Add(string.Format("itemsperpage={0}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(itemsperpage, Client.SerializationSettings).Trim('"'))));
+                _queryParameters.Add(string.Format("itemsPerPage={0}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(itemsPerPage, Client.SerializationSettings).Trim('"'))));
             }
             if (_queryParameters.Count > 0)
             {
@@ -458,7 +459,7 @@ namespace Mailosaur
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<Message>>();
+            var _result = new HttpOperationResponse<MessageListResult>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -467,7 +468,7 @@ namespace Mailosaur
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<IList<Message>>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MessageListResult>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -630,9 +631,9 @@ namespace Mailosaur
         /// Search for messages
         /// </summary>
         /// <remarks>
-        /// Returns a list of messages matching the specified search criteria. The
-        /// messages are returned sorted by received date, with the most
-        /// recently-received messages appearing first.
+        /// Returns a list of messages matching the specified search criteria, in
+        /// summary form. The messages are returned sorted by received date, with the
+        /// most recently-received messages appearing first.
         /// </remarks>
         /// <param name='server'>
         /// The identifier of the server hosting the messages.
@@ -640,12 +641,12 @@ namespace Mailosaur
         /// <param name='criteria'>
         /// The search criteria to match results against.
         /// </param>
-        /// <param name='pagenumber'>
-        /// Used in conjunction with `itemsperpage` to support pagination.
+        /// <param name='page'>
+        /// Used in conjunction with `itemsPerPage` to support pagination.
         /// </param>
-        /// <param name='itemsperpage'>
-        /// A limit on the number of results to be returned. Can be set between 1 and
-        /// 1000 items, the default is 50.
+        /// <param name='itemsPerPage'>
+        /// A limit on the number of results to be returned per page. Can be set
+        /// between 1 and 1000 items, the default is 50.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -668,7 +669,7 @@ namespace Mailosaur
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<Message>>> SearchWithHttpMessagesAsync(string server, SearchCriteria criteria, int? pagenumber = default(int?), int? itemsperpage = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<MessageListResult>> SearchWithHttpMessagesAsync(string server, SearchCriteria criteria, int? page = default(int?), int? itemsPerPage = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (server == null)
             {
@@ -687,8 +688,8 @@ namespace Mailosaur
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("server", server);
                 tracingParameters.Add("criteria", criteria);
-                tracingParameters.Add("pagenumber", pagenumber);
-                tracingParameters.Add("itemsperpage", itemsperpage);
+                tracingParameters.Add("page", page);
+                tracingParameters.Add("itemsPerPage", itemsPerPage);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Search", tracingParameters);
             }
@@ -700,13 +701,13 @@ namespace Mailosaur
             {
                 _queryParameters.Add(string.Format("server={0}", System.Uri.EscapeDataString(server)));
             }
-            if (pagenumber != null)
+            if (page != null)
             {
-                _queryParameters.Add(string.Format("pagenumber={0}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(pagenumber, Client.SerializationSettings).Trim('"'))));
+                _queryParameters.Add(string.Format("page={0}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(page, Client.SerializationSettings).Trim('"'))));
             }
-            if (itemsperpage != null)
+            if (itemsPerPage != null)
             {
-                _queryParameters.Add(string.Format("itemsperpage={0}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(itemsperpage, Client.SerializationSettings).Trim('"'))));
+                _queryParameters.Add(string.Format("itemsPerPage={0}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(itemsPerPage, Client.SerializationSettings).Trim('"'))));
             }
             if (_queryParameters.Count > 0)
             {
@@ -790,7 +791,7 @@ namespace Mailosaur
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<Message>>();
+            var _result = new HttpOperationResponse<MessageListResult>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -799,7 +800,7 @@ namespace Mailosaur
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<IList<Message>>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MessageListResult>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -822,8 +823,8 @@ namespace Mailosaur
         /// Wait for a specific message
         /// </summary>
         /// <remarks>
-        /// Returns as soon as an message matching the specified search criteria is
-        /// found.
+        /// Returns as soon as a message matching the specified search criteria is
+        /// found. This is the most efficient method of looking up a message.
         /// </remarks>
         /// <param name='server'>
         /// The identifier of the server hosting the message.
@@ -934,7 +935,7 @@ namespace Mailosaur
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200)
+            if ((int)_statusCode != 200 && (int)_statusCode != 204)
             {
                 var ex = new MailosaurException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try

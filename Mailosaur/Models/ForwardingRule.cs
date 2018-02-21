@@ -22,10 +22,10 @@ namespace Mailosaur.Models
         /// <summary>
         /// Initializes a new instance of the ForwardingRule class.
         /// </summary>
-        /// <param name="field">Possible values include: 'From', 'To',
-        /// 'Subject'</param>
-        /// <param name="operatorProperty">Possible values include: 'EndsWith',
-        /// 'StartsWith', 'Contains'</param>
+        /// <param name="field">Possible values include: 'from', 'to',
+        /// 'subject'</param>
+        /// <param name="operatorProperty">Possible values include: 'endsWith',
+        /// 'startsWith', 'contains'</param>
         public ForwardingRule(string field = default(string), string operatorProperty = default(string), string value = default(string), string forwardTo = default(string))
         {
             Field = field;
@@ -41,14 +41,14 @@ namespace Mailosaur.Models
         partial void CustomInit();
 
         /// <summary>
-        /// Gets or sets possible values include: 'From', 'To', 'Subject'
+        /// Gets or sets possible values include: 'from', 'to', 'subject'
         /// </summary>
         [JsonProperty(PropertyName = "field")]
         public string Field { get; set; }
 
         /// <summary>
-        /// Gets or sets possible values include: 'EndsWith', 'StartsWith',
-        /// 'Contains'
+        /// Gets or sets possible values include: 'endsWith', 'startsWith',
+        /// 'contains'
         /// </summary>
         [JsonProperty(PropertyName = "operator")]
         public string OperatorProperty { get; set; }

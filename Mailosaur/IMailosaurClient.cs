@@ -23,14 +23,15 @@ namespace Mailosaur
     /// which are understood
     /// by off-the-shelf HTTP clients.
     ///
-    /// [Official client libraries](#) available for most popular languages.
+    /// [Official client libraries](/docs/client-libraries/) available for most
+    /// popular languages.
     ///
     /// # Authentication
     ///
     /// Authenticate your account when using the API by including your API key
     /// in the request.
-    /// You can manage your API keys in the Mailosaur UI. Your API key carrys
-    /// many privileges,
+    /// You can [manage your API keys](/app/account/api-access/) in the
+    /// Mailosaur UI. Your API key carrys many privileges,
     /// so be sure to keep it secret! Do not share your API key in
     /// publicly-accessible areas such
     /// GitHub, client-side code, and so on.
@@ -114,11 +115,6 @@ namespace Mailosaur
         /// Gets the IAnalysis.
         /// </summary>
         IAnalysis Analysis { get; }
-
-        /// <summary>
-        /// Gets the IEmails.
-        /// </summary>
-        IEmails Emails { get; }
 
         /// <summary>
         /// Gets the IFiles.

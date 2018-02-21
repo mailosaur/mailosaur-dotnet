@@ -11,20 +11,20 @@ namespace Mailosaur.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class EmailData
+    public partial class MessageContent
     {
         /// <summary>
-        /// Initializes a new instance of the EmailData class.
+        /// Initializes a new instance of the MessageContent class.
         /// </summary>
-        public EmailData()
+        public MessageContent()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the EmailData class.
+        /// Initializes a new instance of the MessageContent class.
         /// </summary>
-        public EmailData(IList<Link> links = default(IList<Link>), IList<Image> images = default(IList<Image>), string body = default(string))
+        public MessageContent(IList<Link> links = default(IList<Link>), IList<Image> images = default(IList<Image>), string body = default(string))
         {
             Links = links;
             Images = images;

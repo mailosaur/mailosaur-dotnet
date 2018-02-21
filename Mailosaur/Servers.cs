@@ -68,7 +68,7 @@ namespace Mailosaur
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<Server>>> ListWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ServerListResult>> ListWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -155,7 +155,7 @@ namespace Mailosaur
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<Server>>();
+            var _result = new HttpOperationResponse<ServerListResult>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -164,7 +164,7 @@ namespace Mailosaur
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<IList<Server>>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ServerListResult>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -659,7 +659,7 @@ namespace Mailosaur
         /// </summary>
         /// <remarks>
         /// Permanently deletes a server. This operation cannot be undone. Also deletes
-        /// all emails and associated attachments within the server.
+        /// all messages and associated attachments within the server.
         /// </remarks>
         /// <param name='id'>
         /// The identifier of the server to be deleted.

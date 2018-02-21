@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <PackageVersion>5.0.0.0</PackageVersion>
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <PackageVersion>5.0.2.0</PackageVersion>
+    <AssemblyVersion>5.0.2.0</AssemblyVersion>
     <Authors>Mailosaur Ltd</Authors>
     <Owners>Mailosaur Ltd</Owners>
     <Title>Mailosaur .Net Client Library</Title>
@@ -14,7 +14,7 @@ Mailosaur allows you to automate tests that require email. You can use it with t
 You can also use it for manual testing as it gives you unlimited test email addresses or use it as a fake/dummy SMTP service.
 
 For more info go to mailosaur.com</Description>
-    <ReleaseVersion>5.0.0</ReleaseVersion>
+    <ReleaseVersion>5.0.2</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
     <PackageId>Mailosaur</PackageId>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/3448774?v=3&amp;amp;s=400</PackageIconUrl>

@@ -16,10 +16,10 @@ namespace Mailosaur
     public static partial class AnalysisExtensions
     {
             /// <summary>
-            /// Perform a spam check
+            /// Perform a spam test
             /// </summary>
             /// <remarks>
-            /// Perform a spam analysis on the specified email
+            /// Perform spam testing on the specified email
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -27,16 +27,16 @@ namespace Mailosaur
             /// <param name='email'>
             /// The identifier of the email to be analyzed.
             /// </param>
-            public static SpamCheckResult Spam(this IAnalysis operations, System.Guid email)
+            public static SpamAnalysisResult Spam(this IAnalysis operations, System.Guid email)
             {
                 return operations.SpamAsync(email).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Perform a spam check
+            /// Perform a spam test
             /// </summary>
             /// <remarks>
-            /// Perform a spam analysis on the specified email
+            /// Perform spam testing on the specified email
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -47,7 +47,7 @@ namespace Mailosaur
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<SpamCheckResult> SpamAsync(this IAnalysis operations, System.Guid email, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SpamAnalysisResult> SpamAsync(this IAnalysis operations, System.Guid email, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.SpamWithHttpMessagesAsync(email, null, cancellationToken).ConfigureAwait(false))
                 {

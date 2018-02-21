@@ -28,7 +28,7 @@ namespace Mailosaur.Models
         /// Gets or sets the body object.
         /// </summary>
         public MailosaurError Body { private get; set; }
-        public MailosaurError MailosaurError => Body;
+public MailosaurError MailosaurError => Body;
 
         /// <summary>
         /// Initializes a new instance of the MailosaurException class.
