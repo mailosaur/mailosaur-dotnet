@@ -1,64 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9AAD8088-926B-4336-BC0C-1F558AC3CBC0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Mailosaur</RootNamespace>
-    <AssemblyName>Mailosaur</AssemblyName>
-    <ReleaseVersion>1.0.0</ReleaseVersion>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <PackageVersion>5.0.0.0</PackageVersion>
+    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <Authors>Mailosaur Ltd</Authors>
+    <Owners>Mailosaur Ltd</Owners>
+    <Title>Mailosaur .Net Client Library</Title>
+    <Description>Mailosaur .NET client library.
+
+Mailosaur allows you to automate tests that require email. You can use it with tools like Selenium, Ranorex, Robot framework etc...
+
+You can also use it for manual testing as it gives you unlimited test email addresses or use it as a fake/dummy SMTP service.
+
+For more info go to mailosaur.com</Description>
+    <ReleaseVersion>5.0.0</ReleaseVersion>
+    <SynchReleaseVersion>false</SynchReleaseVersion>
+    <PackageId>Mailosaur</PackageId>
+    <PackageIconUrl>https://avatars0.githubusercontent.com/u/3448774?v=3&amp;amp;s=400</PackageIconUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/mailosaurapp/mailosaur-dotnet/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/mailosaurapp/mailosaur-dotnet</PackageProjectUrl>
+    <Summary>Mailosaur allows you to automate email testing</Summary>
+    <PackageTags> email automation api integration testing nunit mstest xunit selenium</PackageTags>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net35\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.2.1\lib\net35\nunit.framework.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.10" />
+    <PackageReference Include="NuGet.Build.Packaging" Version="0.1.276" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\Attachment.cs" />
-    <Compile Include="Model\Email.cs" />
-    <Compile Include="Model\EmailAddress.cs" />
-    <Compile Include="Model\EmailData.cs" />
-    <Compile Include="Model\Link.cs" />
-    <Compile Include="MailboxApi.cs" />
-    <Compile Include="Model\Image.cs" />
-    <Compile Include="Exception\MailosaurException.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="Exception\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Mailosaur.nuspec" />
+    <Compile Remove="Mailosaur\Emails.cs" />
+    <Compile Remove="Mailosaur\EmailsExtensions.cs" />
+    <Compile Remove="Mailosaur\IEmails.cs" />
+    <Compile Remove="Mailosaur\IMailosaurAPI.cs" />
   </ItemGroup>
 </Project>

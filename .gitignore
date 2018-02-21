@@ -159,3 +159,4 @@ Mailosaur.Test.csproj.test-cache
 test-results
 packages
 *.nupkg
+.vscode/

@@ -1,0 +1,14 @@
+language: csharp
+mono: none
+dotnet: 2.1.2
+script:
+ - dotnet restore
+ - dotnet test Mailosaur.Test
+env:
+  global:
+  - secure: "hGxUlbq4vAX5su9h9H7ec+MsO9i2dcZswdT593jNnKr4XtQQSl42lDfWdKcmq6VlVnQvSyw9ObB5MmLq08ePBkanag3S9HBVkJu5iqlUjYpknB9LAW7J1CxIIo3gJ239uSDmqzqADmfRBe+bhV7N5TRJRE/9/FfKouJIQFRCweo="
+  matrix:
+  - MAILOSAUR_BASE_URL=https://mailosaur.com/ MAILOSAUR_SMTP_HOST=mailosaur.io
+  - MAILOSAUR_BASE_URL=https://next.mailosaur.com/ MAILOSAUR_SMTP_HOST=ms-smtp.uk
+notifications:
+  slack: mailosaur:CsJ9RruwjqHPKr1Iugk8GDtX

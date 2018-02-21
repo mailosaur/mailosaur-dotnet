@@ -3,9 +3,9 @@
   <metadata>
     <id>Mailosaur</id>
     <title>Mailosaur</title>
-    <version>3.0.1</version>
-    <authors>mailosaur.com</authors>
-    <owners>Clickity.ltd</owners>
+    <version>5.0.0</version>
+    <authors>Mailosaur Ltd</authors>
+    <owners>Mailosaur Ltd</owners>
     <licenseUrl>https://raw.githubusercontent.com/mailosaurapp/mailosaur-dotnet/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/mailosaurapp/mailosaur-dotnet</projectUrl>
     <iconUrl>https://avatars0.githubusercontent.com/u/3448774?v=3&amp;s=400</iconUrl>
@@ -18,7 +18,7 @@ You can also use it for manual testing as it gives you unlimited test email addr
 
 For more info go to mailosaur.com</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright Clickity Ltd 2016</copyright>
+    <copyright>Copyright (c) 2018 Mailosaur Ltd</copyright>
     <tags>selenium robotframework testing nunit mstest automation</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="8.0.0" />
