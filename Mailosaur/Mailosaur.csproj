@@ -18,15 +18,14 @@ For more info go to mailosaur.com</Description>
     <SynchReleaseVersion>false</SynchReleaseVersion>
     <PackageId>Mailosaur</PackageId>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/3448774?v=3&amp;amp;s=400</PackageIconUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/mailosaurapp/mailosaur-dotnet/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/mailosaurapp/mailosaur-dotnet</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/mailosaur/mailosaur-dotnet/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/mailosaur/mailosaur-dotnet</PackageProjectUrl>
     <Summary>Mailosaur allows you to automate email testing</Summary>
-    <PackageTags> email automation api integration testing nunit mstest xunit selenium</PackageTags>
+    <PackageTags>email automation api integration testing nunit mstest xunit selenium</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.10" />
-    <PackageReference Include="NuGet.Build.Packaging" Version="0.1.276" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Mailosaur\Emails.cs" />
