@@ -161,7 +161,7 @@ namespace Mailosaur
         /// </summary>
         /// <remarks>
         /// Returns as soon as a message matching the specified search criteria
-        /// is found. This is the most efficient method of looking up a
+        /// is found. Default wait timeout is set to 15s. This is the most efficient method of looking up a
         /// message.
         /// </remarks>
         /// <param name='server'>
@@ -176,6 +176,9 @@ namespace Mailosaur
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
+        /// <param name='timeout'>
+        /// Timeout in seconds.
+        /// </param>        
         /// <exception cref="MailosaurException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
@@ -185,6 +188,6 @@ namespace Mailosaur
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<Message>> WaitForWithHttpMessagesAsync(string server, SearchCriteria criteria, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<Message>> WaitForWithHttpMessagesAsync(string server, SearchCriteria criteria, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken), int timeout = 15);
     }
 }

@@ -275,9 +275,9 @@ namespace Mailosaur
             /// <param name='criteria'>
             /// The search criteria to use in order to find a match.
             /// </param>
-            public static Message WaitFor(this IMessages operations, string server, SearchCriteria criteria)
+            public static Message WaitFor(this IMessages operations, string server, SearchCriteria criteria, int timeout = 15)
             {
-                return operations.WaitForAsync(server, criteria).GetAwaiter().GetResult();
+                return operations.WaitForAsync(server, criteria, default(CancellationToken), timeout).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -299,9 +299,9 @@ namespace Mailosaur
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Message> WaitForAsync(this IMessages operations, string server, SearchCriteria criteria, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<Message> WaitForAsync(this IMessages operations, string server, SearchCriteria criteria, CancellationToken cancellationToken = default(CancellationToken), int timeout = 15)
             {
-                using (var _result = await operations.WaitForWithHttpMessagesAsync(server, criteria, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.WaitForWithHttpMessagesAsync(server, criteria, null, cancellationToken, timeout).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

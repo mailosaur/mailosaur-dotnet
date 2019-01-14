@@ -84,6 +84,40 @@ namespace Mailosaur.Test
         }
 
         [Fact]
+        public void WaitForTestWithLateEmailSend()
+        {
+            var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.io";
+            var testEmailAddress = string.Format("wait_for_test_late_send.{0}@{1}", fixture.server, host);
+
+            Task.Delay(5000).ContinueWith(t=> 
+            {
+                Mailer.SendEmail(fixture.client, fixture.server, testEmailAddress);
+            });
+            
+            Message email = this.fixture.client.Messages
+                .WaitFor(this.fixture.server, new SearchCriteria() {
+                SentTo = testEmailAddress
+            }, 10);
+
+            ValidateEmail(email);
+        }        
+
+        [Fact]
+        public void WaitForTestWithTimeout()
+        {
+            var testEmailAddress = "non_existing@email_address.com";
+
+            Assert.Throws<MailosaurException>(delegate
+            {
+                this.fixture.client.Messages
+                    .WaitFor(this.fixture.server, new SearchCriteria()
+                    {
+                        SentTo = testEmailAddress
+                    }, 5);
+            });
+        }
+
+        [Fact]
         public void SearchNoCriteriaErrorTest()
         {
             Assert.Throws<MailosaurException>(delegate {
@@ -277,7 +311,7 @@ namespace Mailosaur.Test
             Assert.NotNull(file2.Id);
             Assert.Equal(212080, file2.Length);
             Assert.NotNull(file2.Url);
-            Assert.Equal("Resources/dog.png", file2.FileName);
+            Assert.Equal("dog.png", file2.FileName);
             Assert.Equal("image/png", file2.ContentType);
         }
     }

@@ -9,6 +9,7 @@ namespace Mailosaur
     using Microsoft.Rest;
     using Models;
     using Newtonsoft.Json;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
@@ -824,7 +825,7 @@ namespace Mailosaur
         /// </summary>
         /// <remarks>
         /// Returns as soon as a message matching the specified search criteria is
-        /// found. This is the most efficient method of looking up a message.
+        /// found. Default wait timeout is set to 15s. This is the most efficient method of looking up a message.
         /// </remarks>
         /// <param name='server'>
         /// The identifier of the server hosting the message.
@@ -838,8 +839,11 @@ namespace Mailosaur
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
+        /// <param name='timeout'>
+        /// Timeout in seconds.
+        /// </param>
         /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
+        /// Thrown when the message is not found after the timeout has elapsed.
         /// </exception>
         /// <exception cref="SerializationException">
         /// Thrown when unable to deserialize the response
@@ -853,7 +857,7 @@ namespace Mailosaur
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<Message>> WaitForWithHttpMessagesAsync(string server, SearchCriteria criteria, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<Message>> WaitForWithHttpMessagesAsync(string server, SearchCriteria criteria, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken), int timeout = 15)
         {
             if (server == null)
             {
@@ -863,134 +867,21 @@ namespace Mailosaur
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "criteria");
             }
-            // Tracing
-            bool _shouldTrace = ServiceClientTracing.IsEnabled;
-            string _invocationId = null;
-            if (_shouldTrace)
-            {
-                _invocationId = ServiceClientTracing.NextInvocationId.ToString();
-                Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("server", server);
-                tracingParameters.Add("criteria", criteria);
-                tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "WaitFor", tracingParameters);
-            }
-            // Construct URL
-            var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/messages/await").ToString();
-            List<string> _queryParameters = new List<string>();
-            if (server != null)
-            {
-                _queryParameters.Add(string.Format("server={0}", System.Uri.EscapeDataString(server)));
-            }
-            if (_queryParameters.Count > 0)
-            {
-                _url += "?" + string.Join("&", _queryParameters);
-            }
-            // Create HTTP transport objects
-            var _httpRequest = new HttpRequestMessage();
-            HttpResponseMessage _httpResponse = null;
-            _httpRequest.Method = new HttpMethod("POST");
-            _httpRequest.RequestUri = new System.Uri(_url);
-            // Set Headers
 
+            var timeoutDatetime = DateTime.Now.AddSeconds(timeout);
 
-            if (customHeaders != null)
-            {
-                foreach(var _header in customHeaders)
+            while(DateTime.Now < timeoutDatetime) {                
+                var messageList = await this.SearchWithHttpMessagesAsync(server, criteria, 0, 1, customHeaders, cancellationToken);
+                if(messageList.Body.Items.Count() > 0) 
                 {
-                    if (_httpRequest.Headers.Contains(_header.Key))
-                    {
-                        _httpRequest.Headers.Remove(_header.Key);
-                    }
-                    _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+                    var message = await this.GetWithHttpMessagesAsync(messageList.Body.Items[0].Id, customHeaders, cancellationToken);
+                    return message;
                 }
+
+                await Task.Delay(2000);
             }
 
-            // Serialize Request
-            string _requestContent = null;
-            if(criteria != null)
-            {
-                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(criteria, Client.SerializationSettings);
-                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
-            }
-            // Set Credentials
-            if (Client.Credentials != null)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await Client.Credentials.ProcessHttpRequestAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
-            }
-            // Send Request
-            if (_shouldTrace)
-            {
-                ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
-            }
-            cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
-            if (_shouldTrace)
-            {
-                ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
-            }
-            HttpStatusCode _statusCode = _httpResponse.StatusCode;
-            cancellationToken.ThrowIfCancellationRequested();
-            string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 204)
-            {
-                var ex = new MailosaurException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                try
-                {
-                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    MailosaurError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<MailosaurError>(_responseContent, Client.DeserializationSettings);
-                    if (_errorBody != null)
-                    {
-                        ex.Body = _errorBody;
-                    }
-                }
-                catch (JsonException)
-                {
-                    // Ignore the exception
-                }
-                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
-                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
-                if (_shouldTrace)
-                {
-                    ServiceClientTracing.Error(_invocationId, ex);
-                }
-                _httpRequest.Dispose();
-                if (_httpResponse != null)
-                {
-                    _httpResponse.Dispose();
-                }
-                throw ex;
-            }
-            // Create Result
-            var _result = new HttpOperationResponse<Message>();
-            _result.Request = _httpRequest;
-            _result.Response = _httpResponse;
-            // Deserialize Response
-            if ((int)_statusCode == 200)
-            {
-                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    _result.Body = Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<Message>(_responseContent, Client.DeserializationSettings);
-                }
-                catch (JsonException ex)
-                {
-                    _httpRequest.Dispose();
-                    if (_httpResponse != null)
-                    {
-                        _httpResponse.Dispose();
-                    }
-                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
-                }
-            }
-            if (_shouldTrace)
-            {
-                ServiceClientTracing.Exit(_invocationId, _result);
-            }
-            return _result;
+            throw new MailosaurException("Wait for message timeout reached.");
         }
 
     }
