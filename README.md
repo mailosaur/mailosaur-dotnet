@@ -17,7 +17,7 @@ nuget install mailosaur
 From Package Manager:
 
 ```
-PM> Install-Package Stripe.net
+PM> Install-Package mailosaur
 ```
 
 From within Visual Studio:
