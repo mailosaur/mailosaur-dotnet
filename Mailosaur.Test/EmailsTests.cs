@@ -31,6 +31,8 @@ namespace Mailosaur.Test
 
             Mailer.SendEmails(client, server, 5);
 
+            System.Threading.Thread.Sleep(3000);
+
             emails = client.Messages.List(server).Items;
         }
 
