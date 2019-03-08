@@ -83,7 +83,7 @@ namespace Mailosaur.Test
         [Fact]
         public void FailedCreateTest()
         {
-            var options = new ServerCreateOptions();
+            var options = new ServerCreateOptions("");
             
             var ex = Assert.Throws<MailosaurException>(delegate {
                 m_Client.Servers.Create(options);
