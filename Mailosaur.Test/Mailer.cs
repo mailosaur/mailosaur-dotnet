@@ -33,12 +33,11 @@ namespace Mailosaur.Test
 
             message.Subject = randomString + " subject";
 
-            message.From = new MailAddress(string.Format("{0} {1} <{2}>", randomString, randomString,
-                client.Servers.GenerateEmailAddress(server)));
+            message.From = new MailAddress($"{randomString} {randomString} <{client.Servers.GenerateEmailAddress(server)}>");
 
             var randomToAddress = sendToAddress ?? client.Servers.GenerateEmailAddress(server);
 
-            message.To.Add(string.Format("{0} {1} <{2}>", randomString, randomString, randomToAddress));
+            message.To.Add($"{randomString} {randomString} <{randomToAddress}>");
 
             // Text body
 			message.Body = s_Text.Replace("REPLACED_DURING_TEST", randomString);

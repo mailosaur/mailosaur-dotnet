@@ -1,11 +1,8 @@
 namespace Mailosaur.Operations
 {
-    using System;
     using System.IO;
-    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Mailosaur.Models;
 
     public class Files : OperationBase
     {
@@ -15,15 +12,7 @@ namespace Mailosaur.Operations
         /// <param name='client'>
         /// Reference to the http client.
         /// </param>
-        public Files(HttpClient client)
-        {
-            _client = client;
-        }
-
-        /// <summary>
-        /// Gets a reference to the HttpClient
-        /// </summary>
-        private readonly HttpClient _client;
+        public Files(HttpClient client) : base(client) { }
 
         /// <summary>
         /// Download an attachment
@@ -36,20 +25,7 @@ namespace Mailosaur.Operations
         /// The identifier of the attachment to be downloaded.
         /// </param>
         public Stream GetAttachment(string id)
-        {
-            try
-            {
-                return GetAttachmentAsync(id).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<Stream>(() => GetAttachmentAsync(id).Result);
 
         /// <summary>
         /// Download an attachment
@@ -61,18 +37,8 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the attachment to be downloaded.
         /// </param>
-        public async Task<Stream> GetAttachmentAsync(string id)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Get, "api/files/attachments/" + id);
-            var response = await _client.SendAsync(request);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-                await ThrowExceptionAsync(response);
-
-            request.Dispose();
-
-            return await response.Content.ReadAsStreamAsync();
-        }
+        public Task<Stream> GetAttachmentAsync(string id)
+            => ExecuteStreamRequest(HttpMethod.Get, $"api/files/attachments/{id}");
 
         /// <summary>
         /// Download EML
@@ -85,20 +51,7 @@ namespace Mailosaur.Operations
         /// The identifier of the email to be downloaded.
         /// </param>
         public Stream GetEmail(string id)
-        {
-            try
-            {
-                return GetEmailAsync(id).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<Stream>(() => GetEmailAsync(id).Result);
 
         /// <summary>
         /// Download EML
@@ -110,17 +63,7 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the email to be downloaded.
         /// </param>
-        public async Task<Stream> GetEmailAsync(string id)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Get, "api/files/email/" + id);
-            var response = await _client.SendAsync(request);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-                await ThrowExceptionAsync(response);
-
-            request.Dispose();
-
-            return await response.Content.ReadAsStreamAsync();
-        }
+        public Task<Stream> GetEmailAsync(string id)
+            => ExecuteStreamRequest(HttpMethod.Get, $"api/files/email/{id}");
     }
 }

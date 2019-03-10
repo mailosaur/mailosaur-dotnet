@@ -1,12 +1,8 @@
 namespace Mailosaur.Operations
 {
-    using System;
-    using System.Net;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
     using Mailosaur.Models;
-    using Newtonsoft.Json;
 
     public class Messages : OperationBase
     {
@@ -16,15 +12,7 @@ namespace Mailosaur.Operations
         /// <param name='client'>
         /// Reference to the HttpClient.
         /// </param>
-        public Messages(HttpClient client)
-        {
-            _client = client;
-        }
-
-        /// <summary>
-        /// Gets a reference to the Http_client
-        /// </summary>
-        private readonly HttpClient _client;
+        public Messages(HttpClient client) : base(client) { }
 
         /// <summary>
         /// Retrieve a message
@@ -37,20 +25,7 @@ namespace Mailosaur.Operations
         /// The identifier of the email message to be retrieved.
         /// </param>
         public Message Get(string id)
-        {
-            try
-            {
-                return GetAsync(id).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<Message>(() => GetAsync(id).Result);
 
         /// <summary>
         /// Retrieve a message
@@ -62,18 +37,8 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the email message to be retrieved.
         /// </param>
-        public async Task<Message> GetAsync(string id)
-        {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, "api/messages/" + id))
-            using (var response = await _client.SendAsync(request))
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    await ThrowExceptionAsync(response);
-
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<Message>(content);
-            }
-        }
+        public Task<Message> GetAsync(string id)
+            => ExecuteRequest<Message>(HttpMethod.Get, $"api/messages/{id}");
 
         /// <summary>
         /// Delete a message
@@ -86,20 +51,7 @@ namespace Mailosaur.Operations
         /// The identifier of the message to be deleted.
         /// </param>
         public void Delete(string id)
-        {
-            try
-            {
-                DeleteAsync(id).Wait();
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException(() => DeleteAsync(id).Wait());
 
         /// <summary>
         /// Delete a message
@@ -111,15 +63,8 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the message to be deleted.
         /// </param>
-        public async Task DeleteAsync(string id)
-        {
-            using (var request = new HttpRequestMessage(HttpMethod.Delete, "api/messages/" + id))
-            using (var response = await _client.SendAsync(request))
-            {
-                if (response.StatusCode != HttpStatusCode.NoContent)
-                    await ThrowExceptionAsync(response);
-            }
-        }
+        public Task DeleteAsync(string id)
+            => ExecuteRequest(HttpMethod.Delete, $"api/messages/{id}");
 
         /// <summary>
         /// List all messages
@@ -140,20 +85,7 @@ namespace Mailosaur.Operations
         /// between 1 and 1000 items, the default is 50.
         /// </param>
         public MessageListResult List(string server, int? page = default(int?), int? itemsPerPage = default(int?))
-        {
-            try
-            {
-                return ListAsync(server, page, itemsPerPage).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<MessageListResult>(() => ListAsync(server, page, itemsPerPage).Result);
 
         /// <summary>
         /// List all messages
@@ -173,21 +105,8 @@ namespace Mailosaur.Operations
         /// A limit on the number of results to be returned per page. Can be set
         /// between 1 and 1000 items, the default is 50.
         /// </param>
-        public async Task<MessageListResult> ListAsync(string server, int? page = default(int?), int? itemsPerPage = default(int?))
-        {
-            var url = "api/messages?server=" + server;
-            url += page != null ? "&page=" + page : "";
-            url += itemsPerPage != null ? "&itemsPerPage=" + itemsPerPage : "";
-            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-            using (var response = await _client.SendAsync(request))
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    await ThrowExceptionAsync(response);
-
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<MessageListResult>(content);
-            }
-        }
+        public Task<MessageListResult> ListAsync(string server, int? page = default(int?), int? itemsPerPage = default(int?))
+            => ExecuteRequest<MessageListResult>(HttpMethod.Get, PagePath($"api/messages?server={server}", page, itemsPerPage));
 
         /// <summary>
         /// Delete all messages
@@ -201,20 +120,7 @@ namespace Mailosaur.Operations
         /// The identifier of the server to be emptied.
         /// </param>
         public void DeleteAll(string server)
-        {
-            try
-            {
-                DeleteAllAsync(server).Wait();
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException(() => DeleteAllAsync(server).Wait());
 
         /// <summary>
         /// Delete all messages
@@ -227,15 +133,8 @@ namespace Mailosaur.Operations
         /// <param name='server'>
         /// The identifier of the server to be emptied.
         /// </param>
-        public async Task DeleteAllAsync(string server)
-        {
-            using (var request = new HttpRequestMessage(HttpMethod.Delete, "api/messages?server=" + server))
-            using (var response = await _client.SendAsync(request))
-            {
-                if (response.StatusCode != HttpStatusCode.NoContent)
-                    await ThrowExceptionAsync(response);
-            }
-        }
+        public Task DeleteAllAsync(string server) 
+            => ExecuteRequest(HttpMethod.Delete, $"api/messages?server={server}");
 
         /// <summary>
         /// Search for messages
@@ -259,20 +158,7 @@ namespace Mailosaur.Operations
         /// between 1 and 1000 items, the default is 50.
         /// </param>
         public MessageListResult Search(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null)
-        {
-            try
-            {
-                return SearchAsync(server, criteria, page, itemsPerPage).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<MessageListResult>(() => SearchAsync(server, criteria, page, itemsPerPage).Result);
 
         /// <summary>
         /// Search for messages
@@ -295,25 +181,8 @@ namespace Mailosaur.Operations
         /// A limit on the number of results to be returned per page. Can be set
         /// between 1 and 1000 items, the default is 50.
         /// </param>
-        public async Task<MessageListResult> SearchAsync(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null)
-        {
-            var url = "api/messages/search?server=" + server;
-            url += page != null ? "&page=" + page : "";
-            url += itemsPerPage != null ? "&itemsPerPage=" + itemsPerPage : "";
-            using (var request = new HttpRequestMessage(HttpMethod.Post, url))
-            {
-                var requestContent = JsonConvert.SerializeObject(criteria);
-                request.Content = new StringContent(requestContent, Encoding.UTF8, "application/json");
-                using (var response = await _client.SendAsync(request))
-                {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        await ThrowExceptionAsync(response);
-
-                    var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<MessageListResult>(content);
-                }
-            }
-        }
+        public Task<MessageListResult> SearchAsync(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null)
+            => ExecuteRequest<MessageListResult>(HttpMethod.Post, PagePath($"api/messages/search?server={server}", page, itemsPerPage), criteria);
 
         /// <summary>
         /// Wait for a specific message
@@ -329,20 +198,7 @@ namespace Mailosaur.Operations
         /// The search criteria to use in order to find a match.
         /// </param>
         public Message WaitFor(string server, SearchCriteria criteria)
-        {
-            try
-            {
-                return WaitForAsync(server, criteria).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<Message>(() => WaitForAsync(server, criteria).Result);
 
         /// <summary>
         /// Wait for a specific message
@@ -357,21 +213,7 @@ namespace Mailosaur.Operations
         /// <param name='criteria'>
         /// The search criteria to use in order to find a match.
         /// </param>
-        public async Task<Message> WaitForAsync(string server, SearchCriteria criteria)
-        {
-            using (var request = new HttpRequestMessage(HttpMethod.Post, "api/messages/await?server=" + server))
-            {
-                var requestContent = JsonConvert.SerializeObject(criteria);
-                request.Content = new StringContent(requestContent, Encoding.UTF8, "application/json");
-                using (var response = await _client.SendAsync(request))
-                {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        await ThrowExceptionAsync(response);
-
-                    var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<Message>(content);
-                }
-            }
-        }
+        public Task<Message> WaitForAsync(string server, SearchCriteria criteria)
+            => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages/await?server={server}", criteria);
     }
 }

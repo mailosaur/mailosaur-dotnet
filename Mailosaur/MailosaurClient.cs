@@ -41,7 +41,7 @@ namespace Mailosaur
             _client.DefaultRequestHeaders.Add("Accept", "application/json");
             _client.DefaultRequestHeaders.Add("User-Agent", "mailosaur-dotnet/5.0.2");
             
-            var apiKeyBytes = ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:", apiKey));
+            var apiKeyBytes = ASCIIEncoding.ASCII.GetBytes($"{apiKey}:");
             var apiKeyBase64 = Convert.ToBase64String(apiKeyBytes);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", apiKeyBase64);
 

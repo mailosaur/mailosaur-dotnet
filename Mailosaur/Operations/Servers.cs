@@ -1,12 +1,9 @@
 namespace Mailosaur.Operations
 {
     using Models;
-    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Newtonsoft.Json;
     using System;
-    using System.Text;
 
     /// <summary>
     /// Servers operations.
@@ -19,28 +16,18 @@ namespace Mailosaur.Operations
         /// <param name='client'>
         /// Reference to the HttpClient.
         /// </param>
-        public Servers(HttpClient client)
-        {
-            _client = client;
-        }
-
-        /// <summary>
-        /// Gets a reference to the Http_client
-        /// </summary>
-        private readonly HttpClient _client;
+        public Servers(HttpClient client) : base(client) { }
 
         /// <summary>
         /// Generates a random email address for use with this server.
         /// </summary>
-        /// <returns>A random new email address that will end up in this server.</returns>
-        /// <param name="operations">Operations.</param>
         /// <param name="serverId">Server identifier.</param>
-        /// <param name="host">Host.</param>
+        /// <returns>A random new email address that will end up in this server.</returns>
         public string GenerateEmailAddress(string serverId)
         {
             string host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.io";
             string guid = Guid.NewGuid().ToString();
-            return string.Format("{0}.{1}@" + host, guid, serverId);
+            return $"{guid}.{serverId}@{host}";
         }
 
         /// <summary>
@@ -57,20 +44,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public ServerListResult List()
-        {
-            try
-            {
-                return ListAsync().Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<ServerListResult>(() => ListAsync().Result);
 
         /// <summary>
         /// List all servers
@@ -85,18 +59,8 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<ServerListResult> ListAsync()
-        {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, "api/servers"))
-            using (var response = await _client.SendAsync(request))
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    await ThrowExceptionAsync(response);
-
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<ServerListResult>(content);
-            }
-        }
+        public Task<ServerListResult> ListAsync() 
+            => ExecuteRequest<ServerListResult>(HttpMethod.Get, $"api/servers");
 
         /// <summary>
         /// Create a server
@@ -113,20 +77,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public Server Create(ServerCreateOptions serverCreateOptions)
-        {
-            try
-            {
-                return CreateAsync(serverCreateOptions).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<Server>(() => CreateAsync(serverCreateOptions).Result);
 
         /// <summary>
         /// Create a server
@@ -142,22 +93,8 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<Server> CreateAsync(ServerCreateOptions serverCreateOptions)
-        {
-            using (var request = new HttpRequestMessage(HttpMethod.Post, "api/servers"))
-            {
-                var requestContent = JsonConvert.SerializeObject(serverCreateOptions);
-                request.Content = new StringContent(requestContent, Encoding.UTF8, "application/json");
-                using (var response = await _client.SendAsync(request))
-                {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        await ThrowExceptionAsync(response);
-
-                    var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<Server>(content);
-                }
-            }
-        }
+        public Task<Server> CreateAsync(ServerCreateOptions serverCreateOptions) 
+            => ExecuteRequest<Server>(HttpMethod.Post, "api/servers", serverCreateOptions);
 
         /// <summary>
         /// Retrieve a server
@@ -176,20 +113,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public Server Get(string id)
-        {
-            try
-            {
-                return GetAsync(id).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<Server>(() => GetAsync(id).Result);
 
         /// <summary>
         /// Retrieve a server
@@ -207,18 +131,8 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<Server> GetAsync(string id)
-        {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, "api/servers/" + id))
-            using (var response = await _client.SendAsync(request))
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    await ThrowExceptionAsync(response);
-
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<Server>(content);
-            }
-        }
+        public Task<Server> GetAsync(string id) 
+            => ExecuteRequest<Server>(HttpMethod.Get, $"api/servers/{id}");
 
         /// <summary>
         /// Update a server
@@ -238,20 +152,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public Server Update(string id, Server server)
-        {
-            try
-            {
-                return UpdateAsync(id, server).Result;
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException<Server>(() => UpdateAsync(id, server).Result);
 
         /// <summary>
         /// Update a server
@@ -270,22 +171,8 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<Server> UpdateAsync(string id, Server server)
-        {
-            using (var request = new HttpRequestMessage(HttpMethod.Put, "api/servers/" + id))
-            {
-                var requestContent = JsonConvert.SerializeObject(server);
-                request.Content = new StringContent(requestContent, Encoding.UTF8, "application/json");
-                using (var response = await _client.SendAsync(request))
-                {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        await ThrowExceptionAsync(response);
-
-                    var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<Server>(content);
-                }
-            }
-        }
+        public Task<Server> UpdateAsync(string id, Server server) 
+            => ExecuteRequest<Server>(HttpMethod.Put, $"api/servers/{id}", server);
 
         /// <summary>
         /// Delete a server
@@ -304,20 +191,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public void Delete(string id)
-        {
-            try
-            {
-                DeleteAsync(id).Wait();
-            }
-            catch (AggregateException ex)
-            {
-                throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => HandleAggregateException(() => DeleteAsync(id).Wait());
 
         /// <summary>
         /// Delete a server
@@ -335,14 +209,7 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task DeleteAsync(string id)
-        {
-            using (var request = new HttpRequestMessage(HttpMethod.Delete, "api/servers/" + id))
-            using (var response = await _client.SendAsync(request))
-            {
-                if (response.StatusCode != HttpStatusCode.NoContent)
-                    await ThrowExceptionAsync(response);
-            }
-        }
+        public Task DeleteAsync(string id)
+            => ExecuteRequest(HttpMethod.Delete, $"api/servers/{id}");
     }
 }
