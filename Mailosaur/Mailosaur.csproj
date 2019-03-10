@@ -6,15 +6,14 @@
     <Authors>Mailosaur Ltd</Authors>
     <Owners>Mailosaur Ltd</Owners>
     <Title>Mailosaur .Net Client Library</Title>
-    <Description>Mailosaur .NET client library.</Description>
+    <Summary>Mailosaur .NET Client Library</Summary>
+    <Description>Mailosaur allows you to automate tests involving email. Allowing you to perform end-to-end automated email testing.</Description>
     <ReleaseVersion>5.0.2</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
     <PackageId>Mailosaur</PackageId>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/3448774?v=3&amp;amp;s=400</PackageIconUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/mailosaur/mailosaur-dotnet/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mailosaur/mailosaur-dotnet</PackageProjectUrl>
-    <Summary>Mailosaur .NET Client Library</Summary>
-    <Description>Mailosaur allows you to automate tests involving email. Allowing you to perform end-to-end automated email testing.</Description>
     <PackageTags>email automation api integration testing nunit mstest xunit selenium</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
