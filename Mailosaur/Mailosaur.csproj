@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
     <PackageVersion>5.0.2.0</PackageVersion>
@@ -7,27 +6,19 @@
     <Authors>Mailosaur Ltd</Authors>
     <Owners>Mailosaur Ltd</Owners>
     <Title>Mailosaur .Net Client Library</Title>
-    <Description>Mailosaur .NET client library.
-
-Mailosaur allows you to automate tests that require email. You can use it with tools like Selenium, Ranorex, Robot framework etc...
-
-You can also use it for manual testing as it gives you unlimited test email addresses or use it as a fake/dummy SMTP service.
-
-For more info go to mailosaur.com</Description>
+    <Summary>Mailosaur .NET Client Library</Summary>
+    <Description>Mailosaur allows you to automate tests involving email. Allowing you to perform end-to-end automated email testing.</Description>
     <ReleaseVersion>5.0.2</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
     <PackageId>Mailosaur</PackageId>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/3448774?v=3&amp;amp;s=400</PackageIconUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/mailosaur/mailosaur-dotnet/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mailosaur/mailosaur-dotnet</PackageProjectUrl>
-    <Summary>Mailosaur allows you to automate email testing</Summary>
     <PackageTags>email automation api integration testing nunit mstest xunit selenium</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.10" />
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <Compile Remove="Mailosaur\Emails.cs" />
     <Compile Remove="Mailosaur\EmailsExtensions.cs" />
     <Compile Remove="Mailosaur\IEmails.cs" />

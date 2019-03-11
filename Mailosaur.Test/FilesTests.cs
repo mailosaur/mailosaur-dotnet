@@ -30,7 +30,7 @@ namespace Mailosaur.Test
             client.Messages.DeleteAll(server);
 
             var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.io";
-            var testEmailAddress = string.Format("wait_for_test.{0}@{1}", server, host);
+            var testEmailAddress = $"wait_for_test.{server}@{host}";
 
             Mailer.SendEmail(client, server, testEmailAddress);
 
@@ -58,12 +58,14 @@ namespace Mailosaur.Test
         [Fact]
         public void GetEmailTest()
         {
-            Stream stream = this.fixture.client.Files.GetEmail(this.fixture.email.Id.Value);
-            byte[] bytes = stream.ReadToArray();
-            
-            Assert.NotNull(bytes);
-            Assert.True(bytes.Length > 1);
-            Assert.Contains(this.fixture.email.Subject, Encoding.UTF8.GetString(bytes));
+            using (Stream stream = this.fixture.client.Files.GetEmail(this.fixture.email.Id))
+            {
+                byte[] bytes = stream.ReadToArray();
+
+                Assert.NotNull(bytes);
+                Assert.True(bytes.Length > 1);
+                Assert.Contains(this.fixture.email.Subject, Encoding.UTF8.GetString(bytes));
+            }
         }
 
         [Fact]
@@ -71,11 +73,13 @@ namespace Mailosaur.Test
         {
             Attachment attachment = this.fixture.email.Attachments[0];
 
-            Stream stream = this.fixture.client.Files.GetAttachment(attachment.Id);
-            byte[] bytes = stream.ReadToArray();
+            using (Stream stream = this.fixture.client.Files.GetAttachment(attachment.Id))
+            {
+                byte[] bytes = stream.ReadToArray();
             
-            Assert.NotNull(bytes);
-            Assert.Equal(attachment.Length, bytes.Length);
+                Assert.NotNull(bytes);
+                Assert.Equal(attachment.Length, bytes.Length);   
+            }
         }
     }
 }

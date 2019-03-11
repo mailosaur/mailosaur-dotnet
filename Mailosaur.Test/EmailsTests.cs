@@ -63,7 +63,7 @@ namespace Mailosaur.Test
         {
             // Should throw if email is not found
             Assert.Throws<MailosaurException>(delegate {
-                this.fixture.client.Messages.Get(new Guid());
+                this.fixture.client.Messages.Get("");
             });
         }
 
@@ -71,7 +71,7 @@ namespace Mailosaur.Test
         public void WaitForTest()
         {
             var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.io";
-            var testEmailAddress = string.Format("wait_for_test.{0}@{1}", fixture.server, host);
+            var testEmailAddress = $"wait_for_test.{fixture.server}@{host}";
             
             Mailer.SendEmail(fixture.client, fixture.server, testEmailAddress);
 
@@ -224,8 +224,8 @@ namespace Mailosaur.Test
 
         private void ValidateHeaders(Message email)
         {
-            var expectedFromHeader = string.Format("\"{0}\" <{1}>", email.From[0].Name, email.From[0].Email);
-            var expectedToHeader = string.Format("\"{0}\" <{1}>", email.To[0].Name, email.To[0].Email);
+            var expectedFromHeader = $"\"{email.From[0].Name}\" <{email.From[0].Email}>";
+            var expectedToHeader = $"\"{email.To[0].Name}\" <{email.To[0].Email}>";
 
             // Fallback casing is used, as header casing is determined by sending server
             // Assert.Equal(expectedFromHeader, actual.Headers.ContainsKey("From") ?
