@@ -25,7 +25,7 @@ namespace Mailosaur.Operations
         /// The identifier of the email message to be retrieved.
         /// </param>
         public Message Get(string id)
-            => HandleAggregateException<Message>(() => GetAsync(id).Result);
+            => Task.Run(async () => await GetAsync(id)).UnwrapException<Message>();
 
         /// <summary>
         /// Retrieve a message
@@ -41,7 +41,7 @@ namespace Mailosaur.Operations
             => ExecuteRequest<Message>(HttpMethod.Get, $"api/messages/{id}");
 
         /// <summary>
-        /// Delete a message
+        ///  a message
         /// </summary>
         /// <remarks>
         /// Permanently deletes a message. This operation cannot be undone. Also
@@ -51,7 +51,7 @@ namespace Mailosaur.Operations
         /// The identifier of the message to be deleted.
         /// </param>
         public void Delete(string id)
-            => HandleAggregateException(() => DeleteAsync(id).Wait());
+            => Task.Run(async () => await DeleteAsync(id)).WaitAndUnwrapException();
 
         /// <summary>
         /// Delete a message
@@ -85,7 +85,7 @@ namespace Mailosaur.Operations
         /// between 1 and 1000 items, the default is 50.
         /// </param>
         public MessageListResult List(string server, int? page = default(int?), int? itemsPerPage = default(int?))
-            => HandleAggregateException<MessageListResult>(() => ListAsync(server, page, itemsPerPage).Result);
+            => Task.Run(async () => await ListAsync(server, page, itemsPerPage)).UnwrapException<MessageListResult>();
 
         /// <summary>
         /// List all messages
@@ -120,7 +120,7 @@ namespace Mailosaur.Operations
         /// The identifier of the server to be emptied.
         /// </param>
         public void DeleteAll(string server)
-            => HandleAggregateException(() => DeleteAllAsync(server).Wait());
+            => Task.Run(async () => await DeleteAllAsync(server)).WaitAndUnwrapException();
 
         /// <summary>
         /// Delete all messages
@@ -158,7 +158,7 @@ namespace Mailosaur.Operations
         /// between 1 and 1000 items, the default is 50.
         /// </param>
         public MessageListResult Search(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null)
-            => HandleAggregateException<MessageListResult>(() => SearchAsync(server, criteria, page, itemsPerPage).Result);
+            => Task.Run(async () => await SearchAsync(server, criteria, page, itemsPerPage)).UnwrapException<MessageListResult>();
 
         /// <summary>
         /// Search for messages
@@ -198,7 +198,7 @@ namespace Mailosaur.Operations
         /// The search criteria to use in order to find a match.
         /// </param>
         public Message WaitFor(string server, SearchCriteria criteria)
-            => HandleAggregateException<Message>(() => WaitForAsync(server, criteria).Result);
+            => Task.Run(async () => await WaitForAsync(server, criteria)).UnwrapException<Message>();
 
         /// <summary>
         /// Wait for a specific message

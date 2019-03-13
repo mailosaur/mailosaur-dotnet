@@ -44,7 +44,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public ServerListResult List()
-            => HandleAggregateException<ServerListResult>(() => ListAsync().Result);
+            => Task.Run(async () => await ListAsync()).UnwrapException<ServerListResult>();
 
         /// <summary>
         /// List all servers
@@ -77,7 +77,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public Server Create(ServerCreateOptions serverCreateOptions)
-            => HandleAggregateException<Server>(() => CreateAsync(serverCreateOptions).Result);
+            => Task.Run(async () => await CreateAsync(serverCreateOptions)).UnwrapException<Server>();
 
         /// <summary>
         /// Create a server
@@ -113,7 +113,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public Server Get(string id)
-            => HandleAggregateException<Server>(() => GetAsync(id).Result);
+            => Task.Run(async () => await GetAsync(id)).UnwrapException<Server>();
 
         /// <summary>
         /// Retrieve a server
@@ -152,7 +152,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public Server Update(string id, Server server)
-            => HandleAggregateException<Server>(() => UpdateAsync(id, server).Result);
+            => Task.Run(async () => await UpdateAsync(id, server)).UnwrapException<Server>();
 
         /// <summary>
         /// Update a server
@@ -191,7 +191,7 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public void Delete(string id)
-            => HandleAggregateException(() => DeleteAsync(id).Wait());
+            => Task.Run(async () => await DeleteAsync(id)).WaitAndUnwrapException();
 
         /// <summary>
         /// Delete a server

@@ -23,8 +23,8 @@ namespace Mailosaur.Operations
         /// <param name='email'>
         /// The identifier of the email to be analyzed.
         /// </param>
-        public SpamAnalysisResult Spam(string email)
-            => HandleAggregateException<SpamAnalysisResult>(() => SpamAsync(email).Result);
+        public SpamAnalysisResult Spam(string email) 
+            => Task.Run<SpamAnalysisResult>(async () => await SpamAsync(email)).Result;
 
         /// <summary>
         /// Perform a spam test

@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Mailosaur
 {
@@ -16,6 +18,40 @@ namespace Mailosaur
                 stream.CopyTo(memStream);
                 return memStream.ToArray();
             }
+        }
+
+        public static void WaitAndUnwrapException(this Task task)
+        {
+            try
+            {
+                task.Wait();
+            }
+            catch (AggregateException ex)
+            {
+                throw ex.InnerException;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static T UnwrapException<T>(this Task<T> task)
+        {
+            try
+            {
+                return task.Result;
+            }
+            catch (AggregateException ex)
+            {
+                throw ex.InnerException;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return default(T);
         }
     }
 }
