@@ -25,7 +25,7 @@ deploy:
   skip_cleanup: true
   provider: script
   script: cd Mailosaur &&
-    dotnet pack Mailosaur &&
+    dotnet pack &&
     dotnet nuget push -k $DEPLOY_KEY
   on:
     branch: master
