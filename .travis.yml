@@ -7,19 +7,28 @@ script:
 env:
   global:
   - secure: "hGxUlbq4vAX5su9h9H7ec+MsO9i2dcZswdT593jNnKr4XtQQSl42lDfWdKcmq6VlVnQvSyw9ObB5MmLq08ePBkanag3S9HBVkJu5iqlUjYpknB9LAW7J1CxIIo3gJ239uSDmqzqADmfRBe+bhV7N5TRJRE/9/FfKouJIQFRCweo="
+  - secure: "PKQEpKsx0bSj6ez265CrKdZb98oLwsSw+YcmmCmsoIGsKEIVNZAnCOjw5w8MTcN7Etb3OCoHhyNPujzgzcg0wiac5/HP9Qyyp2+ofZ5z5gnM+yjtojZlF1tjbhZHi8jQt3z91Z1gsiMs6Ajg0B2O0AOo4bZBGRFACIOOz7rtX/U="
   matrix:
   - MAILOSAUR_BASE_URL=https://mailosaur.com/ MAILOSAUR_SMTP_HOST=mailosaur.io MAILOSAUR_SMTP_PORT=2525
   - MAILOSAUR_BASE_URL=https://next.mailosaur.com/ MAILOSAUR_SMTP_HOST=ms-smtp.uk MAILOSAUR_SMTP_PORT=2525
 notifications:
   slack: mailosaur:CsJ9RruwjqHPKr1Iugk8GDtX
+before_deploy:
+  - version=`git describe --abbrev=0 --tags` &&
+    sed -i s/\[0-9]\.\[0-9]\.\[0-9]/$version/g Mailosaur/Mailosaur.csproj &&
+    sed -i s/\[0-9]\.\[0-9]\.\[0-9]/$version/g Mailosaur/MailosaurClient.cs
+after_deploy:
+  - git checkout master &&
+    git commit -am "New version released" &&
+    git push origin master
 deploy:
   skip_cleanup: true
   provider: script
-  script: echo "key?" && printenv
+  script: cd Mailosaur &&
+    dotnet pack Mailosaur &&
+    dotnet nuget push -k $DEPLOY_KEY
   on:
     branch: master
     dotnet: 2.1.2
     condition: $MAILOSAUR_BASE_URL = https://mailosaur.com/
     tags: true
-  api_key:
-    secure: Blv3XhDzBQ4UQfGYCs5ndMeGx2l/Ki/nlz6JdI7CiiTw0AycjXthjejzK0BEk0IF6cx29OH0QaoH1Y2TfkzqJ2P6u3OsuAC5a+8w8WQZZ5v2oFVdxf5YtnZdQwePndTg+x23uvrLv5LYDtlvR9SfWMsS8o5PS2CItmC38SQXYCA=
