@@ -26,7 +26,7 @@ deploy:
   provider: script
   script: cd Mailosaur &&
     dotnet pack &&
-    dotnet nuget push `find bin/Debug/*.nupkg` -s https://www.nuget.org/ -k $DEPLOY_KEY
+    dotnet nuget push bin/Debug/Mailosaur.$version.nupkg -s https://www.nuget.org/ -k $DEPLOY_KEY
   on:
     branch: master
     dotnet: 2.1.2
