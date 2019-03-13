@@ -2,8 +2,8 @@ language: csharp
 mono: none
 dotnet: 2.1.2
 script:
- - dotnet restore
- - dotnet test Mailosaur.Test
+- dotnet restore
+- dotnet test Mailosaur.Test
 env:
   global:
   - secure: "hGxUlbq4vAX5su9h9H7ec+MsO9i2dcZswdT593jNnKr4XtQQSl42lDfWdKcmq6VlVnQvSyw9ObB5MmLq08ePBkanag3S9HBVkJu5iqlUjYpknB9LAW7J1CxIIo3gJ239uSDmqzqADmfRBe+bhV7N5TRJRE/9/FfKouJIQFRCweo="
@@ -12,3 +12,14 @@ env:
   - MAILOSAUR_BASE_URL=https://next.mailosaur.com/ MAILOSAUR_SMTP_HOST=ms-smtp.uk MAILOSAUR_SMTP_PORT=2525
 notifications:
   slack: mailosaur:CsJ9RruwjqHPKr1Iugk8GDtX
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: echo "key?" && echo $api_key && echo "$api_key"
+  on:
+    branch: master
+    dotnet: 2.1.2
+    condition: $MAILOSAUR_BASE_URL = https://mailosaur.com/
+    tags: true
+  api_key:
+    secure: Blv3XhDzBQ4UQfGYCs5ndMeGx2l/Ki/nlz6JdI7CiiTw0AycjXthjejzK0BEk0IF6cx29OH0QaoH1Y2TfkzqJ2P6u3OsuAC5a+8w8WQZZ5v2oFVdxf5YtnZdQwePndTg+x23uvrLv5LYDtlvR9SfWMsS8o5PS2CItmC38SQXYCA=
