@@ -25,7 +25,7 @@ namespace Mailosaur.Operations
         /// The identifier of the attachment to be downloaded.
         /// </param>
         public Stream GetAttachment(string id)
-            => HandleAggregateException<Stream>(() => GetAttachmentAsync(id).Result);
+            => Task.Run(async () => await GetAttachmentAsync(id)).UnwrapException<Stream>();
 
         /// <summary>
         /// Download an attachment
@@ -51,7 +51,7 @@ namespace Mailosaur.Operations
         /// The identifier of the email to be downloaded.
         /// </param>
         public Stream GetEmail(string id)
-            => HandleAggregateException<Stream>(() => GetEmailAsync(id).Result);
+            => Task.Run(async () => await GetEmailAsync(id)).UnwrapException<Stream>();
 
         /// <summary>
         /// Download EML
