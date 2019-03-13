@@ -15,7 +15,7 @@ notifications:
 deploy:
   skip_cleanup: true
   provider: script
-  script: echo "key?" && echo $api_key && echo "$api_key"
+  script: echo "key?" && printenv"
   on:
     branch: master
     dotnet: 2.1.2
