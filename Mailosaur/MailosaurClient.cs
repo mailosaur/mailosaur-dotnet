@@ -39,7 +39,7 @@ namespace Mailosaur
             _client = new HttpClient();
             _client.BaseAddress = new Uri(baseUrl);
             _client.DefaultRequestHeaders.Add("Accept", "application/json");
-            _client.DefaultRequestHeaders.Add("User-Agent", "mailosaur-dotnet/5.0.2");
+            _client.DefaultRequestHeaders.Add("User-Agent", "mailosaur-dotnet/5.0.0");
             
             var apiKeyBytes = ASCIIEncoding.ASCII.GetBytes($"{apiKey}:");
             var apiKeyBase64 = Convert.ToBase64String(apiKeyBytes);
