@@ -25,7 +25,7 @@ namespace Mailosaur.Test
                 throw new Exception("Missing necessary environment variables - refer to README.md");
             }
 
-            client = new MailosaurClient(apiKey, baseUrl);
+            client = new MailosaurClient(apiKey);
 
             client.Messages.DeleteAll(server);
 

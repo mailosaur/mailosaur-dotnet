@@ -23,14 +23,6 @@ namespace Mailosaur
         /// <param name='apiKey'>
         /// Your Mailosaur API key.
         /// </param>
-        public MailosaurClient(string apiKey) : this(apiKey, null) {}
-
-        /// <summary>
-        /// Initializes a new instance of the MailosaurClient class.
-        /// </summary>
-        /// <param name='apiKey'>
-        /// Your Mailosaur API key.
-        /// </param>
         /// <param name='baseUrl'>
         /// Optional. Override the base URL for the mailosaur server.
         /// </param>
