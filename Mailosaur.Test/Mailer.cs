@@ -1,9 +1,5 @@
 using System;
 using System.Linq;
-using Mailosaur.Models;
-using Xunit;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Mail;
 using System.Text;

@@ -1,8 +1,5 @@
 namespace Mailosaur.Models
 {
-    using Newtonsoft.Json;
-    using System.Linq;
-
     public class SearchCriteria
     {
         /// <summary>

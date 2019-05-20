@@ -1,8 +1,6 @@
 using System;
-using System.Linq;
 using Mailosaur.Models;
 using Xunit;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace Mailosaur.Test
@@ -17,7 +15,6 @@ namespace Mailosaur.Test
 
         public EmailsFixture()
         {
-            var baseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
             var apiKey  = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
             server = Environment.GetEnvironmentVariable("MAILOSAUR_SERVER");
 

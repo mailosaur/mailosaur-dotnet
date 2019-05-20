@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Mailosaur.Models;
 using Xunit;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace Mailosaur.Test
@@ -11,7 +10,6 @@ namespace Mailosaur.Test
     {
         private MailosaurClient m_Client;
         private static string s_ApiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
-        private string s_BaseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
         
         public ServersTests()
         {
@@ -19,7 +17,7 @@ namespace Mailosaur.Test
                 throw new Exception("Missing necessary environment variables - refer to README.md");
             }
 
-            m_Client = new MailosaurClient(s_ApiKey, s_BaseUrl);
+            m_Client = new MailosaurClient(s_ApiKey);
         }
 
         [Fact]

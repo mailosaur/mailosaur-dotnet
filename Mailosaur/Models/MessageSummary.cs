@@ -1,6 +1,5 @@
 namespace Mailosaur.Models
 {
-    using Newtonsoft.Json;
     using System.Collections.Generic;
 
     public class MessageSummary
