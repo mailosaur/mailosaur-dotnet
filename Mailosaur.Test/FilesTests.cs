@@ -34,7 +34,7 @@ namespace Mailosaur.Test
 
             Mailer.SendEmail(client, server, testEmailAddress);
 
-            email = client.Messages.WaitFor(server, new SearchCriteria() {
+            email = client.Messages.Get(server, new SearchCriteria() {
                 SentTo = testEmailAddress
             });
         }

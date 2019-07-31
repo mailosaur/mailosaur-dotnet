@@ -15,4 +15,13 @@ namespace Mailosaur.Models
         public IList<MessageSummary> Items { get; set; }
 
     }
+
+    /// <summary>
+    /// Used internally to delay based on HTTP headers.
+    /// </summary>
+    internal class MessageListResultWithHeaders
+    {
+        public MessageListResult MessageListResult { get; set; }
+        public string DelayHeader { get; set; }
+    }
 }

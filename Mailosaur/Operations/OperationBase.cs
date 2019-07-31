@@ -1,7 +1,9 @@
 namespace Mailosaur.Operations
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Text;
@@ -50,7 +52,16 @@ namespace Mailosaur.Operations
                     if (response.StatusCode != HttpStatusCode.NoContent)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<T>(content);
+
+                        if (typeof(T) != typeof(MessageListResultWithHeaders))
+                            return JsonConvert.DeserializeObject<T>(content);
+                        
+                        response.Headers.TryGetValues("x-ms-delay", out IEnumerable<string> delayHeaderValues);
+                        
+                        return (T)(object)new MessageListResultWithHeaders() {
+                            MessageListResult = JsonConvert.DeserializeObject<MessageListResult>(content),
+                            DelayHeader = delayHeaderValues?.FirstOrDefault()
+                        };
                     }
 
                     return default(T);
@@ -110,10 +121,11 @@ namespace Mailosaur.Operations
             }
         }
 
-        public string PagePath(string path, int? page = null, int? itemsPerPage = null)
+        public string PagePath(string path, int? page = null, int? itemsPerPage = null, DateTime? receivedAfter = null)
         {
             path += page != null ? $"&page={page}" : "";
             path += itemsPerPage != null ? $"&itemsPerPage={itemsPerPage}" : "";
+            path += receivedAfter != null ? $"&receivedAfter={receivedAfter}" : "";
             return path;
         }
 
