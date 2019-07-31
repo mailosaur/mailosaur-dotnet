@@ -35,7 +35,7 @@ namespace Mailosaur.Operations
         /// <param name='receivedAfter'>
         /// Limits results to only messages received after this date/time.
         /// </param>
-        public Message Get(string server, SearchCriteria criteria, int timeout = 10000, DateTime? receivedAfter = null)
+        public Message Get(string server, SearchCriteria criteria = null, int timeout = 10000, DateTime? receivedAfter = null)
             => Task.Run(async () => await GetAsync(server, criteria, timeout, receivedAfter)).UnwrapException<Message>();
         
         /// <summary>
@@ -57,10 +57,11 @@ namespace Mailosaur.Operations
         /// <param name='receivedAfter'>
         /// Limits results to only messages received after this date/time.
         /// </param>
-        public async Task<Message> GetAsync(string server, SearchCriteria criteria, int timeout = 10000, DateTime? receivedAfter = null)
+        public async Task<Message> GetAsync(string server, SearchCriteria criteria = null, int timeout = 10000, DateTime? receivedAfter = null)
         {
             // Timeout defaulted to 10s, receivedAfter to 1h
             receivedAfter = receivedAfter != null ? receivedAfter : DateTime.UtcNow.AddHours(-1);
+            criteria = criteria != null ? criteria : new SearchCriteria();
 
             if (server.Length > 8)
                 throw new Exception("Use GetById to retrieve a message using its identifier");
