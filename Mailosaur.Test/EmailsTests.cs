@@ -52,35 +52,35 @@ namespace Mailosaur.Test
         [Fact]
         public void GetTest()
         {
-            var emailToRetrieve = this.fixture.emails[0];
-            Message email = this.fixture.client.Messages.Get(emailToRetrieve.Id);
-            ValidateEmail(email);
-            ValidateHeaders(email);
-        }
-
-        [Fact]
-        public void GetNotFoundTest()
-        {
-            // Should throw if email is not found
-            Assert.Throws<MailosaurException>(delegate {
-                this.fixture.client.Messages.Get("");
-            });
-        }
-
-        [Fact]
-        public void WaitForTest()
-        {
             var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.io";
             var testEmailAddress = $"wait_for_test.{fixture.server}@{host}";
             
             Mailer.SendEmail(fixture.client, fixture.server, testEmailAddress);
 
             Message email = this.fixture.client.Messages
-                .WaitFor(this.fixture.server, new SearchCriteria() {
+                .Get(this.fixture.server, new SearchCriteria() {
                 SentTo = testEmailAddress
             });
 
             ValidateEmail(email);
+        }
+
+        [Fact]
+        public void GetByIdTest()
+        {
+            var emailToRetrieve = this.fixture.emails[0];
+            Message email = this.fixture.client.Messages.GetById(emailToRetrieve.Id);
+            ValidateEmail(email);
+            ValidateHeaders(email);
+        }
+
+        [Fact]
+        public void GetByIdNotFoundTest()
+        {
+            // Should throw if email is not found
+            Assert.Throws<MailosaurException>(delegate {
+                this.fixture.client.Messages.GetById("");
+            });
         }
 
         [Fact]
