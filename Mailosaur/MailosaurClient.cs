@@ -23,7 +23,7 @@ namespace Mailosaur
         /// <param name='apiKey'>
         /// Your Mailosaur API key.
         /// </param>
-        public MailosaurClient(string apiKey) : this(apiKey, null) {}
+        public MailosaurClient(string apiKey) : this(apiKey, "https://mailosaur.com/") {}
 
         /// <summary>
         /// Initializes a new instance of the MailosaurClient class.
@@ -34,7 +34,7 @@ namespace Mailosaur
         /// <param name='baseUrl'>
         /// Optional. Override the base URL for the mailosaur server.
         /// </param>
-        public MailosaurClient(string apiKey, string baseUrl = "https://mailosaur.com/")
+        public MailosaurClient(string apiKey, string baseUrl)
         {
             _client = new HttpClient();
             _client.BaseAddress = new Uri(baseUrl);
