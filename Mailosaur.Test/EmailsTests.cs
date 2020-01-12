@@ -151,6 +151,50 @@ namespace Mailosaur.Test
         }
 
         [Fact]
+        public void SearchMatchUnspecifiedTest()
+        {
+            var targetEmail = this.fixture.emails[1];
+            
+            var results = this.fixture.client.Messages
+                .Search(this.fixture.server, new SearchCriteria() {
+                SentTo = targetEmail.To[0].Email,
+                Body = "this is a test"
+            }).Items;
+
+            Assert.Equal(1, results.Count);
+        }
+
+        [Fact]
+        public void SearchMatchAllTest()
+        {
+            var targetEmail = this.fixture.emails[1];
+            
+            var results = this.fixture.client.Messages
+                .Search(this.fixture.server, new SearchCriteria() {
+                SentTo = targetEmail.To[0].Email,
+                Body = "this is a test",
+                Match = "all"
+            }).Items;
+
+            Assert.Equal(1, results.Count);
+        }
+
+        [Fact]
+        public void SearchMatchAnyTest()
+        {
+            var targetEmail = this.fixture.emails[1];
+            
+            var results = this.fixture.client.Messages
+                .Search(this.fixture.server, new SearchCriteria() {
+                SentTo = targetEmail.To[0].Email,
+                Body = "this is a test",
+                Match = "any"
+            }).Items;
+
+            Assert.Equal(6, results.Count);
+        }
+
+        [Fact]
         public void SpamAnalysisTest()
         {
             var targetId = this.fixture.emails[0].Id;
