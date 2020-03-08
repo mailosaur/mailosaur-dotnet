@@ -140,8 +140,11 @@ namespace Mailosaur.Operations
         /// A limit on the number of results to be returned per page. Can be set
         /// between 1 and 1000 items, the default is 50.
         /// </param>
-        public MessageListResult List(string server, int? page = default(int?), int? itemsPerPage = default(int?))
-            => Task.Run(async () => await ListAsync(server, page, itemsPerPage)).UnwrapException<MessageListResult>();
+        /// <param name='receivedAfter'>
+        /// Limits results to only messages received after this date/time.
+        /// </param>
+        public MessageListResult List(string server, int? page = default(int?), int? itemsPerPage = default(int?), DateTime? receivedAfter = null)
+            => Task.Run(async () => await ListAsync(server, page, itemsPerPage, receivedAfter)).UnwrapException<MessageListResult>();
 
         /// <summary>
         /// List all messages
@@ -161,8 +164,11 @@ namespace Mailosaur.Operations
         /// A limit on the number of results to be returned per page. Can be set
         /// between 1 and 1000 items, the default is 50.
         /// </param>
-        public Task<MessageListResult> ListAsync(string server, int? page = default(int?), int? itemsPerPage = default(int?))
-            => ExecuteRequest<MessageListResult>(HttpMethod.Get, PagePath($"api/messages?server={server}", page, itemsPerPage));
+        /// <param name='receivedAfter'>
+        /// Limits results to only messages received after this date/time.
+        /// </param>
+        public Task<MessageListResult> ListAsync(string server, int? page = default(int?), int? itemsPerPage = default(int?), DateTime? receivedAfter = null)
+            => ExecuteRequest<MessageListResult>(HttpMethod.Get, PagePath($"api/messages?server={server}", page, itemsPerPage, receivedAfter));
 
         /// <summary>
         /// Delete all messages
