@@ -50,6 +50,15 @@ namespace Mailosaur.Test
         }
 
         [Fact]
+        public void ListReceivedAfterTest()
+        {
+            var futureEmails = this.fixture.client.Messages
+                .List(this.fixture.server, receivedAfter: DateTime.Now).Items;
+
+            Assert.Equal(0, futureEmails.Count);
+        }
+
+        [Fact]
         public void GetTest()
         {
             var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.io";
