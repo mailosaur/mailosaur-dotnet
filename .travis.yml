@@ -7,7 +7,7 @@ script:
 env:
   global:
   - secure: "hGxUlbq4vAX5su9h9H7ec+MsO9i2dcZswdT593jNnKr4XtQQSl42lDfWdKcmq6VlVnQvSyw9ObB5MmLq08ePBkanag3S9HBVkJu5iqlUjYpknB9LAW7J1CxIIo3gJ239uSDmqzqADmfRBe+bhV7N5TRJRE/9/FfKouJIQFRCweo="
-  - secure: "PKQEpKsx0bSj6ez265CrKdZb98oLwsSw+YcmmCmsoIGsKEIVNZAnCOjw5w8MTcN7Etb3OCoHhyNPujzgzcg0wiac5/HP9Qyyp2+ofZ5z5gnM+yjtojZlF1tjbhZHi8jQt3z91Z1gsiMs6Ajg0B2O0AOo4bZBGRFACIOOz7rtX/U="
+  - secure: "Ee8oNaj+FtkTEuS+pGJ/S/WJQs0u+zRiig1snyEWzSpWLLQwJk6UZtXm/e166C0nPLDg/NIjvPvtSNtRLQ5iAiQ7rD8R66/OARtdenbJ4008wjx8A4P53j6dO4qtVXElSMdgPRlIjm5rWcrNs8NvESNhHfxyiUf0svu3IXfqF2g="
   matrix:
   - MAILOSAUR_BASE_URL=https://mailosaur.com/ MAILOSAUR_SMTP_HOST=mailosaur.io MAILOSAUR_SMTP_PORT=2525
   - MAILOSAUR_BASE_URL=https://next.mailosaur.com/ MAILOSAUR_SMTP_HOST=ms-smtp.uk MAILOSAUR_SMTP_PORT=2525
