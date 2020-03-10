@@ -52,6 +52,11 @@ namespace Mailosaur.Test
         [Fact]
         public void ListReceivedAfterTest()
         {
+            var pastEmails = this.fixture.client.Messages
+                .List(this.fixture.server, receivedAfter: new DateTime(2000, 1, 1)).Items;
+
+            Assert.True(pastEmails.Count > 0);
+
             var futureEmails = this.fixture.client.Messages
                 .List(this.fixture.server, receivedAfter: DateTime.Now).Items;
 
