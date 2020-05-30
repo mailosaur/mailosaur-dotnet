@@ -1,0 +1,51 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      MAILOSAUR_BASE_URL: https://mailosaur.com/
+      MAILOSAUR_SMTP_HOST: mailosaur.io
+      MAILOSAUR_SMTP_PORT: 2525
+      MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
+      MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal Mailosaur.Test
+
+  build-next:
+    needs: build
+    runs-on: ubuntu-latest
+
+    env:
+      MAILOSAUR_BASE_URL: https://next.mailosaur.com/
+      MAILOSAUR_SMTP_HOST: ms-smtp.uk
+      MAILOSAUR_SMTP_PORT: 2525
+      MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
+      MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal Mailosaur.Test
