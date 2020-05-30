@@ -291,7 +291,7 @@ namespace Mailosaur.Test
             Assert.NotNull(file2.Id);
             Assert.Equal(212080, file2.Length);
             Assert.NotNull(file2.Url);
-            Assert.Equal("Resources/dog.png", file2.FileName);
+            Assert.Equal("dog.png", file2.FileName);
             Assert.Equal("image/png", file2.ContentType);
         }
     }
