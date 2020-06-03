@@ -20,6 +20,9 @@ namespace Mailosaur.Test
         public static void SendEmails(MailosaurClient client, string server, int quantity) {
             for (var i = 0; i < quantity; i++) 
                 SendEmail(client, server);
+            
+            // Allow 2 seconds for any SMTP processing
+            System.Threading.Thread.Sleep(2000);
         }
 
         public static void SendEmail(MailosaurClient client, string server, string sendToAddress = null)
