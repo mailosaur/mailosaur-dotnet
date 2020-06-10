@@ -13,13 +13,12 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
-      - name: version
+      - name: deploy
         run: |
           version=`git describe --abbrev=0 --tags` &&	
           sed -i s/5\.\[0-9]\.\[0-9]/$version/g Mailosaur/Mailosaur.csproj &&	
           sed -i s/5\.\[0-9]\.\[0-9]/$version/g Mailosaur/MailosaurClient.cs
-      - name: deploy
-        run: |
+
           cd Mailosaur &&	
           dotnet pack &&	
           dotnet nuget push bin/Debug/Mailosaur.$version.nupkg -s https://www.nuget.org/ -k ${{ secrets.NUGET_KEY }}
