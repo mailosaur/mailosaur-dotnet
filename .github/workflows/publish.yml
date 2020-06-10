@@ -1,0 +1,25 @@
+name: Publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+      - name: version
+        run: |
+          version=`git describe --abbrev=0 --tags` &&	
+          sed -i s/5\.\[0-9]\.\[0-9]/$version/g Mailosaur/Mailosaur.csproj &&	
+          sed -i s/5\.\[0-9]\.\[0-9]/$version/g Mailosaur/MailosaurClient.cs
+      - name: deploy
+        run: |
+          cd Mailosaur &&	
+          dotnet pack &&	
+          dotnet nuget push bin/Debug/Mailosaur.$version.nupkg -s https://www.nuget.org/ -k ${{ secrets.NUGET_KEY }}
