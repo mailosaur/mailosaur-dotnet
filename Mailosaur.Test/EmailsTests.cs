@@ -52,7 +52,7 @@ namespace Mailosaur.Test
         [Fact]
         public void ListReceivedAfterTest()
         {
-            var pastDate = DateTime.Now.AddMinutes(-5);
+            var pastDate = DateTime.Now.AddMinutes(-10);
             var pastEmails = this.fixture.client.Messages
                 .List(this.fixture.server, receivedAfter: pastDate).Items;
 
