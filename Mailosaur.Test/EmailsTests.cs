@@ -202,6 +202,7 @@ namespace Mailosaur.Test
         private void ValidateEmailSummary(MessageSummary email)
         {
             ValidateMetadata(email);
+            Assert.NotEmpty(email.Summary);
             Assert.Equal(2, email.Attachments);
         }
 
