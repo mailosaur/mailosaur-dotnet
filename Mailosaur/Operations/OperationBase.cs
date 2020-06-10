@@ -123,9 +123,14 @@ namespace Mailosaur.Operations
 
         public string PagePath(string path, int? page = null, int? itemsPerPage = null, DateTime? receivedAfter = null)
         {
+            string isoReceivedAfter = null;
+            if (receivedAfter != null) {
+                isoReceivedAfter = WebUtility.UrlEncode(receivedAfter.Value.ToString("o"));
+            }
+            
             path += page != null ? $"&page={page}" : "";
             path += itemsPerPage != null ? $"&itemsPerPage={itemsPerPage}" : "";
-            path += receivedAfter != null ? $"&receivedAfter={receivedAfter}" : "";
+            path += receivedAfter != null ? $"&receivedAfter={isoReceivedAfter}" : "";
             return path;
         }
 
