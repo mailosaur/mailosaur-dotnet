@@ -14,7 +14,7 @@
     <PackageTags>email;sms;testing;automation;xunit;nunit;mstest;selenium</PackageTags>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/3448774?v=3&amp;amp;s=400</PackageIconUrl>
     <PackageProjectUrl>https://github.com/mailosaur/mailosaur-dotnet</PackageProjectUrl>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/mailosaur/mailosaur-dotnet/master/LICENSE</PackageLicenseUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
