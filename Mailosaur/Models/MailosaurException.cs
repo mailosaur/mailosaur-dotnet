@@ -8,29 +8,32 @@ namespace Mailosaur.Models
     /// </summary>
     public class MailosaurException : Exception
     {
-        /// <summary>
-        /// Gets or sets the body object.
-        /// </summary>
-        public MailosaurError MailosaurError { get; set; }
+        public string ErrorType { get; private set; }
+        public int? HttpStatusCode { get; private set; }
+        public string HttpResponseBody { get; private set; }
 
         public MailosaurException()
         {
         }
 
-        public MailosaurException(string message)
+        public MailosaurException(string message, string errorType)
             : base(message)
         {
-            MailosaurError = new MailosaurError() {
-                Type = "ValidationError"
-            };
+            ErrorType = errorType;
+        }
+
+        public MailosaurException(string message, string errorType, int httpStatusCode, string httpResponseBody)
+            : base(message)
+        {
+            ErrorType = errorType;
+            HttpStatusCode = httpStatusCode;
+            HttpResponseBody = httpResponseBody;
         }
 
         public MailosaurException(string message, Exception inner)
             : base(message, inner)
         {
-            MailosaurError = new MailosaurError() {
-                Type = "ValidationError"
-            };
+            ErrorType = "client_error";
         }
     }
 }

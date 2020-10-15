@@ -89,10 +89,10 @@ namespace Mailosaur.Test
                 m_Client.Servers.Create(options);
             });
 
-            Assert.Equal("Operation returned an invalid status code 'BadRequest'", ex.Message);
-            Assert.Equal("ValidationError", ex.MailosaurError.Type);
-            Assert.Equal(1, ex.MailosaurError.Messages.Count);
-            Assert.NotEmpty(ex.MailosaurError.Messages["name"]);
+            Assert.Equal("Request had one or more invalid parameters.", ex.Message);
+            Assert.Equal("invalid_request", ex.ErrorType);
+            Assert.Equal(400, ex.HttpStatusCode);
+            Assert.Equal("{\"type\":\"ValidationError\",\"messages\":{\"name\":\"Please provide a name for your server\"}}", ex.HttpResponseBody);
         }
     }
 }

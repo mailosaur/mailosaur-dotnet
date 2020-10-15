@@ -136,24 +136,36 @@ namespace Mailosaur.Operations
 
         private async Task ThrowExceptionAsync(HttpResponseMessage response)
         {
-            var ex = new MailosaurException($"Operation returned an invalid status code '{response.StatusCode}'");
+            string errorMessage = "";
+            string errorType = "";
 
-            var content = (response.StatusCode != HttpStatusCode.NoContent) ?
+            switch (response.StatusCode) {
+                case HttpStatusCode.BadRequest:
+                    errorMessage = "Request had one or more invalid parameters.";
+                    errorType = "invalid_request";
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    errorMessage = "Authentication failed, check your API key.";
+                    errorType = "authentication_error";
+                    break;
+                case HttpStatusCode.Forbidden:
+                    errorMessage = "Insufficient permission to perform that task.";
+                    errorType = "permission_error";
+                    break;
+                case HttpStatusCode.NotFound:
+                    errorMessage = "Request did not find any matching resources.";
+                    errorType = "invalid_request";
+                    break;
+                default:
+                    errorMessage = "An API error occurred, see httpResponse for further information.";
+                    errorType = "api_error";
+                    break;
+            }
+
+            var httpResponseBody = (response.StatusCode != HttpStatusCode.NoContent) ?
                 await response.Content.ReadAsStringAsync() : "";
 
-            try
-            {
-                // Add model if one exists
-                var mailosaurError = JsonConvert.DeserializeObject<MailosaurError>(content);
-                if (mailosaurError != null)
-                    ex.MailosaurError = mailosaurError;
-            }
-            catch (Exception)
-            {
-                // Ignore the exception
-            }
-
-            throw ex;
+            throw new MailosaurException(errorMessage, errorType, (int)response.StatusCode, httpResponseBody);
         }
     }
 }
