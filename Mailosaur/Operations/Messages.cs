@@ -63,8 +63,8 @@ namespace Mailosaur.Operations
             receivedAfter = receivedAfter != null ? receivedAfter : DateTime.UtcNow.AddHours(-1);
             criteria = criteria != null ? criteria : new SearchCriteria();
 
-            if (server.Length > 8)
-                throw new Exception("Use GetById to retrieve a message using its identifier");
+            if (server.Length != 8)
+                throw new MailosaurException("Must provide a valid Server ID.", "invalid_request");
             
             var result = await SearchAsync(server, criteria, timeout: timeout, receivedAfter: receivedAfter);
             return GetById(result.Items[0].Id);
@@ -278,7 +278,7 @@ namespace Mailosaur.Operations
 
                 // Stop if timeout will be exceeded
                 if (((int)(DateTime.UtcNow - startTime).TotalMilliseconds) + delay > timeout)
-                    throw new Exception("No matching messages were found in time");
+                    throw new MailosaurException("No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this).", "search_timeout");
                 
                 Task.Delay(delay).Wait();
             }
