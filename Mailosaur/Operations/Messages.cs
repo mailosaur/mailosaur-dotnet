@@ -66,7 +66,7 @@ namespace Mailosaur.Operations
             if (server.Length != 8)
                 throw new MailosaurException("Must provide a valid Server ID.", "invalid_request");
             
-            var result = await SearchAsync(server, criteria, timeout: timeout, receivedAfter: receivedAfter);
+            var result = await SearchAsync(server, criteria, 0, 1, timeout, receivedAfter);
             return GetById(result.Items[0].Id);
         }
 

@@ -63,7 +63,7 @@ namespace Mailosaur.Test
             Assert.NotNull(retrievedServer.ForwardingRules);
 
             // Update a server and confirm it has changed
-            retrievedServer.Name += " EDITED";
+            retrievedServer.Name += " updated with ellipsis … and emoji 👨🏿‍🚒";
             Server updatedServer = m_Client.Servers.Update(retrievedServer.Id, retrievedServer);
             Assert.Equal(retrievedServer.Id, updatedServer.Id);
             Assert.Equal(retrievedServer.Name, updatedServer.Name);

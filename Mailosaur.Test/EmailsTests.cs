@@ -166,6 +166,16 @@ namespace Mailosaur.Test
         }
 
         [Fact]
+        public void SearchWithSpecialCharactersTest()
+        {
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
+                Subject = "Search with ellipsis … and emoji 👨🏿‍🚒"
+            }).Items;
+
+            Assert.Equal(0, results.Count);
+        }
+
+        [Fact]
         public void SpamAnalysisTest()
         {
             var targetId = this.fixture.emails[0].Id;
