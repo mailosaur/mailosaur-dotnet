@@ -108,6 +108,34 @@ namespace Mailosaur.Test
         }
 
         [Fact]
+        public void SearchBySentFromTest()
+        {
+            var targetEmail = this.fixture.emails[1];
+            
+            var results = this.fixture.client.Messages
+                .Search(this.fixture.server, new SearchCriteria() {
+                SentFrom = targetEmail.From[0].Email
+            }).Items;
+
+            Assert.Equal(1, results.Count);
+            Assert.Equal(targetEmail.From[0].Email, results[0].From[0].Email);
+            Assert.Equal(targetEmail.Subject, results[0].Subject);
+        }
+
+        [Fact]
+        public void SearchBySentFromInvalidEmailTest()
+        {
+            var criteria = new SearchCriteria() {
+                SentFrom = ".not_an_email_address"
+            };
+
+            Assert.Throws<MailosaurException>(delegate {
+                this.fixture.client.Messages
+                    .Search(this.fixture.server, criteria);
+            });
+        }
+
+        [Fact]
         public void SearchBySentToTest()
         {
             var targetEmail = this.fixture.emails[1];
