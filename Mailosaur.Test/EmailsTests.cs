@@ -166,6 +166,36 @@ namespace Mailosaur.Test
         }
 
         [Fact]
+        public void SearchWithMatchAll()
+        {
+            var targetEmail = this.fixture.emails[1];
+            var uniqueString = targetEmail.Subject.Substring(0, 10);
+
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
+                Subject = uniqueString,
+                Body = "this is a link",
+                Match = "ALL"
+            }).Items;
+
+            Assert.Equal(1, results.Count);
+        }
+
+        [Fact]
+        public void SearchWithMatchAny()
+        {
+            var targetEmail = this.fixture.emails[1];
+            var uniqueString = targetEmail.Subject.Substring(0, 10);
+
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
+                Subject = uniqueString,
+                Body = "this is a link",
+                Match = "ANY"
+            }).Items;
+
+            Assert.Equal(5, results.Count);
+        }
+
+        [Fact]
         public void SearchWithSpecialCharactersTest()
         {
             var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {

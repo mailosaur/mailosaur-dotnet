@@ -14,11 +14,15 @@ namespace Mailosaur.Models
         /// subject line.</param>
         /// <param name="body">The value to seek within the target email's HTML
         /// or text body.</param>
-        public SearchCriteria(string sentTo = null, string subject = null, string body = null)
+        /// <param name="match">If set to ALL (default), then only results that match all 
+        /// specified criteria will be returned. If set to ANY, results that match any of the
+        /// specified criteria will be returned.</param>
+        public SearchCriteria(string sentTo = null, string subject = null, string body = null, string match = "ALL")
         {
             SentTo = sentTo;
             Subject = subject;
             Body = body;
+            Match = match;
         }
 
         /// <summary>
@@ -39,5 +43,11 @@ namespace Mailosaur.Models
         /// </summary>
         public string Body { get; set; }
 
+        /// <summary>
+        /// If set to ALL (default), then only results that match all 
+        /// specified criteria will be returned. If set to ANY, results that match any of the
+        /// specified criteria will be returned.
+        /// </summary>
+        public string Match { get; set; }
     }
 }
