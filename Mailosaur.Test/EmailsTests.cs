@@ -174,7 +174,7 @@ namespace Mailosaur.Test
             var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
                 Subject = uniqueString,
                 Body = "this is a link",
-                Match = "ALL"
+                Match = SearchMatchOperator.ALL
             }).Items;
 
             Assert.Equal(1, results.Count);
@@ -189,7 +189,7 @@ namespace Mailosaur.Test
             var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
                 Subject = uniqueString,
                 Body = "this is a link",
-                Match = "ANY"
+                Match = SearchMatchOperator.ANY
             }).Items;
 
             Assert.Equal(5, results.Count);

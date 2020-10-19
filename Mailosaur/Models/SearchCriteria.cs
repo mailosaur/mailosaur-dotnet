@@ -17,7 +17,7 @@ namespace Mailosaur.Models
         /// <param name="match">If set to ALL (default), then only results that match all 
         /// specified criteria will be returned. If set to ANY, results that match any of the
         /// specified criteria will be returned.</param>
-        public SearchCriteria(string sentTo = null, string subject = null, string body = null, string match = "ALL")
+        public SearchCriteria(string sentTo = null, string subject = null, string body = null, SearchMatchOperator match = SearchMatchOperator.ALL)
         {
             SentTo = sentTo;
             Subject = subject;
@@ -48,6 +48,6 @@ namespace Mailosaur.Models
         /// specified criteria will be returned. If set to ANY, results that match any of the
         /// specified criteria will be returned.
         /// </summary>
-        public string Match { get; set; }
+        public SearchMatchOperator Match { get; set; }
     }
 }
