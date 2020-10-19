@@ -1,6 +1,6 @@
 # Mailosaur .NET Client Library
 
-[Mailosaur](https://mailosaur.com) allows you to automate tests involving email. Allowing you to perform end-to-end automated and functional email testing.
+[Mailosaur](https://mailosaur.com) lets you automate email and SMS tests, like account verification and password resets, and integrate these into your CI/CD pipeline.
 
 [![](https://github.com/mailosaur/mailosaur-dotnet/workflows/CI/badge.svg)](https://github.com/mailosaur/mailosaur-dotnet/actions)
 
@@ -28,22 +28,46 @@ From within Visual Studio:
 4. Click on the Browse tab and search for "Mailosaur".
 5. Click on the Mailosaur package, select the appropriate version in the right-tab and click *Install*.
 
-## Documentation and usage examples
+## Documentation
 
-[Mailosaur's documentation](https://mailosaur.com/docs) includes all the information and usage examples you'll need.
+Please see the [.NET client reference](https://mailosaur.com/docs/email-testing/dotnet/client-reference/) for the most up-to-date documentation.
 
-## Running tests
+## Usage
 
-Once you've cloned this repository locally, you can simply run:
+Example.cs
 
+```csharp
+using System;
+using Mailosaur;
+
+namespace example
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      var mailosaur = new MailosaurClient("YOUR_API_KEY");
+
+      var result = mailosaur.Servers.List();
+
+      Console.WriteLine("Your have a server called: " + result.Items[0].Name);
+    }
+  }
+}
 ```
-cd Mailosaur.Test
 
-dotnet restore
+## Development
 
+The test suite requires the following environment variables to be set:
+
+```sh
 export MAILOSAUR_API_KEY=your_api_key
 export MAILOSAUR_SERVER=server_id
+```
 
+Run all tests:
+
+```sh
 dotnet test
 ```
 
