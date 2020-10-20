@@ -108,6 +108,17 @@ namespace Mailosaur.Test
         }
 
         [Fact]
+        public void SearchTimeoutErrorSuppressedTest()
+        {
+            var results = this.fixture.client.Messages
+                .Search(this.fixture.server, new SearchCriteria() {
+                SentFrom = "neverfound@example.com"
+            }, timeout: 1, errorOnTimeout: false).Items;
+
+            Assert.Equal(0, results.Count);
+        }
+
+        [Fact]
         public void SearchBySentFromTest()
         {
             var targetEmail = this.fixture.emails[1];

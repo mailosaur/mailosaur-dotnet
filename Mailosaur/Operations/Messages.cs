@@ -225,8 +225,12 @@ namespace Mailosaur.Operations
         /// <param name='receivedAfter'>
         /// Limits results to only messages received after this date/time.
         /// </param>
-        public MessageListResult Search(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null)
-            => Task.Run(async () => await SearchAsync(server, criteria, page, itemsPerPage, timeout, receivedAfter)).UnwrapException<MessageListResult>();
+        /// <param name='errorOnTimeout'>
+        ///  When set to false, an error will not be throw if timeout is reached
+        ///  (default: true).
+        /// </param>
+        public MessageListResult Search(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null, bool errorOnTimeout = true)
+            => Task.Run(async () => await SearchAsync(server, criteria, page, itemsPerPage, timeout, receivedAfter, errorOnTimeout)).UnwrapException<MessageListResult>();
 
         /// <summary>
         /// Search for messages
@@ -255,7 +259,11 @@ namespace Mailosaur.Operations
         /// <param name='receivedAfter'>
         /// Limits results to only messages received after this date/time.
         /// </param>
-        public async Task<MessageListResult> SearchAsync(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null)
+        /// <param name='errorOnTimeout'>
+        ///  When set to false, an error will not be throw if timeout is reached
+        ///  (default: true).
+        /// </param>
+        public async Task<MessageListResult> SearchAsync(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null, bool errorOnTimeout = true)
         {
             var pollCount = 0;
             var startTime = DateTime.UtcNow;
@@ -278,7 +286,13 @@ namespace Mailosaur.Operations
 
                 // Stop if timeout will be exceeded
                 if (((int)(DateTime.UtcNow - startTime).TotalMilliseconds) + delay > timeout)
+                {
+                    if (errorOnTimeout == false) {
+                        return result.MessageListResult;
+                    }
+
                     throw new MailosaurException("No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this).", "search_timeout");
+                }
                 
                 Task.Delay(delay).Wait();
             }
