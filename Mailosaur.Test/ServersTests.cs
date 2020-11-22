@@ -51,7 +51,6 @@ namespace Mailosaur.Test
             Assert.NotNull(createdServer.Password);
             Assert.NotNull(createdServer.Users);
             Assert.Equal(0, createdServer.Messages);
-            Assert.NotNull(createdServer.ForwardingRules);
 
             // Retrieve a server and confirm it has expected content
             Server retrievedServer = m_Client.Servers.Get(createdServer.Id);
@@ -60,7 +59,6 @@ namespace Mailosaur.Test
             Assert.NotNull(retrievedServer.Password);
             Assert.NotNull(retrievedServer.Users);
             Assert.Equal(0, retrievedServer.Messages);
-            Assert.NotNull(retrievedServer.ForwardingRules);
 
             // Update a server and confirm it has changed
             retrievedServer.Name += " updated with ellipsis … and emoji 👨🏿‍🚒";
