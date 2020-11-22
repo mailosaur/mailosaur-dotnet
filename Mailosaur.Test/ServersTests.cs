@@ -70,7 +70,6 @@ namespace Mailosaur.Test
             Assert.Equal(retrievedServer.Password, updatedServer.Password);
             Assert.Equal(retrievedServer.Users, updatedServer.Users);
             Assert.Equal(retrievedServer.Messages, updatedServer.Messages);
-            Assert.Equal(retrievedServer.ForwardingRules, updatedServer.ForwardingRules);
 
             m_Client.Servers.Delete(retrievedServer.Id);
 
