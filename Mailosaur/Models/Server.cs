@@ -31,11 +31,5 @@ namespace Mailosaur.Models
         /// </summary>
         public int? Messages { get; set; }
 
-        /// <summary>
-        /// Gets or sets the rules used to manage email forwarding for this
-        /// server.
-        /// </summary>
-        public IList<ForwardingRule> ForwardingRules { get; set; }
-
     }
 }
