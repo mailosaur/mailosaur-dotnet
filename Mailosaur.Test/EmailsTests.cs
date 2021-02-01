@@ -67,8 +67,8 @@ namespace Mailosaur.Test
         [Fact]
         public void GetTest()
         {
-            var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.io";
-            var testEmailAddress = $"wait_for_test.{fixture.server}@{host}";
+            var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.net";
+            var testEmailAddress = $"wait_for_test@{fixture.server}.{host}";
             
             Mailer.SendEmail(fixture.client, fixture.server, testEmailAddress);
 

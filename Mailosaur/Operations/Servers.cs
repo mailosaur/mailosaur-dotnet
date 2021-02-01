@@ -25,9 +25,9 @@ namespace Mailosaur.Operations
         /// <returns>A random new email address that will end up in this server.</returns>
         public string GenerateEmailAddress(string serverId)
         {
-            string host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.io";
+            string host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.net";
             string guid = Guid.NewGuid().ToString();
-            return $"{guid}.{serverId}@{host}";
+            return $"{guid}@{serverId}.{host}";
         }
 
         /// <summary>
