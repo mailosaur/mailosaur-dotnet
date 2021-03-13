@@ -297,37 +297,5 @@ namespace Mailosaur.Operations
                 Task.Delay(delay).Wait();
             }
         }
-
-        /// <summary>
-        /// Wait for a specific message
-        /// </summary>
-        /// <remarks>
-        /// Returns as soon as a message matching the specified search criteria is
-        /// found. This is the most efficient method of looking up a message.
-        /// </remarks>
-        /// <param name='server'>
-        /// The identifier of the server hosting the message.
-        /// </param>
-        /// <param name='criteria'>
-        /// The search criteria to use in order to find a match.
-        /// </param>
-        public Message WaitFor(string server, SearchCriteria criteria)
-            => Task.Run(async () => await WaitForAsync(server, criteria)).UnwrapException<Message>();
-
-        /// <summary>
-        /// Wait for a specific message
-        /// </summary>
-        /// <remarks>
-        /// Returns as soon as a message matching the specified search criteria is
-        /// found. This is the most efficient method of looking up a message.
-        /// </remarks>
-        /// <param name='server'>
-        /// The identifier of the server hosting the message.
-        /// </param>
-        /// <param name='criteria'>
-        /// The search criteria to use in order to find a match.
-        /// </param>
-        public Task<Message> WaitForAsync(string server, SearchCriteria criteria)
-            => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages/await?server={server}", criteria);
     }
 }
