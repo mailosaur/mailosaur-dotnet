@@ -48,7 +48,6 @@ namespace Mailosaur.Test
             Server createdServer = m_Client.Servers.Create(options);
             Assert.False(string.IsNullOrWhiteSpace(createdServer.Id));
             Assert.Equal(serverName, createdServer.Name);
-            Assert.NotNull(createdServer.Password);
             Assert.NotNull(createdServer.Users);
             Assert.Equal(0, createdServer.Messages);
 
@@ -56,7 +55,6 @@ namespace Mailosaur.Test
             Server retrievedServer = m_Client.Servers.Get(createdServer.Id);
             Assert.Equal(createdServer.Id, retrievedServer.Id);
             Assert.Equal(createdServer.Name, retrievedServer.Name);
-            Assert.NotNull(retrievedServer.Password);
             Assert.NotNull(retrievedServer.Users);
             Assert.Equal(0, retrievedServer.Messages);
 
@@ -65,7 +63,6 @@ namespace Mailosaur.Test
             Server updatedServer = m_Client.Servers.Update(retrievedServer.Id, retrievedServer);
             Assert.Equal(retrievedServer.Id, updatedServer.Id);
             Assert.Equal(retrievedServer.Name, updatedServer.Name);
-            Assert.Equal(retrievedServer.Password, updatedServer.Password);
             Assert.Equal(retrievedServer.Users, updatedServer.Users);
             Assert.Equal(retrievedServer.Messages, updatedServer.Messages);
 

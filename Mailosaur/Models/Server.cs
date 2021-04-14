@@ -11,11 +11,6 @@ namespace Mailosaur.Models
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets SMTP/POP3 password.
-        /// </summary>
-        public string Password { get; set; }
-
-        /// <summary>
         /// Gets or sets a name used to identify the server.
         /// </summary>
         public string Name { get; set; }
