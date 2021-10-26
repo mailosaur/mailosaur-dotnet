@@ -24,8 +24,8 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the attachment to be downloaded.
         /// </param>
-        public Stream GetAttachment(string id)
-            => Task.Run(async () => await GetAttachmentAsync(id)).UnwrapException<Stream>();
+        public byte[] GetAttachment(string id)
+            => Task.Run(async () => await GetAttachmentAsync(id)).UnwrapException<byte[]>();
 
         /// <summary>
         /// Download an attachment
@@ -37,8 +37,8 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the attachment to be downloaded.
         /// </param>
-        public Task<Stream> GetAttachmentAsync(string id)
-            => ExecuteStreamRequest(HttpMethod.Get, $"api/files/attachments/{id}");
+        public Task<byte[]> GetAttachmentAsync(string id)
+            => ExecuteBytesRequest(HttpMethod.Get, $"api/files/attachments/{id}");
 
         /// <summary>
         /// Download EML
@@ -50,8 +50,8 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the email to be downloaded.
         /// </param>
-        public Stream GetEmail(string id)
-            => Task.Run(async () => await GetEmailAsync(id)).UnwrapException<Stream>();
+        public byte[] GetEmail(string id)
+            => Task.Run(async () => await GetEmailAsync(id)).UnwrapException<byte[]>();
 
         /// <summary>
         /// Download EML
@@ -63,7 +63,7 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the email to be downloaded.
         /// </param>
-        public Task<Stream> GetEmailAsync(string id)
-            => ExecuteStreamRequest(HttpMethod.Get, $"api/files/email/{id}");
+        public Task<byte[]> GetEmailAsync(string id)
+            => ExecuteBytesRequest(HttpMethod.Get, $"api/files/email/{id}");
     }
 }

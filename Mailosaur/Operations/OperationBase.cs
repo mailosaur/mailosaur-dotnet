@@ -69,7 +69,7 @@ namespace Mailosaur.Operations
             }
         }
 
-        public async Task<Stream> ExecuteStreamRequest(HttpMethod method, string path, object body = null)
+        public async Task<byte[]> ExecuteBytesRequest(HttpMethod method, string path, object body = null)
         {
             var request = new HttpRequestMessage(method, path);
 
@@ -86,7 +86,7 @@ namespace Mailosaur.Operations
 
             request.Dispose();
 
-            return await response.Content.ReadAsStreamAsync();
+            return await response.Content.ReadAsByteArrayAsync();
         }
 
         public void HandleAggregateException(Action requestMethod)

@@ -4,11 +4,11 @@
     <Title>Mailosaur .NET library</Title>
     <Summary>Mailosaur .NET library</Summary>
     <AssemblyTitle>Mailosaur</AssemblyTitle>
-    <PackageVersion>7.0.0.0</PackageVersion>
-    <AssemblyVersion>7.0.0.0</AssemblyVersion>
+    <PackageVersion>8.0.0.0</PackageVersion>
+    <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <Authors>Mailosaur</Authors>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <ReleaseVersion>7.0.0</ReleaseVersion>
+    <ReleaseVersion>8.0.0</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
     <PackageId>Mailosaur</PackageId>
     <PackageTags>email;sms;testing;automation;xunit;nunit;mstest;selenium</PackageTags>
