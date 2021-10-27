@@ -15,7 +15,7 @@ namespace Mailosaur.Test
     {
         private static readonly string s_Html = File.ReadAllText(Path.Combine("Resources", "testEmail.html"));
         private static readonly string s_Text = File.ReadAllText(Path.Combine("Resources", "testEmail.txt"));
-        private static readonly string s_VerifiedDomain = Environment.GetEnvironmentVariable("MAILOSAUR_VERIFIED_DOMAIN");
+        private static readonly string s_VerifiedDomain = Environment.GetEnvironmentVariable("MAILOSAUR_VERIFIED_DOMAIN") ?? "mailosaur.net";
         private static Random s_Random = new Random();
 
         public static void SendEmails(MailosaurClient client, string server, int quantity) {

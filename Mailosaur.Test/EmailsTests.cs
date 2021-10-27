@@ -24,7 +24,7 @@ namespace Mailosaur.Test
             server = Environment.GetEnvironmentVariable("MAILOSAUR_SERVER");
             verifiedDomain = Environment.GetEnvironmentVariable("MAILOSAUR_VERIFIED_DOMAIN");
 
-            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server) || string.IsNullOrWhiteSpace(verifiedDomain)) {
+            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server)) {
                 throw new Exception("Missing necessary environment variables - refer to README.md");
             }
 
@@ -276,6 +276,11 @@ namespace Mailosaur.Test
         [Fact]
         public void CreateSendTextTest()
         {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+                return;
+            }
+
             var subject = "New message";
 
             var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions() {
@@ -292,6 +297,11 @@ namespace Mailosaur.Test
         [Fact]
         public void CreateSendHtmlTest()
         {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+                return;
+            }
+
             var subject = "New HTML message";
 
             var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions() {
@@ -308,6 +318,11 @@ namespace Mailosaur.Test
         [Fact]
         public void ForwardTextTest()
         {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+                return;
+            }
+
             var body = "Forwarded message";
             var targetEmail = this.fixture.emails[0];
 
@@ -323,6 +338,11 @@ namespace Mailosaur.Test
         [Fact]
         public void ForwardHtmlTest()
         {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+                return;
+            }
+            
             var body = "<p>Forwarded <strong>HTML</strong> message.</p>";
             var targetEmail = this.fixture.emails[0];
 
@@ -338,6 +358,11 @@ namespace Mailosaur.Test
         [Fact]
         public void ReplyTextTest()
         {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+                return;
+            }
+
             var body = "Reply message";
             var targetEmail = this.fixture.emails[0];
 
@@ -352,6 +377,11 @@ namespace Mailosaur.Test
         [Fact]
         public void ReplyHtmlTest()
         {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+                return;
+            }
+
             var body = "<p>Reply <strong>HTML</strong> message.</p>";
             var targetEmail = this.fixture.emails[0];
 
