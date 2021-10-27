@@ -18,10 +18,11 @@ namespace Mailosaur.Test
         public FilesFixture()
         {
             var baseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
-            var apiKey  = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
+            var apiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
             var server = Environment.GetEnvironmentVariable("MAILOSAUR_SERVER");
 
-            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server)) {
+            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server))
+            {
                 throw new Exception("Missing necessary environment variables - refer to README.md");
             }
 
@@ -34,7 +35,8 @@ namespace Mailosaur.Test
 
             Mailer.SendEmail(client, server, testEmailAddress);
 
-            email = client.Messages.Get(server, new SearchCriteria() {
+            email = client.Messages.Get(server, new SearchCriteria()
+            {
                 SentTo = testEmailAddress
             });
         }
@@ -49,7 +51,7 @@ namespace Mailosaur.Test
         private static Random s_Random = new Random();
 
         FilesFixture fixture;
-        
+
         public FilesTests(FilesFixture fixture)
         {
             this.fixture = fixture;
@@ -58,14 +60,11 @@ namespace Mailosaur.Test
         [Fact]
         public void GetEmailTest()
         {
-            using (Stream stream = this.fixture.client.Files.GetEmail(this.fixture.email.Id))
-            {
-                byte[] bytes = stream.ReadToArray();
+            byte[] bytes = this.fixture.client.Files.GetEmail(this.fixture.email.Id);
 
-                Assert.NotNull(bytes);
-                Assert.True(bytes.Length > 1);
-                Assert.Contains(this.fixture.email.Subject, Encoding.UTF8.GetString(bytes));
-            }
+            Assert.NotNull(bytes);
+            Assert.True(bytes.Length > 1);
+            Assert.Contains(this.fixture.email.Subject, Encoding.UTF8.GetString(bytes));
         }
 
         [Fact]
@@ -73,13 +72,10 @@ namespace Mailosaur.Test
         {
             Attachment attachment = this.fixture.email.Attachments[0];
 
-            using (Stream stream = this.fixture.client.Files.GetAttachment(attachment.Id))
-            {
-                byte[] bytes = stream.ReadToArray();
-            
-                Assert.NotNull(bytes);
-                Assert.Equal(attachment.Length, bytes.Length);   
-            }
+            byte[] bytes = this.fixture.client.Files.GetAttachment(attachment.Id);
+
+            Assert.NotNull(bytes);
+            Assert.Equal(attachment.Length, bytes.Length);
         }
     }
 }

@@ -297,5 +297,137 @@ namespace Mailosaur.Operations
                 Task.Delay(delay).Wait();
             }
         }
+
+        /// <summary>
+        /// Create a message
+        /// </summary>
+        /// <remarks>
+        /// Creates a new message that can be sent to a verified email address. This is 
+        /// useful in scenarios where you want an email to trigger a workflow in your
+        /// product.
+        /// </remarks>
+        /// <param name='server'>
+        /// The identifier of the server to create the message in.
+        /// </param>
+        /// <param name='messageCreateOptions'>
+        /// The options with which to create the message.
+        /// </param>
+        /// <exception cref="MailosaurException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public Message Create(string server, MessageCreateOptions messageCreateOptions)
+            => Task.Run(async () => await CreateAsync(server, messageCreateOptions)).UnwrapException<Message>();
+
+        /// <summary>
+        /// Create a message
+        /// </summary>
+        /// <remarks>
+        /// Creates a new message that can be sent to a verified email address. This is 
+        /// useful in scenarios where you want an email to trigger a workflow in your
+        /// product.
+        /// </remarks>
+        /// <param name='server'>
+        /// The identifier of the server to create the message in.
+        /// </param>
+        /// <param name='messageCreateOptions'>
+        /// The options with which to create the message.
+        /// </param>
+        /// <exception cref="MailosaurException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public Task<Message> CreateAsync(string server, MessageCreateOptions messageCreateOptions) 
+            => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages?server={server}", messageCreateOptions);
+
+        /// <summary>
+        /// Forward an email
+        /// </summary>
+        /// <remarks>
+        /// Forwards the specified email to a verified email address.
+        /// </remarks>
+        /// <param name='id'>
+        /// The identifier of the email to forward.
+        /// </param>
+        /// <param name='messageForwardOptions'>
+        /// The options with which to forward the email.
+        /// </param>
+        /// <exception cref="MailosaurException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public Message Forward(string id, MessageForwardOptions messageForwardOptions)
+            => Task.Run(async () => await ForwardAsync(id, messageForwardOptions)).UnwrapException<Message>();
+
+        /// <summary>
+        /// Forward an email
+        /// </summary>
+        /// <remarks>
+        /// Forwards the specified email to a verified email address.
+        /// </remarks>
+        /// <param name='id'>
+        /// The identifier of the email to forward.
+        /// </param>
+        /// <param name='messageForwardOptions'>
+        /// The options with which to forward the email.
+        /// </param>
+        /// <exception cref="MailosaurException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public Task<Message> ForwardAsync(string id, MessageForwardOptions messageForwardOptions) 
+            => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages/{id}/forward", messageForwardOptions);
+        
+        /// <summary>
+        /// Reply to an email
+        /// </summary>
+        /// <remarks>
+        /// Sends a reply to the specified email. This is useful for when simulating a user
+        /// replying to one of your emails.
+        /// </remarks>
+        /// <param name='id'>
+        /// The identifier of the email to reply to.
+        /// </param>
+        /// <param name='messageReplyOptions'>
+        /// The options with which to reply to the email.
+        /// </param>
+        /// <exception cref="MailosaurException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public Message Reply(string id, MessageReplyOptions messageReplyOptions)
+            => Task.Run(async () => await ReplyAsync(id, messageReplyOptions)).UnwrapException<Message>();
+
+        /// <summary>
+        /// Reply to an email
+        /// </summary>
+        /// <remarks>
+        /// Sends a reply to the specified email. This is useful for when simulating a user
+        /// replying to one of your emails.
+        /// </remarks>
+        /// <param name='id'>
+        /// The identifier of the email to reply to.
+        /// </param>
+        /// <param name='messageReplyOptions'>
+        /// The options with which to reply to the email.
+        /// </param>
+        /// <exception cref="MailosaurException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public Task<Message> ReplyAsync(string id, MessageReplyOptions messageReplyOptions) 
+            => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages/{id}/reply", messageReplyOptions);
     }
 }

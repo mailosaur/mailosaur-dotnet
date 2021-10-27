@@ -12,6 +12,8 @@ namespace Mailosaur.Test
         public MailosaurClient client { get; set; }
 
         public string server { get; set; }
+
+        public string verifiedDomain { get; set; }
         
         public IList<MessageSummary> emails { get; set; }
 
@@ -20,8 +22,9 @@ namespace Mailosaur.Test
             var baseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
             var apiKey  = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
             server = Environment.GetEnvironmentVariable("MAILOSAUR_SERVER");
+            verifiedDomain = Environment.GetEnvironmentVariable("MAILOSAUR_VERIFIED_DOMAIN");
 
-            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server)) {
+            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server) || string.IsNullOrWhiteSpace(verifiedDomain)) {
                 throw new Exception("Missing necessary environment variables - refer to README.md");
             }
 
@@ -268,6 +271,96 @@ namespace Mailosaur.Test
             Assert.Throws<MailosaurException>(delegate {
                 self.fixture.client.Messages.Delete(targetEmailId);
             });
+        }
+
+        [Fact]
+        public void CreateSendTextTest()
+        {
+            var subject = "New message";
+
+            var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions() {
+                To = $"anything@{fixture.verifiedDomain}",
+                Send = true,
+                Subject = subject,
+                Text = "This is a new email"
+            });
+
+            Assert.NotEmpty(message.Id);
+            Assert.Equal(subject, message.Subject);
+        }
+
+        [Fact]
+        public void CreateSendHtmlTest()
+        {
+            var subject = "New HTML message";
+
+            var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions() {
+                To = $"anything@{fixture.verifiedDomain}",
+                Send = true,
+                Subject = subject,
+                Html = "<p>This is a new email.</p>"
+            });
+
+            Assert.NotEmpty(message.Id);
+            Assert.Equal(subject, message.Subject);
+        }
+
+        [Fact]
+        public void ForwardTextTest()
+        {
+            var body = "Forwarded message";
+            var targetEmail = this.fixture.emails[0];
+
+            var message = this.fixture.client.Messages.Forward(targetEmail.Id, new MessageForwardOptions() {
+                To = $"anything@{fixture.verifiedDomain}",
+                Text = body
+            });
+
+            Assert.NotEmpty(message.Id);
+            Assert.True(message.Text.Body.Contains(body));
+        }
+
+        [Fact]
+        public void ForwardHtmlTest()
+        {
+            var body = "<p>Forwarded <strong>HTML</strong> message.</p>";
+            var targetEmail = this.fixture.emails[0];
+
+            var message = this.fixture.client.Messages.Forward(targetEmail.Id, new MessageForwardOptions() {
+                To = $"anything@{fixture.verifiedDomain}",
+                Html = body
+            });
+
+            Assert.NotEmpty(message.Id);
+            Assert.True(message.Html.Body.Contains(body));
+        }
+
+        [Fact]
+        public void ReplyTextTest()
+        {
+            var body = "Reply message";
+            var targetEmail = this.fixture.emails[0];
+
+            var message = this.fixture.client.Messages.Reply(targetEmail.Id, new MessageReplyOptions() {
+                Text = body
+            });
+
+            Assert.NotEmpty(message.Id);
+            Assert.True(message.Text.Body.Contains(body));
+        }
+
+        [Fact]
+        public void ReplyHtmlTest()
+        {
+            var body = "<p>Reply <strong>HTML</strong> message.</p>";
+            var targetEmail = this.fixture.emails[0];
+
+            var message = this.fixture.client.Messages.Reply(targetEmail.Id, new MessageReplyOptions() {
+                Html = body
+            });
+
+            Assert.NotEmpty(message.Id);
+            Assert.True(message.Html.Body.Contains(body));
         }
 
         private void ValidateEmail(Message email)
