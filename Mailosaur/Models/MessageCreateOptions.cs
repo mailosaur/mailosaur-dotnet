@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Mailosaur.Models
 {
     public class MessageCreateOptions
@@ -17,20 +19,22 @@ namespace Mailosaur.Models
         /// <param name="subject">The email subject line.</param>
         /// <param name="text">The plain text body of the email. Note that only text or html can be supplied, not both.</param>
         /// <param name="html">The HTML body of the email. Note that only text or html can be supplied, not both.</param>
-        public MessageCreateOptions(string to, bool send, string subject, string text = null, string html = null)
+        /// <param name="att">The email subject line.</param>
+        public MessageCreateOptions(string to, bool send, string subject, string text = null, string html = null, IEnumerable<Attachment> attachments = null)
         {
             To = to;
             Send = send;
             Subject = subject;
             Text = text;
             Html = html;
+            Attachments = attachments;
         }
 
         /// <summary>
         /// The email address to which the email will be sent.
         /// </summary>
         public string To { get; set; }
-        
+
         /// <summary>
         /// If true, email will be sent upon creation.
         /// </summary>
@@ -50,5 +54,10 @@ namespace Mailosaur.Models
         /// The HTML body of the email. Note that only text or html can be supplied, not both.
         /// </summary>
         public string Html { get; set; }
+
+        /// <summary>
+        /// Any message attachments.
+        /// </summary>
+        public IEnumerable<Attachment> Attachments { get; set; }
     }
 }

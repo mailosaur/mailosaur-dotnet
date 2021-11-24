@@ -4,6 +4,7 @@ using Mailosaur.Models;
 using Xunit;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Mailosaur.Test
 {
@@ -14,17 +15,18 @@ namespace Mailosaur.Test
         public string server { get; set; }
 
         public string verifiedDomain { get; set; }
-        
+
         public IList<MessageSummary> emails { get; set; }
 
         public EmailsFixture()
         {
             var baseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
-            var apiKey  = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
+            var apiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
             server = Environment.GetEnvironmentVariable("MAILOSAUR_SERVER");
             verifiedDomain = Environment.GetEnvironmentVariable("MAILOSAUR_VERIFIED_DOMAIN");
 
-            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server)) {
+            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server))
+            {
                 throw new Exception("Missing necessary environment variables - refer to README.md");
             }
 
@@ -43,11 +45,11 @@ namespace Mailosaur.Test
     public class EmailsTests : IClassFixture<EmailsFixture>
     {
         EmailsFixture fixture;
-        
+
         public EmailsTests(EmailsFixture fixture)
         {
             this.fixture = fixture;
-            
+
             foreach (var email in this.fixture.emails)
                 ValidateEmailSummary(email);
         }
@@ -72,13 +74,14 @@ namespace Mailosaur.Test
         {
             var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.net";
             var testEmailAddress = $"wait_for_test@{fixture.server}.{host}";
-            
+
             Mailer.SendEmail(fixture.client, fixture.server, testEmailAddress);
 
             Message email = this.fixture.client.Messages
-                .Get(this.fixture.server, new SearchCriteria() {
-                SentTo = testEmailAddress
-            });
+                .Get(this.fixture.server, new SearchCriteria()
+                {
+                    SentTo = testEmailAddress
+                });
 
             ValidateEmail(email);
         }
@@ -96,15 +99,17 @@ namespace Mailosaur.Test
         public void GetByIdNotFoundTest()
         {
             // Should throw if email is not found
-            Assert.Throws<MailosaurException>(delegate {
-                this.fixture.client.Messages.GetById(Guid.NewGuid());
+            Assert.Throws<MailosaurException>(delegate
+            {
+                this.fixture.client.Messages.GetById("efe907e9-74ed-4113-a3e0-a3d41d914765");
             });
         }
 
         [Fact]
         public void SearchNoCriteriaErrorTest()
         {
-            Assert.Throws<MailosaurException>(delegate {
+            Assert.Throws<MailosaurException>(delegate
+            {
                 this.fixture.client.Messages
                     .Search(this.fixture.server, new SearchCriteria());
             });
@@ -114,9 +119,10 @@ namespace Mailosaur.Test
         public void SearchTimeoutErrorSuppressedTest()
         {
             var results = this.fixture.client.Messages
-                .Search(this.fixture.server, new SearchCriteria() {
-                SentFrom = "neverfound@example.com"
-            }, timeout: 1, errorOnTimeout: false).Items;
+                .Search(this.fixture.server, new SearchCriteria()
+                {
+                    SentFrom = "neverfound@example.com"
+                }, timeout: 1, errorOnTimeout: false).Items;
 
             Assert.Equal(0, results.Count);
         }
@@ -125,11 +131,12 @@ namespace Mailosaur.Test
         public void SearchBySentFromTest()
         {
             var targetEmail = this.fixture.emails[1];
-            
+
             var results = this.fixture.client.Messages
-                .Search(this.fixture.server, new SearchCriteria() {
-                SentFrom = targetEmail.From[0].Email
-            }).Items;
+                .Search(this.fixture.server, new SearchCriteria()
+                {
+                    SentFrom = targetEmail.From[0].Email
+                }).Items;
 
             Assert.Equal(1, results.Count);
             Assert.Equal(targetEmail.From[0].Email, results[0].From[0].Email);
@@ -139,11 +146,13 @@ namespace Mailosaur.Test
         [Fact]
         public void SearchBySentFromInvalidEmailTest()
         {
-            var criteria = new SearchCriteria() {
+            var criteria = new SearchCriteria()
+            {
                 SentFrom = ".not_an_email_address"
             };
 
-            Assert.Throws<MailosaurException>(delegate {
+            Assert.Throws<MailosaurException>(delegate
+            {
                 this.fixture.client.Messages
                     .Search(this.fixture.server, criteria);
             });
@@ -153,11 +162,12 @@ namespace Mailosaur.Test
         public void SearchBySentToTest()
         {
             var targetEmail = this.fixture.emails[1];
-            
+
             var results = this.fixture.client.Messages
-                .Search(this.fixture.server, new SearchCriteria() {
-                SentTo = targetEmail.To[0].Email
-            }).Items;
+                .Search(this.fixture.server, new SearchCriteria()
+                {
+                    SentTo = targetEmail.To[0].Email
+                }).Items;
 
             Assert.Equal(1, results.Count);
             Assert.Equal(targetEmail.To[0].Email, results[0].To[0].Email);
@@ -167,11 +177,13 @@ namespace Mailosaur.Test
         [Fact]
         public void SearchBySentToInvalidEmailTest()
         {
-            var criteria = new SearchCriteria() {
+            var criteria = new SearchCriteria()
+            {
                 SentTo = ".not_an_email_address"
             };
 
-            Assert.Throws<MailosaurException>(delegate {
+            Assert.Throws<MailosaurException>(delegate
+            {
                 this.fixture.client.Messages
                     .Search(this.fixture.server, criteria);
             });
@@ -182,8 +194,9 @@ namespace Mailosaur.Test
         {
             var targetEmail = this.fixture.emails[1];
             var uniqueString = targetEmail.Subject.Substring(0, 10);
-            
-            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
+
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria()
+            {
                 Body = uniqueString + " html"
             }).Items;
 
@@ -198,7 +211,8 @@ namespace Mailosaur.Test
             var targetEmail = this.fixture.emails[1];
             var uniqueString = targetEmail.Subject.Substring(0, 10);
 
-            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria()
+            {
                 Subject = uniqueString
             }).Items;
 
@@ -213,7 +227,8 @@ namespace Mailosaur.Test
             var targetEmail = this.fixture.emails[1];
             var uniqueString = targetEmail.Subject.Substring(0, 10);
 
-            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria()
+            {
                 Subject = uniqueString,
                 Body = "this is a link",
                 Match = SearchMatchOperator.ALL
@@ -228,7 +243,8 @@ namespace Mailosaur.Test
             var targetEmail = this.fixture.emails[1];
             var uniqueString = targetEmail.Subject.Substring(0, 10);
 
-            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria()
+            {
                 Subject = uniqueString,
                 Body = "this is a link",
                 Match = SearchMatchOperator.ANY
@@ -240,7 +256,8 @@ namespace Mailosaur.Test
         [Fact]
         public void SearchWithSpecialCharactersTest()
         {
-            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria() {
+            var results = this.fixture.client.Messages.Search(this.fixture.server, new SearchCriteria()
+            {
                 Subject = "Search with ellipsis … and emoji 👨🏿‍🚒"
             }).Items;
 
@@ -266,9 +283,10 @@ namespace Mailosaur.Test
             var self = this;
 
             this.fixture.client.Messages.Delete(targetEmailId);
-        
+
             // Attempting to delete again should fail
-            Assert.Throws<MailosaurException>(delegate {
+            Assert.Throws<MailosaurException>(delegate
+            {
                 self.fixture.client.Messages.Delete(targetEmailId);
             });
         }
@@ -277,13 +295,15 @@ namespace Mailosaur.Test
         public void CreateSendTextTest()
         {
             // TODO When xUnit 3 is released, use Assert.SkipIf
-            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
                 return;
             }
 
             var subject = "New message";
 
-            var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions() {
+            var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions()
+            {
                 To = $"anything@{fixture.verifiedDomain}",
                 Send = true,
                 Subject = subject,
@@ -298,13 +318,15 @@ namespace Mailosaur.Test
         public void CreateSendHtmlTest()
         {
             // TODO When xUnit 3 is released, use Assert.SkipIf
-            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
                 return;
             }
 
             var subject = "New HTML message";
 
-            var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions() {
+            var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions()
+            {
                 To = $"anything@{fixture.verifiedDomain}",
                 Send = true,
                 Subject = subject,
@@ -316,81 +338,161 @@ namespace Mailosaur.Test
         }
 
         [Fact]
+        public void CreateSendWithAttachment()
+        {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
+                return;
+            }
+
+            var subject = "New message with attachment";
+
+            var data = File.ReadAllBytes(Path.Combine("Resources", "cat.png"));
+            var attachment = new Attachment()
+            {
+                FileName = "cat.png",
+                Content = Convert.ToBase64String(data),
+                ContentType = "image/png"
+            };
+
+            var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions()
+            {
+                To = $"anything@{fixture.verifiedDomain}",
+                Send = true,
+                Subject = subject,
+                Html = "<p>This is a new email.</p>",
+                Attachments = new List<Attachment>() { attachment }
+            });
+
+            Assert.Equal(1, message.Attachments.Count);
+            var file1 = message.Attachments[0];
+            Assert.NotNull(file1.Id);
+            Assert.Equal(82138, file1.Length);
+            Assert.NotNull(file1.Url);
+            Assert.Equal("cat.png", file1.FileName);
+            Assert.Equal("image/png", file1.ContentType);
+        }
+
+        [Fact]
         public void ForwardTextTest()
         {
             // TODO When xUnit 3 is released, use Assert.SkipIf
-            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
                 return;
             }
 
             var body = "Forwarded message";
             var targetEmail = this.fixture.emails[0];
 
-            var message = this.fixture.client.Messages.Forward(targetEmail.Id, new MessageForwardOptions() {
+            var message = this.fixture.client.Messages.Forward(targetEmail.Id, new MessageForwardOptions()
+            {
                 To = $"anything@{fixture.verifiedDomain}",
                 Text = body
             });
 
             Assert.NotEmpty(message.Id);
-            Assert.True(message.Text.Body.Contains(body));
+            Assert.Contains(body, message.Text.Body);
         }
 
         [Fact]
         public void ForwardHtmlTest()
         {
             // TODO When xUnit 3 is released, use Assert.SkipIf
-            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
                 return;
             }
-            
+
             var body = "<p>Forwarded <strong>HTML</strong> message.</p>";
             var targetEmail = this.fixture.emails[0];
 
-            var message = this.fixture.client.Messages.Forward(targetEmail.Id, new MessageForwardOptions() {
+            var message = this.fixture.client.Messages.Forward(targetEmail.Id, new MessageForwardOptions()
+            {
                 To = $"anything@{fixture.verifiedDomain}",
                 Html = body
             });
 
             Assert.NotEmpty(message.Id);
-            Assert.True(message.Html.Body.Contains(body));
+            Assert.Contains(body, message.Html.Body);
         }
 
         [Fact]
         public void ReplyTextTest()
         {
             // TODO When xUnit 3 is released, use Assert.SkipIf
-            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
                 return;
             }
 
             var body = "Reply message";
             var targetEmail = this.fixture.emails[0];
 
-            var message = this.fixture.client.Messages.Reply(targetEmail.Id, new MessageReplyOptions() {
+            var message = this.fixture.client.Messages.Reply(targetEmail.Id, new MessageReplyOptions()
+            {
                 Text = body
             });
 
             Assert.NotEmpty(message.Id);
-            Assert.True(message.Text.Body.Contains(body));
+            Assert.Contains(body, message.Text.Body);
         }
 
         [Fact]
         public void ReplyHtmlTest()
         {
             // TODO When xUnit 3 is released, use Assert.SkipIf
-            if(string.IsNullOrWhiteSpace(this.fixture.verifiedDomain)) {
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
                 return;
             }
 
             var body = "<p>Reply <strong>HTML</strong> message.</p>";
             var targetEmail = this.fixture.emails[0];
 
-            var message = this.fixture.client.Messages.Reply(targetEmail.Id, new MessageReplyOptions() {
+            var message = this.fixture.client.Messages.Reply(targetEmail.Id, new MessageReplyOptions()
+            {
                 Html = body
             });
 
             Assert.NotEmpty(message.Id);
-            Assert.True(message.Html.Body.Contains(body));
+            Assert.Contains(body, message.Html.Body);
+        }
+
+        [Fact]
+        public void ReplyWithAttachment()
+        {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
+                return;
+            }
+
+            var body = "<p>Reply with attachment.</p>";
+            var targetEmail = this.fixture.emails[0];
+
+            var data = File.ReadAllBytes(Path.Combine("Resources", "cat.png"));
+            var attachment = new Attachment()
+            {
+                FileName = "cat.png",
+                Content = Convert.ToBase64String(data),
+                ContentType = "image/png"
+            };
+
+            var message = this.fixture.client.Messages.Reply(targetEmail.Id, new MessageReplyOptions()
+            {
+                Html = body,
+                Attachments = new List<Attachment>() { attachment }
+            });
+
+            Assert.Equal(1, message.Attachments.Count);
+            var file1 = message.Attachments[0];
+            Assert.NotNull(file1.Id);
+            Assert.Equal(82138, file1.Length);
+            Assert.NotNull(file1.Url);
+            Assert.Equal("cat.png", file1.FileName);
+            Assert.Equal("image/png", file1.ContentType);
         }
 
         private void ValidateEmail(Message email)
@@ -423,7 +525,7 @@ namespace Mailosaur.Test
             Assert.Equal("invalid", email.Html.Links[2].Text);
 
             // Html.Images
-            Assert.True(email.Html.Images[1].Src.StartsWith("cid:"));
+            Assert.StartsWith("cid:", email.Html.Images[1].Src);
             Assert.Equal("Inline image 1", email.Html.Images[1].Alt);
         }
 
@@ -431,13 +533,13 @@ namespace Mailosaur.Test
         {
             // Text.Body
             Assert.StartsWith("this is a test", email.Text.Body);
-            
+
             // Text.Links
             Assert.Equal(2, email.Text.Links.Count);
             Assert.Equal("https://mailosaur.com/", email.Text.Links[0].Href);
-            Assert.Equal( email.Text.Links[0].Href, email.Text.Links[0].Text);
+            Assert.Equal(email.Text.Links[0].Href, email.Text.Links[0].Text);
             Assert.Equal("https://mailosaur.com/", email.Text.Links[1].Href);
-            Assert.Equal( email.Text.Links[1].Href, email.Text.Links[1].Text);
+            Assert.Equal(email.Text.Links[1].Href, email.Text.Links[1].Text);
         }
 
         private void ValidateHeaders(Message email)
@@ -448,16 +550,18 @@ namespace Mailosaur.Test
             // Fallback casing is used, as header casing is determined by sending server
             // Assert.Equal(expectedFromHeader, actual.Headers.ContainsKey("From") ?
             //     actual.Headers["From"].ToString() : actual.Headers["from"].ToString());
-            
+
             // Assert.Equal(expectedToHeader, actual.Headers.ContainsKey("To") ?
             //     actual.Headers["To"].ToString() : actual.Headers["to"].ToString());
-            
+
             // Assert.Equal(expected.Subject, actual.Headers.ContainsKey("Subject") ?
             //     actual.Headers["Subject"].ToString() : actual.Headers["subject"].ToString());
         }
 
-        private void ValidateMetadata(Message email) {
-            ValidateMetadata(new MessageSummary() {
+        private void ValidateMetadata(Message email)
+        {
+            ValidateMetadata(new MessageSummary()
+            {
                 From = email.From,
                 To = email.To,
                 Cc = email.Cc,
