@@ -7,6 +7,8 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+concurrency: mailosaur-dotnet
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -58,7 +60,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 6.0.100
     - name: Install dependencies
       run: dotnet restore
     - name: Test
