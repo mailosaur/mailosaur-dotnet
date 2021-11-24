@@ -97,7 +97,7 @@ namespace Mailosaur.Test
         {
             // Should throw if email is not found
             Assert.Throws<MailosaurException>(delegate {
-                this.fixture.client.Messages.GetById(Guid.NewGuid());
+                this.fixture.client.Messages.GetById(Guid.NewGuid().ToString());
             });
         }
 
