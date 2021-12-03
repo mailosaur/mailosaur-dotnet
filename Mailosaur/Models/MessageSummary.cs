@@ -17,11 +17,6 @@ namespace Mailosaur.Models
         public string Server { get; set; }
 
         /// <summary>
-        /// Gets or sets the rcpt value of the message.
-        /// </summary>
-        public IList<MessageAddress> Rcpt { get; set; }
-
-        /// <summary>
         /// Gets or sets the sender of the message.
         /// </summary>
         public IList<MessageAddress> From { get; set; }

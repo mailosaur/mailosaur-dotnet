@@ -12,10 +12,11 @@ namespace Mailosaur.Test
         private MailosaurClient m_Client;
         private static string s_ApiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
         private string s_BaseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
-        
+
         public ServersTests()
         {
-            if (string.IsNullOrWhiteSpace(s_ApiKey)) {
+            if (string.IsNullOrWhiteSpace(s_ApiKey))
+            {
                 throw new Exception("Missing necessary environment variables - refer to README.md");
             }
 
@@ -33,7 +34,8 @@ namespace Mailosaur.Test
         public void GetNotFoundTest()
         {
             // Should throw if server is not found
-            Assert.Throws<MailosaurException>(delegate {
+            Assert.Throws<MailosaurException>(delegate
+            {
                 m_Client.Servers.Get("efe907e9-74ed-4113-a3e0-a3d41d914765");
             });
         }
@@ -69,7 +71,8 @@ namespace Mailosaur.Test
             m_Client.Servers.Delete(retrievedServer.Id);
 
             // Attempting to delete again should fail
-            Assert.Throws<MailosaurException>(delegate {
+            Assert.Throws<MailosaurException>(delegate
+            {
                 m_Client.Servers.Delete(retrievedServer.Id);
             });
         }
@@ -78,15 +81,16 @@ namespace Mailosaur.Test
         public void FailedCreateTest()
         {
             var options = new ServerCreateOptions("");
-            
-            var ex = Assert.Throws<MailosaurException>(delegate {
+
+            var ex = Assert.Throws<MailosaurException>(delegate
+            {
                 m_Client.Servers.Create(options);
             });
 
             Assert.Equal("Request had one or more invalid parameters.", ex.Message);
             Assert.Equal("invalid_request", ex.ErrorType);
             Assert.Equal(400, ex.HttpStatusCode);
-            Assert.Equal("{\"type\":\"ValidationError\",\"messages\":{\"name\":\"Please provide a name for your server\"}}", ex.HttpResponseBody);
+            Assert.Contains("{\"type\":", ex.HttpResponseBody);
         }
     }
 }

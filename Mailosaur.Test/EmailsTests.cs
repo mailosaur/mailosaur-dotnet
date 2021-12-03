@@ -501,6 +501,9 @@ namespace Mailosaur.Test
             ValidateAttachmentMetadata(email);
             ValidateHtml(email);
             ValidateText(email);
+            Assert.NotEmpty(email.Metadata.Ehlo);
+            Assert.NotEmpty(email.Metadata.MailFrom);
+            Assert.Equal(1, email.Metadata.RcptTo.Count());
         }
 
         private void ValidateEmailSummary(MessageSummary email)
