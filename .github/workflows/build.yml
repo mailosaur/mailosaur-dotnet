@@ -7,7 +7,9 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
-concurrency: mailosaur-dotnet
+concurrency: 
+  group: mailosaur-dotnet
+  cancel-in-progress: true
 
 jobs:
   build:
