@@ -18,15 +18,16 @@ namespace Mailosaur.Test
         private static readonly string s_VerifiedDomain = Environment.GetEnvironmentVariable("MAILOSAUR_VERIFIED_DOMAIN") ?? "mailosaur.net";
         private static Random s_Random = new Random();
 
-        public static void SendEmails(MailosaurClient client, string server, int quantity) {
-            for (var i = 0; i < quantity; i++) 
+        public static void SendEmails(MailosaurClient client, string server, int quantity)
+        {
+            for (var i = 0; i < quantity; i++)
                 SendEmail(client, server);
         }
 
         public static void SendEmail(MailosaurClient client, string server, string sendToAddress = null)
         {
             var host = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_HOST") ?? "mailosaur.net";
-			var port = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_PORT") ?? "25";
+            var port = Environment.GetEnvironmentVariable("MAILOSAUR_SMTP_PORT") ?? "25";
 
             var message = new MailMessage();
 
@@ -41,36 +42,36 @@ namespace Mailosaur.Test
             message.To.Add($"{randomString} {randomString} <{randomToAddress}>");
 
             // Text body
-			message.Body = s_Text.Replace("REPLACED_DURING_TEST", randomString);
-			message.IsBodyHtml = false;
-			message.BodyEncoding = Encoding.UTF8;
+            message.Body = s_Text.Replace("REPLACED_DURING_TEST", randomString);
+            message.IsBodyHtml = false;
+            message.BodyEncoding = Encoding.UTF8;
 
-			// Html body
+            // Html body
             var htmlString = s_Html.Replace("REPLACED_DURING_TEST", randomString);
-			var htmlView = AlternateView.CreateAlternateViewFromString(htmlString,
+            var htmlView = AlternateView.CreateAlternateViewFromString(htmlString,
                 new ContentType(MediaTypeNames.Text.Html));
-			htmlView.TransferEncoding = TransferEncoding.Base64;
-			message.AlternateViews.Add(htmlView);
+            htmlView.TransferEncoding = TransferEncoding.Base64;
+            message.AlternateViews.Add(htmlView);
 
-			var image = new LinkedResource(Path.Combine("Resources", "cat.png"));
-			image.ContentId = "ii_1435fadb31d523f6";
+            var image = new LinkedResource(Path.Combine("Resources", "cat.png"));
+            image.ContentId = "ii_1435fadb31d523f6";
             image.ContentType = new ContentType("image/png");
             htmlView.LinkedResources.Add(image);
 
             var attachment = new System.Net.Mail.Attachment(Path.Combine("Resources", "dog.png"));
             attachment.ContentType = new ContentType("image/png");
-			message.Attachments.Add(attachment);
+            message.Attachments.Add(attachment);
 
-			var smtp = new SmtpClient();
-			smtp.Host = host;
-			smtp.Port = int.Parse(port);
+            var smtp = new SmtpClient();
+            smtp.Host = host;
+            smtp.Port = int.Parse(port);
 
-			smtp.Send(message);
+            smtp.Send(message);
         }
 
-        private static string RandomString() 
+        private static string RandomString()
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             return new string(Enumerable.Repeat(chars, 10)
             .Select(s => s[s_Random.Next(s.Length)]).ToArray());
         }

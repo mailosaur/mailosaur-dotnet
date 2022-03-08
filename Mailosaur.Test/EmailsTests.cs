@@ -527,6 +527,11 @@ namespace Mailosaur.Test
             Assert.Equal("http://invalid/", email.Html.Links[2].Href);
             Assert.Equal("invalid", email.Html.Links[2].Text);
 
+            // Html.Codes
+            Assert.Equal(2, email.Html.Codes.Count);
+            Assert.Equal("123456", email.Html.Codes[0].Value);
+            Assert.Equal("G3H1Y2", email.Html.Codes[1].Value);
+
             // Html.Images
             Assert.StartsWith("cid:", email.Html.Images[1].Src);
             Assert.Equal("Inline image 1", email.Html.Images[1].Alt);
@@ -543,6 +548,11 @@ namespace Mailosaur.Test
             Assert.Equal(email.Text.Links[0].Href, email.Text.Links[0].Text);
             Assert.Equal("https://mailosaur.com/", email.Text.Links[1].Href);
             Assert.Equal(email.Text.Links[1].Href, email.Text.Links[1].Text);
+
+            // Text.Codes
+            Assert.Equal(2, email.Text.Codes.Count);
+            Assert.Equal("654321", email.Text.Codes[0].Value);
+            Assert.Equal("5H0Y2", email.Text.Codes[1].Value);
         }
 
         private void ValidateHeaders(Message email)
