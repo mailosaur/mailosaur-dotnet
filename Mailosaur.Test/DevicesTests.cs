@@ -39,9 +39,13 @@ namespace Mailosaur.Test
             OtpResult otpResult = m_Client.Devices.Otp(createdDevice.Id);
             Assert.Equal(6, otpResult.Code.Length);
 
-            Assert.Equal(1, m_Client.Devices.List().Items.Count());
+            var before = m_Client.Devices.List();
+            Assert.True(before.Items.Any(x => x.Id == createdDevice.Id));
+
             m_Client.Devices.Delete(createdDevice.Id);
-            Assert.Equal(0, m_Client.Devices.List().Items.Count());
+
+            var after = m_Client.Devices.List();
+            Assert.False(after.Items.Any(x => x.Id == createdDevice.Id));
         }
 
         [Fact]
