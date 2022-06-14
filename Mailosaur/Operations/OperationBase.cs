@@ -55,10 +55,11 @@ namespace Mailosaur.Operations
 
                         if (typeof(T) != typeof(MessageListResultWithHeaders))
                             return JsonConvert.DeserializeObject<T>(content);
-                        
+
                         response.Headers.TryGetValues("x-ms-delay", out IEnumerable<string> delayHeaderValues);
-                        
-                        return (T)(object)new MessageListResultWithHeaders() {
+
+                        return (T)(object)new MessageListResultWithHeaders()
+                        {
                             MessageListResult = JsonConvert.DeserializeObject<MessageListResult>(content),
                             DelayHeader = delayHeaderValues?.FirstOrDefault()
                         };
@@ -124,10 +125,11 @@ namespace Mailosaur.Operations
         public string PagePath(string path, int? page = null, int? itemsPerPage = null, DateTime? receivedAfter = null)
         {
             string isoReceivedAfter = null;
-            if (receivedAfter != null) {
+            if (receivedAfter != null)
+            {
                 isoReceivedAfter = WebUtility.UrlEncode(receivedAfter.Value.ToString("o"));
             }
-            
+
             path += page != null ? $"&page={page}" : "";
             path += itemsPerPage != null ? $"&itemsPerPage={itemsPerPage}" : "";
             path += receivedAfter != null ? $"&receivedAfter={isoReceivedAfter}" : "";
@@ -139,9 +141,18 @@ namespace Mailosaur.Operations
             string errorMessage = "";
             string errorType = "";
 
-            switch (response.StatusCode) {
+            var httpResponseBody = (response.StatusCode != HttpStatusCode.NoContent) ?
+                await response.Content.ReadAsStringAsync() : "";
+
+            switch (response.StatusCode)
+            {
                 case HttpStatusCode.BadRequest:
-                    errorMessage = "Request had one or more invalid parameters.";
+                    var json = JsonConvert.DeserializeObject<ErrorResponse>(httpResponseBody);
+                    foreach (var err in json.Errors)
+                    {
+                        errorMessage += $"({err.Field}) {err.Detail[0].Description}\r\n";
+                    }
+                    // errorMessage = "Request had one or more invalid parameters.";
                     errorType = "invalid_request";
                     break;
                 case HttpStatusCode.Unauthorized:
@@ -153,7 +164,7 @@ namespace Mailosaur.Operations
                     errorType = "permission_error";
                     break;
                 case HttpStatusCode.NotFound:
-                    errorMessage = "Request did not find any matching resources.";
+                    errorMessage = "Not found, check input parameters.";
                     errorType = "invalid_request";
                     break;
                 default:
@@ -161,9 +172,6 @@ namespace Mailosaur.Operations
                     errorType = "api_error";
                     break;
             }
-
-            var httpResponseBody = (response.StatusCode != HttpStatusCode.NoContent) ?
-                await response.Content.ReadAsStringAsync() : "";
 
             throw new MailosaurException(errorMessage, errorType, (int)response.StatusCode, httpResponseBody);
         }

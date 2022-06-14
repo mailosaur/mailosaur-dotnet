@@ -87,7 +87,7 @@ namespace Mailosaur.Test
                 m_Client.Servers.Create(options);
             });
 
-            Assert.Equal("Request had one or more invalid parameters.", ex.Message);
+            Assert.Equal("(name) Please provide a name for your server\r\n", ex.Message);
             Assert.Equal("invalid_request", ex.ErrorType);
             Assert.Equal(400, ex.HttpStatusCode);
             Assert.Contains("{\"type\":", ex.HttpResponseBody);
