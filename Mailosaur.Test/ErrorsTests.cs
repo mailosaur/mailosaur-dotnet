@@ -40,7 +40,7 @@ namespace Mailosaur.Test
                 client.Servers.Create(options);
             });
 
-            Assert.Equal("(name) Please provide a name for your server\r\n", ex.Message);
+            Assert.Equal("(name) Servers need a name\r\n", ex.Message);
         }
     }
 }
