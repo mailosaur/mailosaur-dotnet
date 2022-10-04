@@ -41,7 +41,10 @@ namespace Mailosaur.Test
             });
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+            client.Dispose();
+        }
     }
 
     public class FilesTests : IClassFixture<FilesFixture>

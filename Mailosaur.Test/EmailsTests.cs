@@ -39,7 +39,10 @@ namespace Mailosaur.Test
             emails = client.Messages.List(server).Items;
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+            client.Dispose();
+        }
     }
 
     public class EmailsTests : IClassFixture<EmailsFixture>

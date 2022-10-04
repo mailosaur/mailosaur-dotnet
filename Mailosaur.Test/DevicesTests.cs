@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Mailosaur.Test
 {
-    public class DevicesTests
+    public class DevicesTests : IDisposable
     {
         private MailosaurClient m_Client;
         private static string s_ApiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
@@ -54,6 +54,11 @@ namespace Mailosaur.Test
             var sharedSecret = "ONSWG4TFOQYTEMY=";
             OtpResult otpResult = m_Client.Devices.Otp(sharedSecret);
             Assert.Equal(6, otpResult.Code.Length);
+        }
+
+        public void Dispose()
+        {
+            m_Client.Dispose();
         }
     }
 }

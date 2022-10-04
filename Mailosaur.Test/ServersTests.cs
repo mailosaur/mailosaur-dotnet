@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Mailosaur.Test
 {
-    public class ServersTests
+    public class ServersTests : IDisposable
     {
         private MailosaurClient m_Client;
         private static string s_ApiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
@@ -91,6 +91,11 @@ namespace Mailosaur.Test
             Assert.Equal("invalid_request", ex.ErrorType);
             Assert.Equal(400, ex.HttpStatusCode);
             Assert.Contains("{\"type\":", ex.HttpResponseBody);
+        }
+
+        public void Dispose()
+        {
+            m_Client.Dispose();
         }
     }
 }

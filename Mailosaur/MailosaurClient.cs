@@ -8,7 +8,7 @@ namespace Mailosaur
     using System.Text;
     using Mailosaur.Operations;
 
-    public class MailosaurClient
+    public class MailosaurClient : IDisposable
     {
         public Servers Servers { get; private set; }
         public Messages Messages { get; private set; }
@@ -53,6 +53,14 @@ namespace Mailosaur
             Analysis = new Analysis(_client);
             Usage = new Usage(_client);
             Devices = new Devices(_client);
+        }
+
+        /// <summary>
+        /// Disposes relevant resources
+        /// </summary>
+        public void Dispose()
+        {
+            _client?.Dispose();
         }
     }
 }

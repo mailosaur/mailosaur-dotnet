@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Mailosaur.Test
 {
-    public class UsageTests
+    public class UsageTests : IDisposable
     {
         private MailosaurClient m_Client;
         private static string s_ApiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
@@ -45,6 +45,11 @@ namespace Mailosaur.Test
             Assert.IsType<DateTime>(result.Items[0].Timestamp);
             Assert.IsType<int>(result.Items[0].Email);
             Assert.IsType<int>(result.Items[0].Sms);
+        }
+
+        public void Dispose()
+        {
+            m_Client.Dispose();
         }
     }
 }
