@@ -11,6 +11,11 @@ namespace Mailosaur.Models
         public string Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the type of message.
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
         /// Gets or sets identifier for the server in which the message is
         /// located.
         /// </summary>

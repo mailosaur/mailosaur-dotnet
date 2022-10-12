@@ -10,6 +10,11 @@ namespace Mailosaur.Models
         public string Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the type of message.
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
         /// Gets or sets the sender of the message.
         /// </summary>
         public IList<MessageAddress> From { get; set; }

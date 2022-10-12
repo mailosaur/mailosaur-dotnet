@@ -545,6 +545,7 @@ namespace Mailosaur.Test
         {
             ValidateMetadata(new MessageSummary()
             {
+                Type = email.Type,
                 From = email.From,
                 To = email.To,
                 Cc = email.Cc,
@@ -556,6 +557,7 @@ namespace Mailosaur.Test
 
         private void ValidateMetadata(MessageSummary email)
         {
+            Assert.Equal("Email", email.Type);
             Assert.Equal(1, email.From.Count);
             Assert.Equal(1, email.To.Count);
             Assert.NotEmpty(email.From[0].Email);
