@@ -122,7 +122,7 @@ namespace Mailosaur.Operations
             }
         }
 
-        public string PagePath(string path, int? page = null, int? itemsPerPage = null, DateTime? receivedAfter = null)
+        public string PagePath(string path, int? page = null, int? itemsPerPage = null, DateTime? receivedAfter = null, string dir = null)
         {
             string isoReceivedAfter = null;
             if (receivedAfter != null)
@@ -133,6 +133,7 @@ namespace Mailosaur.Operations
             path += page != null ? $"&page={page}" : "";
             path += itemsPerPage != null ? $"&itemsPerPage={itemsPerPage}" : "";
             path += receivedAfter != null ? $"&receivedAfter={isoReceivedAfter}" : "";
+            path += dir != null ? $"&dir={dir}" : "";
             return path;
         }
 

@@ -37,7 +37,7 @@ namespace Mailosaur.Operations
         /// </param>
         public Message Get(string server, SearchCriteria criteria = null, int timeout = 10000, DateTime? receivedAfter = null)
             => Task.Run(async () => await GetAsync(server, criteria, timeout, receivedAfter)).UnwrapException<Message>();
-        
+
         /// <summary>
         /// Retrieve a message using search criteria
         /// </summary>
@@ -65,7 +65,7 @@ namespace Mailosaur.Operations
 
             if (server.Length != 8)
                 throw new MailosaurException("Must provide a valid Server ID.", "invalid_request");
-            
+
             var result = await SearchAsync(server, criteria, 0, 1, timeout, receivedAfter);
             return GetById(result.Items[0].Id);
         }
@@ -143,8 +143,12 @@ namespace Mailosaur.Operations
         /// <param name='receivedAfter'>
         /// Limits results to only messages received after this date/time.
         /// </param>
-        public MessageListResult List(string server, int? page = default(int?), int? itemsPerPage = default(int?), DateTime? receivedAfter = null)
-            => Task.Run(async () => await ListAsync(server, page, itemsPerPage, receivedAfter)).UnwrapException<MessageListResult>();
+        /// <param name='dir'>
+        /// Optionally limits results based on the direction (`Sent` or `Received`),
+        /// with the default being `Received`.
+        /// </param>
+        public MessageListResult List(string server, int? page = default(int?), int? itemsPerPage = default(int?), DateTime? receivedAfter = null, string dir = null)
+            => Task.Run(async () => await ListAsync(server, page, itemsPerPage, receivedAfter, dir)).UnwrapException<MessageListResult>();
 
         /// <summary>
         /// List all messages
@@ -167,8 +171,12 @@ namespace Mailosaur.Operations
         /// <param name='receivedAfter'>
         /// Limits results to only messages received after this date/time.
         /// </param>
-        public Task<MessageListResult> ListAsync(string server, int? page = default(int?), int? itemsPerPage = default(int?), DateTime? receivedAfter = null)
-            => ExecuteRequest<MessageListResult>(HttpMethod.Get, PagePath($"api/messages?server={server}", page, itemsPerPage, receivedAfter));
+        /// <param name='dir'>
+        /// Optionally limits results based on the direction (`Sent` or `Received`),
+        /// with the default being `Received`.
+        /// </param>
+        public Task<MessageListResult> ListAsync(string server, int? page = default(int?), int? itemsPerPage = default(int?), DateTime? receivedAfter = null, string dir = null)
+            => ExecuteRequest<MessageListResult>(HttpMethod.Get, PagePath($"api/messages?server={server}", page, itemsPerPage, receivedAfter, dir));
 
         /// <summary>
         /// Delete all messages
@@ -195,7 +203,7 @@ namespace Mailosaur.Operations
         /// <param name='server'>
         /// The identifier of the server to be emptied.
         /// </param>
-        public Task DeleteAllAsync(string server) 
+        public Task DeleteAllAsync(string server)
             => ExecuteRequest(HttpMethod.Delete, $"api/messages?server={server}");
 
         /// <summary>
@@ -229,8 +237,12 @@ namespace Mailosaur.Operations
         ///  When set to false, an error will not be throw if timeout is reached
         ///  (default: true).
         /// </param>
-        public MessageListResult Search(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null, bool errorOnTimeout = true)
-            => Task.Run(async () => await SearchAsync(server, criteria, page, itemsPerPage, timeout, receivedAfter, errorOnTimeout)).UnwrapException<MessageListResult>();
+        /// <param name='dir'>
+        /// Optionally limits results based on the direction (`Sent` or `Received`),
+        /// with the default being `Received`.
+        /// </param>
+        public MessageListResult Search(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null, bool errorOnTimeout = true, string dir = null)
+            => Task.Run(async () => await SearchAsync(server, criteria, page, itemsPerPage, timeout, receivedAfter, errorOnTimeout, dir)).UnwrapException<MessageListResult>();
 
         /// <summary>
         /// Search for messages
@@ -263,21 +275,25 @@ namespace Mailosaur.Operations
         ///  When set to false, an error will not be throw if timeout is reached
         ///  (default: true).
         /// </param>
-        public async Task<MessageListResult> SearchAsync(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null, bool errorOnTimeout = true)
+        /// <param name='dir'>
+        /// Optionally limits results based on the direction (`Sent` or `Received`),
+        /// with the default being `Received`.
+        /// </param>
+        public async Task<MessageListResult> SearchAsync(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null, bool errorOnTimeout = true, string dir = null)
         {
             var pollCount = 0;
             var startTime = DateTime.UtcNow;
 
-            while(true)
+            while (true)
             {
-                var result = await ExecuteRequest<MessageListResultWithHeaders>(HttpMethod.Post, PagePath($"api/messages/search?server={server}", page, itemsPerPage, receivedAfter), criteria);
+                var result = await ExecuteRequest<MessageListResultWithHeaders>(HttpMethod.Post, PagePath($"api/messages/search?server={server}", page, itemsPerPage, receivedAfter, dir), criteria);
 
                 if (timeout == null || timeout == 0 || result.MessageListResult.Items.Count != 0)
                     return result.MessageListResult;
-                
+
                 var delayPattern = (string.IsNullOrWhiteSpace(result.DelayHeader) ? "1000" : result.DelayHeader)
                     .Split(',').Select(x => Int32.Parse(x)).ToArray();
-                
+
                 var delay = pollCount >= delayPattern.Length ?
                     delayPattern[delayPattern.Length - 1] :
                     delayPattern[pollCount];
@@ -287,13 +303,14 @@ namespace Mailosaur.Operations
                 // Stop if timeout will be exceeded
                 if (((int)(DateTime.UtcNow - startTime).TotalMilliseconds) + delay > timeout)
                 {
-                    if (errorOnTimeout == false) {
+                    if (errorOnTimeout == false)
+                    {
                         return result.MessageListResult;
                     }
 
                     throw new MailosaurException("No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this).", "search_timeout");
                 }
-                
+
                 Task.Delay(delay).Wait();
             }
         }
@@ -341,7 +358,7 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public Task<Message> CreateAsync(string server, MessageCreateOptions messageCreateOptions) 
+        public Task<Message> CreateAsync(string server, MessageCreateOptions messageCreateOptions)
             => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages?server={server}", messageCreateOptions);
 
         /// <summary>
@@ -383,9 +400,9 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public Task<Message> ForwardAsync(string id, MessageForwardOptions messageForwardOptions) 
+        public Task<Message> ForwardAsync(string id, MessageForwardOptions messageForwardOptions)
             => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages/{id}/forward", messageForwardOptions);
-        
+
         /// <summary>
         /// Reply to an email
         /// </summary>
@@ -427,7 +444,7 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public Task<Message> ReplyAsync(string id, MessageReplyOptions messageReplyOptions) 
+        public Task<Message> ReplyAsync(string id, MessageReplyOptions messageReplyOptions)
             => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages/{id}/reply", messageReplyOptions);
     }
 }
