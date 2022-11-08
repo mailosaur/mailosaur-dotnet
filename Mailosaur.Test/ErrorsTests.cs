@@ -9,38 +9,44 @@ namespace Mailosaur.Test
         [Fact]
         public void UnauthorizedTest()
         {
-            var client = new MailosaurClient("invalid_key");
-            var ex = Assert.Throws<MailosaurException>(delegate
+            using (var client = new MailosaurClient("invalid_key"))
             {
-                client.Servers.List();
-            });
+                var ex = Assert.Throws<MailosaurException>(delegate
+                {
+                    client.Servers.List();
+                });
 
-            Assert.Equal("Authentication failed, check your API key.", ex.Message);
+                Assert.Equal("Authentication failed, check your API key.", ex.Message);
+            }
         }
 
         [Fact]
         public void NotFoundTest()
         {
-            var client = new MailosaurClient(Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY"));
-            var ex = Assert.Throws<MailosaurException>(delegate
+            using (var client = new MailosaurClient(Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY")))
             {
-                client.Servers.Get("not_found");
-            });
+                var ex = Assert.Throws<MailosaurException>(delegate
+                {
+                    client.Servers.Get("not_found");
+                });
 
-            Assert.Equal("Not found, check input parameters.", ex.Message);
+                Assert.Equal("Not found, check input parameters.", ex.Message);
+            }
         }
 
         [Fact]
         public void BadRequestTest()
         {
-            var client = new MailosaurClient(Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY"));
-            var options = new ServerCreateOptions("");
-            var ex = Assert.Throws<MailosaurException>(delegate
+            using (var client = new MailosaurClient(Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY")))
             {
-                client.Servers.Create(options);
-            });
+                var options = new ServerCreateOptions("");
+                var ex = Assert.Throws<MailosaurException>(delegate
+                {
+                    client.Servers.Create(options);
+                });
 
-            Assert.Equal("(name) Servers need a name\r\n", ex.Message);
+                Assert.Equal("(name) Servers need a name\r\n", ex.Message);
+            }
         }
     }
 }

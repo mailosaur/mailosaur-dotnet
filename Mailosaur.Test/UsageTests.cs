@@ -2,20 +2,19 @@ using System;
 using System.Linq;
 using Mailosaur.Models;
 using Xunit;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace Mailosaur.Test
 {
-    public class UsageTests
+    public class UsageTests : IDisposable
     {
         private MailosaurClient m_Client;
         private static string s_ApiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
         private string s_BaseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
-        
+
         public UsageTests()
         {
-            if (string.IsNullOrWhiteSpace(s_ApiKey)) {
+            if (string.IsNullOrWhiteSpace(s_ApiKey))
+            {
                 throw new Exception("Missing necessary environment variables - refer to README.md");
             }
 
@@ -45,6 +44,11 @@ namespace Mailosaur.Test
             Assert.IsType<DateTime>(result.Items[0].Timestamp);
             Assert.IsType<int>(result.Items[0].Email);
             Assert.IsType<int>(result.Items[0].Sms);
+        }
+
+        public void Dispose()
+        {
+            m_Client.Dispose();
         }
     }
 }

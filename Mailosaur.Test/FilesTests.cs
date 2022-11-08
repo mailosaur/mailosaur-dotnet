@@ -1,9 +1,6 @@
 using System;
-using System.Linq;
 using Mailosaur.Models;
 using Xunit;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -41,7 +38,10 @@ namespace Mailosaur.Test
             });
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+            client.Dispose();
+        }
     }
 
     public class FilesTests : IClassFixture<FilesFixture>

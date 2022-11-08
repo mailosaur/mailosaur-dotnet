@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Mailosaur.Models;
 using Xunit;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 
@@ -39,7 +38,10 @@ namespace Mailosaur.Test
             emails = client.Messages.List(server).Items;
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+            client.Dispose();
+        }
     }
 
     public class EmailsTests : IClassFixture<EmailsFixture>
