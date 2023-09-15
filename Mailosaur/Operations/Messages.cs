@@ -446,5 +446,47 @@ namespace Mailosaur.Operations
         /// </return>
         public Task<Message> ReplyAsync(string id, MessageReplyOptions messageReplyOptions)
             => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages/{id}/reply", messageReplyOptions);
+
+        /// <summary>
+        /// Generate email previews
+        /// </summary>
+        /// <remarks>
+        /// Generates screenshots of an email rendered in the specified email clients.
+        /// </remarks>
+        /// <param name='id'>
+        /// The identifier of the email to preview.
+        /// </param>
+        /// <param name='options'>
+        /// The options with which to generate previews.
+        /// </param>
+        /// <exception cref="MailosaurException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public PreviewListResult GeneratePreviews(string id, PreviewRequestOptions options)
+            => Task.Run(async () => await GeneratePreviewsAsync(id, options)).UnwrapException<PreviewListResult>();
+
+        /// <summary>
+        /// Generate email previews
+        /// </summary>
+        /// <remarks>
+        /// Generates screenshots of an email rendered in the specified email clients.
+        /// </remarks>
+        /// <param name='id'>
+        /// The identifier of the email to preview.
+        /// </param>
+        /// <param name='options'>
+        /// The options with which to generate previews.
+        /// </param>
+        /// <exception cref="MailosaurException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        public Task<PreviewListResult> GeneratePreviewsAsync(string id, PreviewRequestOptions options)
+            => ExecuteRequest<PreviewListResult>(HttpMethod.Post, $"api/messages/{id}/previews", options);
     }
 }

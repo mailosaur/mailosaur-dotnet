@@ -69,7 +69,7 @@ namespace Mailosaur.Test
             smtp.Send(message);
         }
 
-        private static string RandomString()
+        public static string RandomString()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             return new string(Enumerable.Repeat(chars, 10)

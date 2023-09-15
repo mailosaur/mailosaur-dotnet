@@ -14,6 +14,7 @@ namespace Mailosaur
         public Analysis Analysis { get; private set; }
         public Usage Usage { get; private set; }
         public Devices Devices { get; private set; }
+        public Previews Previews { get; private set; }
 
         private readonly HttpClient _client;
 
@@ -51,6 +52,7 @@ namespace Mailosaur
             Analysis = new Analysis(_client);
             Usage = new Usage(_client);
             Devices = new Devices(_client);
+            Previews = new Previews(_client);
         }
 
         /// <summary>

@@ -65,5 +65,31 @@ namespace Mailosaur.Operations
         /// </param>
         public Task<byte[]> GetEmailAsync(string id)
             => ExecuteBytesRequest(HttpMethod.Get, $"api/files/email/{id}");
+
+        /// <summary>
+        /// Download Email Preview
+        /// </summary>
+        /// <remarks>
+        /// Downloads a screenshot of your email rendered in a real email client. Simply supply 
+        /// the unique identifier for the required preview.
+        /// </remarks>
+        /// <param name='id'>
+        /// The identifier of the preview to be downloaded.
+        /// </param>
+        public byte[] GetPreview(string id)
+            => Task.Run(async () => await GetPreviewAsync(id)).UnwrapException<byte[]>();
+
+        /// <summary>
+        /// Download Email Preview
+        /// </summary>
+        /// <remarks>
+        /// Downloads a screenshot of your email rendered in a real email client. Simply supply 
+        /// the unique identifier for the required preview.
+        /// </remarks>
+        /// <param name='id'>
+        /// The identifier of the preview to be downloaded.
+        /// </param>
+        public Task<byte[]> GetPreviewAsync(string id)
+            => ExecuteBytesRequest(HttpMethod.Get, $"api/files/previews/{id}");
     }
 }
