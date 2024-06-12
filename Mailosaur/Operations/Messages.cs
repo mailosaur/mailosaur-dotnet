@@ -5,6 +5,7 @@ namespace Mailosaur.Operations
     using System.Net.Http;
     using System.Threading.Tasks;
     using Mailosaur.Models;
+    using Newtonsoft.Json;
 
     public class Messages : OperationBase
     {
@@ -308,7 +309,7 @@ namespace Mailosaur.Operations
                         return result.MessageListResult;
                     }
 
-                    throw new MailosaurException("No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this).", "search_timeout");
+                    throw new MailosaurException($"No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this). The search criteria used for this query was [{JsonConvert.SerializeObject(criteria)}] which timed out after {timeout}ms", "search_timeout");
                 }
 
                 Task.Delay(delay).Wait();
