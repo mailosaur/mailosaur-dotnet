@@ -9,7 +9,7 @@ namespace Mailosaur.Test
         [Fact]
         public void UnauthorizedTest()
         {
-            using (var client = new MailosaurClient("invalid_key", Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY")))
+            using (var client = new MailosaurClient("invalid_key", Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL")))
             {
                 var ex = Assert.Throws<MailosaurException>(delegate
                 {
