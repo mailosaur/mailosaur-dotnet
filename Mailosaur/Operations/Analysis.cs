@@ -37,5 +37,29 @@ namespace Mailosaur.Operations
         /// </param>
         public Task<SpamAnalysisResult> SpamAsync(string email)
             => ExecuteRequest<SpamAnalysisResult>(HttpMethod.Get, $"api/analysis/spam/{email}");
+        
+        /// <summary>
+        /// Perform a deliverability test 
+        /// </summary>
+        /// <remarks>
+        /// Perform deliverability testing on the specified email
+        /// </remarks>
+        /// <param name='email'>
+        /// The identifier of the email to be analyzed.
+        /// </param>
+        public DeliverabilityReport Deliverability(string email) 
+            => Task.Run<DeliverabilityReport>(async () => await DeliverabilityAsync(email)).Result;
+        
+        /// <summary>
+        /// Perform a deliverability test
+        /// </summary>
+        /// <remarks>
+        /// Perform deliverability testing on the specified email
+        /// </remarks>
+        /// <param name='email'>
+        /// The identifier of the email to be analyzed.
+        /// </param>
+        public Task<DeliverabilityReport> DeliverabilityAsync(string email)
+            => ExecuteRequest<DeliverabilityReport>(HttpMethod.Get, $"api/analysis/deliverability/{email}");
     }
 }

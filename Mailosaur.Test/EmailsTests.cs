@@ -247,6 +247,43 @@ namespace Mailosaur.Test
                 Assert.NotEmpty(rule.Description);
             }
         }
+        
+        [Fact]
+        public void DeliverabilityReportTest()
+        {
+            var targetId = this.fixture.emails[0].Id;
+            DeliverabilityReport result = this.fixture.client.Analysis.Deliverability(targetId);
+            
+            Assert.NotNull(result);
+            Assert.NotNull(result.Spf);
+            Assert.NotEmpty(result.Dkim);
+            foreach (var dkim in result.Dkim)
+            {
+                Assert.NotNull(dkim);
+            }
+            Assert.NotNull(result.Dmarc);
+            
+            Assert.NotNull(result.BlockLists);
+            foreach (var blockList in result.BlockLists)
+            {
+                Assert.NotNull(blockList.Id);
+                Assert.NotNull(blockList.Name);
+            }
+            
+            Assert.NotNull(result.Content);
+            
+            Assert.NotNull(result.DnsRecords);
+            Assert.NotNull(result.DnsRecords.A);
+            Assert.NotNull(result.DnsRecords.MX);
+            Assert.NotNull(result.DnsRecords.PTR);
+            
+            Assert.NotNull(result.SpamAssassin);
+            foreach (SpamAssassinRule rule in result.SpamAssassin.Rules)
+            {
+                Assert.NotEmpty(rule.Rule);
+                Assert.NotEmpty(rule.Description);
+            }
+        }
 
         [Fact]
         public void DeleteTest()
