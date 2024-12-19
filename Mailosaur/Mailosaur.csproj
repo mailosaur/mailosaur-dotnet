@@ -19,7 +19,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <Compile Remove="Mailosaur\Emails.cs" />
     <Compile Remove="Mailosaur\EmailsExtensions.cs" />
     <Compile Remove="Mailosaur\IEmails.cs" />
