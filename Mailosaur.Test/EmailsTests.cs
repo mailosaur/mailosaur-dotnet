@@ -345,6 +345,32 @@ namespace Mailosaur.Test
             Assert.NotEmpty(message.Id);
             Assert.Equal(subject, message.Subject);
         }
+        
+        [Fact]
+        public void CreateSendHtmlWithCc()
+        {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
+                return;
+            }
+
+            var subject = "CC message";
+            var ccRecipient = $"someoneelse@{fixture.verifiedDomain}";
+            var message = this.fixture.client.Messages.Create(this.fixture.server, new MessageCreateOptions()
+            {
+                To = $"anything@{fixture.verifiedDomain}",
+                Cc = ccRecipient,
+                Send = true,
+                Subject = subject,
+                Html = "<p>This is a new email.</p>"
+            });
+
+            Assert.NotEmpty(message.Id);
+            Assert.Equal(subject, message.Subject);
+            Assert.Single(message.Cc);
+            Assert.Equal(ccRecipient, message.Cc.Single().Email);
+        }
 
         [Fact]
         public void CreateSendWithAttachment()
@@ -426,6 +452,32 @@ namespace Mailosaur.Test
             Assert.NotEmpty(message.Id);
             Assert.Contains(body, message.Html.Body);
         }
+        
+        [Fact]
+        public void ForwardHtmlWithCc()
+        {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
+                return;
+            }
+            
+            var ccRecipient = $"someoneelse@{fixture.verifiedDomain}";
+            var body = "<p>Forwarded <strong>HTML</strong> message.</p>";
+            var targetEmail = this.fixture.emails[0];
+
+            var message = this.fixture.client.Messages.Forward(targetEmail.Id, new MessageForwardOptions()
+            {
+                To = $"forwardcc@{fixture.verifiedDomain}",
+                Cc = ccRecipient,
+                Html = body
+            });
+
+            Assert.NotEmpty(message.Id);
+            Assert.Contains(body, message.Html.Body);
+            Assert.Single(message.Cc);
+            Assert.Equal(ccRecipient, message.Cc.Single().Email);
+        }
 
         [Fact]
         public void ReplyTextTest()
@@ -467,6 +519,30 @@ namespace Mailosaur.Test
 
             Assert.NotEmpty(message.Id);
             Assert.Contains(body, message.Html.Body);
+        }
+        
+        [Fact]
+        public void ReplyHtmlWithCc()
+        {
+            // TODO When xUnit 3 is released, use Assert.SkipIf
+            if (string.IsNullOrWhiteSpace(this.fixture.verifiedDomain))
+            {
+                return;
+            }
+            
+            var ccRecipient = $"someoneelse@{fixture.verifiedDomain}";
+            var body = "Reply CC message";
+            var targetEmail = this.fixture.emails[0];
+
+            var message = this.fixture.client.Messages.Reply(targetEmail.Id, new MessageReplyOptions()
+            {
+                Cc = ccRecipient,
+                Html = body
+            });
+            Assert.NotEmpty(message.Id);
+            Assert.Contains(body, message.Html.Body);
+            Assert.Single(message.Cc);
+            Assert.Equal(ccRecipient, message.Cc.Single().Email);
         }
 
         [Fact]
