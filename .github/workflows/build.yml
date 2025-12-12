@@ -2,18 +2,18 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
-concurrency: 
+concurrency:
   group: mailosaur-dotnet
   cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
 
     env:
@@ -25,23 +25,15 @@ jobs:
       MAILOSAUR_VERIFIED_DOMAIN: ${{ secrets.MAILOSAUR_VERIFIED_DOMAIN }}
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.100
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal Mailosaur.Test
-    - name: Notify on Failure
-      uses: skitionek/notify-microsoft-teams@master
-      if: ${{ failure() }}
-      with:
-        webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
-        needs: ${{ toJson(needs) }}
-        job: ${{ toJson(job) }}
-        overwrite: "{ title: `${workflow} failed for ${repository.name}` }"
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal Mailosaur.Test
 
   build-next:
     if: ${{ always() }}
@@ -58,20 +50,12 @@ jobs:
       MAILOSAUR_VERIFIED_DOMAIN: ${{ secrets.MAILOSAUR_VERIFIED_DOMAIN }}
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.100
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal Mailosaur.Test
-    - name: Notify on Failure
-      uses: skitionek/notify-microsoft-teams@master
-      if: ${{ failure() }}
-      with:
-        webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
-        needs: ${{ toJson(needs) }}
-        job: ${{ toJson(job) }}
-        overwrite: "{ title: `${workflow} failed for ${repository.name}` }"
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal Mailosaur.Test
