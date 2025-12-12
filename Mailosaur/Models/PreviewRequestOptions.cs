@@ -1,20 +1,22 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Mailosaur.Models
 {
     public class PreviewRequestOptions
     {
         /// <summary>
-        /// Sets the list of email preview requests.
+        /// Sets the list email clients to generate previews with.
         /// </summary>
-        public PreviewRequestOptions(IEnumerable<PreviewRequest> previews)
+        public PreviewRequestOptions(IEnumerable<string> emailClients)
         {
-            Previews = previews;
+            EmailClients = emailClients;
         }
 
         /// <summary>
-        /// The list of email preview requests.
+        /// The list email clients to generate previews with.
         /// </summary>
-        public IEnumerable<PreviewRequest> Previews { get; set; }
+        [JsonProperty("emailClients")]
+        public IEnumerable<string> EmailClients { get; set; }
     }
 }
