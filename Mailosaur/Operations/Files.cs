@@ -1,8 +1,11 @@
 namespace Mailosaur.Operations
 {
+    using System;
     using System.IO;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Mailosaur.Models;
 
     public class Files : OperationBase
     {
@@ -90,6 +93,43 @@ namespace Mailosaur.Operations
         /// The identifier of the preview to be downloaded.
         /// </param>
         public Task<byte[]> GetPreviewAsync(string id)
-            => ExecuteBytesRequest(HttpMethod.Get, $"api/files/previews/{id}");
+            => GetScreenshotAsync(id);
+
+        private async Task<byte[]> GetScreenshotAsync(string id)
+        {
+            var timeout = 120000;
+            var pollCount = 0;
+            var startTime = DateTime.UtcNow;
+
+            while (true)
+            {
+                var response = await ExecuteRequestWithResponse(HttpMethod.Get, $"api/files/screenshots/{id}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+
+                response.Headers.TryGetValues("x-ms-delay", out var delayHeaderValues);
+                var delayString = delayHeaderValues?.FirstOrDefault() ?? "1000";
+                var delayPattern = delayString.Split(',').Select(x => int.Parse(x.Trim())).ToArray();
+
+                var delay = pollCount >= delayPattern.Length ?
+                    delayPattern[delayPattern.Length - 1] :
+                    delayPattern[pollCount];
+
+                pollCount++;
+
+                // Stop if timeout will be exceeded
+                if (((int)(DateTime.UtcNow - startTime).TotalMilliseconds) + delay > timeout)
+                {
+                    throw new MailosaurException(
+                        $"An email preview was not generated in time. The email client may not be available, or the preview ID [{id}] may be incorrect.",
+                        "preview_timeout");
+                }
+
+                Task.Delay(delay).Wait();
+            }
+        }
     }
 }

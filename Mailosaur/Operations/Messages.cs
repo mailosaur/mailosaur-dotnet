@@ -488,6 +488,6 @@ namespace Mailosaur.Operations
         /// A response object containing the response body and response headers.
         /// </return>
         public Task<PreviewListResult> GeneratePreviewsAsync(string id, PreviewRequestOptions options)
-            => ExecuteRequest<PreviewListResult>(HttpMethod.Post, $"api/messages/{id}/previews", options);
+            => ExecuteRequest<PreviewListResult>(HttpMethod.Post, $"api/messages/{id}/screenshots", options);
     }
 }

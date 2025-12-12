@@ -17,7 +17,7 @@ namespace Mailosaur.Test
         {
             var baseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
             var apiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
-            server = Environment.GetEnvironmentVariable("MAILOSAUR_PREVIEWS_SERVER");
+            server = Environment.GetEnvironmentVariable("MAILOSAUR_SERVER");
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
@@ -69,9 +69,8 @@ namespace Mailosaur.Test
                 SentTo = testEmailAddress
             });
 
-            PreviewRequest request = new PreviewRequest("OL2021");
-            PreviewRequestOptions options = new PreviewRequestOptions(new List<PreviewRequest>() {
-                request
+            PreviewRequestOptions options = new PreviewRequestOptions(new List<string>() {
+                "iphone-16plus-applemail-lightmode-portrait"
             });
 
             PreviewListResult result = this.fixture.client.Messages.GeneratePreviews(email.Id, options);

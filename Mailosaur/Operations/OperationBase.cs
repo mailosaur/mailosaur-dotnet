@@ -70,7 +70,7 @@ namespace Mailosaur.Operations
             }
         }
 
-        public async Task<byte[]> ExecuteBytesRequest(HttpMethod method, string path, object body = null)
+        public async Task<byte[]> ExecuteBytesRequest(HttpMethod method, string path, object body = null, HttpStatusCode? expectedStatus = null)
         {
             var request = new HttpRequestMessage(method, path);
 
@@ -82,12 +82,32 @@ namespace Mailosaur.Operations
 
             var response = await _client.SendAsync(request);
 
-            if (response.StatusCode != HttpStatusCode.OK)
+            var expected = expectedStatus ?? HttpStatusCode.OK;
+            if (response.StatusCode != expected)
                 await ThrowExceptionAsync(response);
 
             request.Dispose();
 
             return await response.Content.ReadAsByteArrayAsync();
+        }
+
+        public async Task<HttpResponseMessage> ExecuteRequestWithResponse(HttpMethod method, string path, object body = null)
+        {
+            var request = new HttpRequestMessage(method, path);
+
+            if (body != null)
+            {
+                var requestContent = JsonConvert.SerializeObject(body);
+                request.Content = new StringContent(requestContent, Encoding.UTF8, "application/json");
+            }
+
+            var response = await _client.SendAsync(request);
+
+            // Allow 200 OK and 202 Accepted for polling scenarios, throw for all others
+            if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted)
+                await ThrowExceptionAsync(response);
+
+            return response;
         }
 
         public void HandleAggregateException(Action requestMethod)
@@ -167,6 +187,10 @@ namespace Mailosaur.Operations
                 case HttpStatusCode.NotFound:
                     errorMessage = "Not found, check input parameters.";
                     errorType = "invalid_request";
+                    break;
+                case HttpStatusCode.Gone:
+                    errorMessage = "Permanently expired or deleted.";
+                    errorType = "gone";
                     break;
                 default:
                     errorMessage = "An API error occurred, see httpResponse for further information.";

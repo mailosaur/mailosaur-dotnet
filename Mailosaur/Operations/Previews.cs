@@ -29,8 +29,8 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public PreviewEmailClientListResult ListEmailClients()
-            => Task.Run(async () => await ListEmailClientsAsync()).UnwrapException<PreviewEmailClientListResult>();
+        public EmailClientListResult ListEmailClients()
+            => Task.Run(async () => await ListEmailClientsAsync()).UnwrapException<EmailClientListResult>();
 
         /// <summary>
         /// List all email preview clients
@@ -44,7 +44,7 @@ namespace Mailosaur.Operations
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public Task<PreviewEmailClientListResult> ListEmailClientsAsync()
-            => ExecuteRequest<PreviewEmailClientListResult>(HttpMethod.Get, $"api/previews/clients");
+        public Task<EmailClientListResult> ListEmailClientsAsync()
+            => ExecuteRequest<EmailClientListResult>(HttpMethod.Get, $"api/screenshots/clients");
     }
 }
