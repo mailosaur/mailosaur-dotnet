@@ -6,14 +6,14 @@ on:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 3.1.101
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
       - name: deploy
         run: |
           version=`git describe --abbrev=0 --tags` &&	
