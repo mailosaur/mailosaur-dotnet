@@ -23,11 +23,3 @@ jobs:
           cd Mailosaur &&	
           dotnet pack &&	
           dotnet nuget push bin/Debug/Mailosaur.$version.nupkg -s https://www.nuget.org/ -k ${{ secrets.NUGET_KEY }}
-      - name: Notify on Failure
-        uses: skitionek/notify-microsoft-teams@master
-        if: ${{ failure() }}
-        with:
-          webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          overwrite: "{ title: `${workflow} failed for ${repository.name}` }"

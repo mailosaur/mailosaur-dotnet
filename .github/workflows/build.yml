@@ -34,14 +34,6 @@ jobs:
         run: dotnet restore
       - name: Test
         run: dotnet test --no-restore --verbosity normal Mailosaur.Test
-      - name: Notify on Failure
-        uses: skitionek/notify-microsoft-teams@master
-        if: ${{ failure() }}
-        with:
-          webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          overwrite: "{ title: `${workflow} failed for ${repository.name}` }"
 
   build-next:
     if: ${{ always() }}
@@ -59,19 +51,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 6.0.100
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
       - name: Install dependencies
         run: dotnet restore
       - name: Test
         run: dotnet test --no-restore --verbosity normal Mailosaur.Test
-      - name: Notify on Failure
-        uses: skitionek/notify-microsoft-teams@master
-        if: ${{ failure() }}
-        with:
-          webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          overwrite: "{ title: `${workflow} failed for ${repository.name}` }"
