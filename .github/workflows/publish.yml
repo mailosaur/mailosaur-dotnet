@@ -21,5 +21,5 @@ jobs:
           sed -i s/9\.\[0-9]\.\[0-9]/$version/g Mailosaur/MailosaurClient.cs
 
           cd Mailosaur &&	
-          dotnet pack &&	
-          dotnet nuget push bin/Debug/Mailosaur.$version.nupkg -s https://www.nuget.org/ -k ${{ secrets.NUGET_KEY }}
+          dotnet pack -o nuget &&	
+          dotnet nuget push nuget/Mailosaur.$version.nupkg -s https://www.nuget.org/ -k ${{ secrets.NUGET_KEY }}
