@@ -4,17 +4,27 @@ on:
   release:
     types: [created]
 
+permissions:
+  contents: read
+
 jobs:
   publish:
     runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Checkout custom actions
+        uses: actions/checkout@v4
+        with:
+          repository: mailosaur/actions
+          token: ${{ secrets.CUSTOM_ACTIONS_TOKEN }}
+          path: .github/actions
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ vars.DOTNET_VERSION }}
-      - name: deploy
+      - name: Deploy
         run: |
           version=`git describe --abbrev=0 --tags` &&	
           sed -i s/9\.\[0-9]\.\[0-9]/$version/g Mailosaur/Mailosaur.csproj &&	
@@ -23,3 +33,8 @@ jobs:
           cd Mailosaur &&	
           dotnet pack -o nuget &&	
           dotnet nuget push nuget/Mailosaur.$version.nupkg -s https://www.nuget.org/ -k ${{ secrets.NUGET_KEY }}
+      - name: Send notifications
+        if: ${{ always() }}
+        uses: ./.github/actions/notify
+        with:
+          webhook-url: ${{ secrets.NOTIFICATION_URL }}
