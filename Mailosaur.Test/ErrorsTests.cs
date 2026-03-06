@@ -6,7 +6,6 @@ namespace Mailosaur.Test
 {
     public class ErrorsTests
     {
-        private static string s_ApiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
         private string s_BaseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
 
         [Fact]
@@ -26,7 +25,7 @@ namespace Mailosaur.Test
         [Fact]
         public void NotFoundTest()
         {
-            using (var client = new MailosaurClient(s_ApiKey, s_BaseUrl))
+            using (var client = new MailosaurClient(baseUrl: s_BaseUrl))
             {
                 var ex = Assert.Throws<MailosaurException>(delegate
                 {
@@ -40,7 +39,7 @@ namespace Mailosaur.Test
         [Fact]
         public void BadRequestTest()
         {
-            using (var client = new MailosaurClient(s_ApiKey, s_BaseUrl))
+            using (var client = new MailosaurClient(baseUrl: s_BaseUrl))
             {
                 var options = new ServerCreateOptions("");
                 var ex = Assert.Throws<MailosaurException>(delegate

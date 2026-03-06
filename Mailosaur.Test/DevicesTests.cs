@@ -8,17 +8,11 @@ namespace Mailosaur.Test
     public class DevicesTests : IDisposable
     {
         private MailosaurClient m_Client;
-        private static string s_ApiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
         private string s_BaseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
 
         public DevicesTests()
         {
-            if (string.IsNullOrWhiteSpace(s_ApiKey))
-            {
-                throw new Exception("Missing necessary environment variables - refer to README.md");
-            }
-
-            m_Client = new MailosaurClient(s_ApiKey, s_BaseUrl);
+            m_Client = new MailosaurClient(baseUrl: s_BaseUrl);
         }
 
         [Fact]

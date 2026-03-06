@@ -10,17 +10,32 @@ Mailosaur lets you automate email and SMS tests as part of software development 
 
 This guide provides several key sections:
 
+- [Mailosaur - .NET library · ](#mailosaur---net-library--)
   - [Get Started](#get-started)
+    - [Installation](#installation)
+    - [Set your API key](#set-your-api-key)
+    - [Create your code](#create-your-code)
+    - [API Reference](#api-reference)
   - [Creating an account](#creating-an-account)
   - [Test email addresses with Mailosaur](#test-email-addresses-with-mailosaur)
+    - [Create your code](#create-your-code-1)
   - [Find an email](#find-an-email)
+    - [What is this code doing?](#what-is-this-code-doing)
+    - [My email wasn't found](#my-email-wasnt-found)
   - [Find an SMS message](#find-an-sms-message)
   - [Testing plain text content](#testing-plain-text-content)
+    - [Extracting verification codes from plain text](#extracting-verification-codes-from-plain-text)
   - [Testing HTML content](#testing-html-content)
+    - [Working with HTML using HtmlAgilityPack](#working-with-html-using-htmlagilitypack)
   - [Working with hyperlinks](#working-with-hyperlinks)
+    - [Links in plain text (including SMS messages)](#links-in-plain-text-including-sms-messages)
   - [Working with attachments](#working-with-attachments)
   - [Working with images and web beacons](#working-with-images-and-web-beacons)
+    - [Remotely-hosted images](#remotely-hosted-images)
+    - [Triggering web beacons](#triggering-web-beacons)
   - [Spam checking](#spam-checking)
+  - [Development](#development)
+  - [Contacting us](#contacting-us)
 
 You can find the full [Mailosaur documentation](https://mailosaur.com/docs/) on the website.
 
@@ -47,6 +62,22 @@ From within Visual Studio:
 3. Click on Manage NuGet Packages...
 4. Click on the Browse tab and search for "Mailosaur".
 5. Click on the Mailosaur package, select the appropriate version in the right-tab and click *Install*.
+
+### Set your API key
+
+Get your API key from the Mailosaur Dashboard and set it as an environment variable:
+
+```sh
+export MAILOSAUR_API_KEY='your-api-key-here'
+```
+
+### Create your code
+
+Then import the library and create a client:
+
+```csharp
+var mailosaur = new MailosaurClient();
+```
 
 ### API Reference
 
@@ -81,6 +112,8 @@ Here's how it works:
 
 ***Can't use test email addresses?** You can also [use SMTP to test email](https://mailosaur.com/docs/email-testing/sending-to-mailosaur/#sending-via-smtp). By connecting your product or website to Mailosaur via SMTP, Mailosaur will catch all email your application sends, regardless of the email address.*
 
+### Create your code
+
 ## Find an email
 
 In automated tests you will want to wait for a new email to arrive. This library makes that easy with the `Messages.Get` method. Here's how you use it:
@@ -96,7 +129,7 @@ namespace EmailTests
   {
     static void Main(string[] args)
     {
-      var mailosaur = new MailosaurClient("API_KEY");
+      var mailosaur = new MailosaurClient();
 
       // See https://mailosaur.com/app/project/api
       var serverId = "abc123";
@@ -116,7 +149,7 @@ namespace EmailTests
 
 ### What is this code doing?
 
-1. Sets up an instance of `MailosaurClient` with your API key.
+1. Sets up an instance of `MailosaurClient` using the `MAILOSAUR_API_KEY` environment variable.
 2. Waits for an email to arrive at the server with ID `abc123`.
 3. Outputs the subject line of the email.
 
@@ -140,7 +173,7 @@ var email = mailosaur.Messages.Get("SERVER_ID", new SearchCriteria() {
 If your account has [SMS testing](https://mailosaur.com/sms-testing/) enabled, you can reserve phone numbers to test with, then use the Mailosaur API in a very similar way to when testing email:
 
 ```csharp
-var mailosaur = new MailosaurClient("API_KEY");
+var mailosaur = new MailosaurClient();
 
 var serverId = "abc123";
 
