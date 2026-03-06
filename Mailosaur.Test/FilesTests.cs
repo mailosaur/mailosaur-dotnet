@@ -15,15 +15,14 @@ namespace Mailosaur.Test
         public FilesFixture()
         {
             var baseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
-            var apiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
             var server = Environment.GetEnvironmentVariable("MAILOSAUR_SERVER");
 
-            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(server))
+            if (string.IsNullOrWhiteSpace(server))
             {
                 throw new Exception("Missing necessary environment variables - refer to README.md");
             }
 
-            client = new MailosaurClient(apiKey, baseUrl);
+            client = new MailosaurClient(baseUrl: baseUrl);
 
             client.Messages.DeleteAll(server);
 

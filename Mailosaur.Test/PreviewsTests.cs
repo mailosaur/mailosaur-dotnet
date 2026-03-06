@@ -16,15 +16,9 @@ namespace Mailosaur.Test
         public PreviewsFixture()
         {
             var baseUrl = Environment.GetEnvironmentVariable("MAILOSAUR_BASE_URL") ?? "https://mailosaur.com/";
-            var apiKey = Environment.GetEnvironmentVariable("MAILOSAUR_API_KEY");
             server = Environment.GetEnvironmentVariable("MAILOSAUR_SERVER");
 
-            if (string.IsNullOrWhiteSpace(apiKey))
-            {
-                throw new Exception("Missing necessary environment variables - refer to README.md");
-            }
-
-            client = new MailosaurClient(apiKey, baseUrl);
+            client = new MailosaurClient(baseUrl: baseUrl);
         }
 
         public void Dispose()
