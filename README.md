@@ -18,7 +18,6 @@ This guide provides several key sections:
     - [API Reference](#api-reference)
   - [Creating an account](#creating-an-account)
   - [Test email addresses with Mailosaur](#test-email-addresses-with-mailosaur)
-    - [Create your code](#create-your-code-1)
   - [Find an email](#find-an-email)
     - [What is this code doing?](#what-is-this-code-doing)
     - [My email wasn't found](#my-email-wasnt-found)
@@ -30,6 +29,7 @@ This guide provides several key sections:
   - [Working with hyperlinks](#working-with-hyperlinks)
     - [Links in plain text (including SMS messages)](#links-in-plain-text-including-sms-messages)
   - [Working with attachments](#working-with-attachments)
+    - [Writing an attachment to disk](#writing-an-attachment-to-disk)
   - [Working with images and web beacons](#working-with-images-and-web-beacons)
     - [Remotely-hosted images](#remotely-hosted-images)
     - [Triggering web beacons](#triggering-web-beacons)
@@ -84,7 +84,7 @@ var mailosaur = new MailosaurClient();
 This library is powered by the Mailosaur [email & SMS testing API](https://mailosaur.com/docs/api/). You can easily check out the API itself by looking at our [API reference documentation](https://mailosaur.com/docs/api/) or via our Postman or Insomnia collections:
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/6961255-6cc72dff-f576-451a-9023-b82dec84f95d?action=collection%2Ffork&collection-url=entityId%3D6961255-6cc72dff-f576-451a-9023-b82dec84f95d%26entityType%3Dcollection%26workspaceId%3D386a4af1-4293-4197-8f40-0eb49f831325)
- [![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Mailosaur&uri=https%3A%2F%2Fmailosaur.com%2Finsomnia.json)
+ [![Run in Insomnia](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Mailosaur&uri=https%3A%2F%2Fmailosaur.com%2Finsomnia.json)
 
 ## Creating an account
 
@@ -111,8 +111,6 @@ Here's how it works:
 * You can create more servers when you need them. Each one will have its own domain name.
 
 ***Can't use test email addresses?** You can also [use SMTP to test email](https://mailosaur.com/docs/email-testing/sending-to-mailosaur/#sending-via-smtp). By connecting your product or website to Mailosaur via SMTP, Mailosaur will catch all email your application sends, regardless of the email address.*
-
-### Create your code
 
 ## Find an email
 
@@ -141,7 +139,7 @@ namespace EmailTests
 
       var message = mailosaur.Messages.Get(serverId, criteria);
 
-      Console.WriteLine(email.Subject); // "Hello world!"
+      Console.WriteLine(message.Subject); // "Hello world!"
     }
   }
 }
@@ -149,21 +147,23 @@ namespace EmailTests
 
 ### What is this code doing?
 
-1. Sets up an instance of `MailosaurClient` using the `MAILOSAUR_API_KEY` environment variable.
+1. Sets up an instance of `MailosaurClient`, reading the API key from the `MAILOSAUR_API_KEY` environment variable.
 2. Waits for an email to arrive at the server with ID `abc123`.
 3. Outputs the subject line of the email.
 
 ### My email wasn't found
 
-First, check that the email you sent is visible in the [Mailosaur Dashboard](https://mailosaur.com/api/project/messages). 
+First, check that the email you sent is visible in the [Mailosaur Dashboard](https://mailosaur.com/app/project/messages).
 
 If it is, the likely reason is that by default, `Messages.Get` only searches emails received by Mailosaur in the last 1 hour. You can override this behavior (see the `receivedAfter` option below), however we only recommend doing this during setup, as your tests will generally run faster with the default settings:
 
 ```csharp
 // Override receivedAfter to search all messages since Jan 1st
-var email = mailosaur.Messages.Get("SERVER_ID", new SearchCriteria() {
-  SentTo = "someone@SERVER_ID.mailosaur.net"
-}, receivedAfter: new DateTime(2021, 1, 1));
+var email = mailosaur.Messages.Get(
+  serverId,
+  criteria,
+  receivedAfter: new DateTime(2021, 1, 1)
+);
 ```
 
 ## Find an SMS message
@@ -195,7 +195,7 @@ Console.WriteLine(message.Text.Body); // "Hi Jason, ..."
 
 if (message.Text.Body.Contains("Jason"))
 {
-  Console.WriteLine('Email contains "Jason"');
+  Console.WriteLine("Email contains \"Jason\"");
 }
 ```
 
@@ -225,22 +225,24 @@ Console.WriteLine(message.Html.Body); // "<html><head ..."
 
 ### Working with HTML using HtmlAgilityPack
 
-If you need to traverse the HTML content of an email. For example, finding an element via a CSS selector, you can use the [HtmlAgilityPack](https://html-agility-pack.net/) library.
+If you need to traverse the HTML content of an email — for example, finding an element via an XPath expression — you can use the [HtmlAgilityPack](https://html-agility-pack.net/) library.
 
 ```sh
 dotnet add package HtmlAgilityPack
 ```
 
 ```csharp
+using HtmlAgilityPack;
+
+// ...
+
 var doc = new HtmlDocument();
 doc.LoadHtml(message.Html.Body);
 
-// Find element using xpath
-var node = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'verification-code')]")
+// Find element using XPath
+var node = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'verification-code')]");
 
-var verificationCode = node.InnerText;
-
-Console.WriteLine(verificationCode); // "542163"
+var verificationCode = node.InnerText; // "542163"
 ```
 
 [Read more](https://mailosaur.com/docs/test-cases/html-content/)
@@ -260,7 +262,7 @@ Console.WriteLine(firstLink.Text); // "Google Search"
 Console.WriteLine(firstLink.Href); // "https://www.google.com/"
 ```
 
-**Important:** To ensure you always have valid emails. Mailosaur only extracts links that have been correctly marked up with `<a>` or `<area>` tags.
+**Important:** To ensure you always have valid emails, Mailosaur only extracts links that have been correctly marked up with `<a>` or `<area>` tags.
 
 ### Links in plain text (including SMS messages)
 
@@ -298,6 +300,19 @@ var firstAttachment = message.Attachments[0];
 Console.WriteLine(firstAttachment.Length); // 4028
 ```
 
+### Writing an attachment to disk
+
+```csharp
+using System.IO;
+
+// ...
+
+var firstAttachment = message.Attachments[1];
+
+var fileBytes = mailosaur.Files.GetAttachment(firstAttachment.Id);
+File.WriteAllBytes(firstAttachment.FileName, fileBytes);
+```
+
 ## Working with images and web beacons
 
 The `Html.Images` property of a message contains an array of images found within the HTML content of an email. The length of this array corresponds to the number of images found within an email:
@@ -325,12 +340,17 @@ A web beacon is a small image that can be used to track whether an email has bee
 Because a web beacon is simply another form of remotely-hosted image, you can use the `Src` attribute to perform an HTTP request to that address:
 
 ```csharp
+using System.Net.Http;
+
+// ...
+
 var image = message.Html.Images[0];
 
 Console.WriteLine(image.Src); // "https://example.com/s.png?abc123"
 
 // Make an HTTP call to trigger the web beacon
-using (var client = new HttpClient()) {
+using (var client = new HttpClient())
+{
   var result = await client.GetAsync(image.Src);
   Console.WriteLine(result.StatusCode); // 200
 }
