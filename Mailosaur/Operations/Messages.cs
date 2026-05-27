@@ -9,7 +9,7 @@ namespace Mailosaur.Operations
 
     /// <summary>
     /// Operations for finding, retrieving, creating, forwarding, replying to, and deleting the
-    /// email and SMS messages received by your Mailosaur servers. Accessed via <c>client.Messages</c>.
+    /// email and SMS messages received by your Mailosaur inboxes (servers). Accessed via <c>client.Messages</c>.
     /// </summary>
     public class Messages : OperationBase
     {
@@ -29,7 +29,7 @@ namespace Mailosaur.Operations
         /// found. This is the most efficient method of looking up a message.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server hosting the message.
+        /// The identifier of the inbox (server) hosting the message.
         /// </param>
         /// <param name='criteria'>
         /// The search criteria to use in order to find a match.
@@ -58,7 +58,7 @@ namespace Mailosaur.Operations
         /// found. This is the most efficient method of looking up a message.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server hosting the message.
+        /// The identifier of the inbox (server) hosting the message.
         /// </param>
         /// <param name='criteria'>
         /// The search criteria to use in order to find a match.
@@ -156,7 +156,7 @@ namespace Mailosaur.Operations
         /// first.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server hosting the messages.
+        /// The identifier of the inbox (server) hosting the messages.
         /// </param>
         /// <param name='page'>
         /// Used in conjunction with `itemsPerPage` to support pagination.
@@ -187,7 +187,7 @@ namespace Mailosaur.Operations
         /// first.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server hosting the messages.
+        /// The identifier of the inbox (server) hosting the messages.
         /// </param>
         /// <param name='page'>
         /// Used in conjunction with `itemsPerPage` to support pagination.
@@ -213,12 +213,12 @@ namespace Mailosaur.Operations
         /// Delete all messages
         /// </summary>
         /// <remarks>
-        /// Permanently deletes all messages held by the specified server. This
+        /// Permanently deletes all messages held by the specified inbox (server). This
         /// operation cannot be undone. Also deletes any attachments related to each
         /// message.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server to be emptied.
+        /// The identifier of the inbox (server) to be emptied.
         /// </param>
         public void DeleteAll(string server)
             => Task.Run(async () => await DeleteAllAsync(server)).WaitAndUnwrapException();
@@ -227,12 +227,12 @@ namespace Mailosaur.Operations
         /// Delete all messages
         /// </summary>
         /// <remarks>
-        /// Permanently deletes all messages held by the specified server. This
+        /// Permanently deletes all messages held by the specified inbox (server). This
         /// operation cannot be undone. Also deletes any attachments related to each
         /// message.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server to be emptied.
+        /// The identifier of the inbox (server) to be emptied.
         /// </param>
         public Task DeleteAllAsync(string server)
             => ExecuteRequest(HttpMethod.Delete, $"api/messages?server={server}");
@@ -246,7 +246,7 @@ namespace Mailosaur.Operations
         /// most recently-received messages appearing first.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server hosting the messages.
+        /// The identifier of the inbox (server) hosting the messages.
         /// </param>
         /// <param name='criteria'>
         /// The search criteria to match results against.
@@ -291,7 +291,7 @@ namespace Mailosaur.Operations
         /// most recently-received messages appearing first.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server hosting the messages.
+        /// The identifier of the inbox (server) hosting the messages.
         /// </param>
         /// <param name='criteria'>
         /// The search criteria to match results against.
@@ -369,7 +369,7 @@ namespace Mailosaur.Operations
         /// product.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server to create the message in.
+        /// The identifier of the inbox (server) to create the message in.
         /// </param>
         /// <param name='messageCreateOptions'>
         /// The options with which to create the message.
@@ -389,7 +389,7 @@ namespace Mailosaur.Operations
         /// product.
         /// </remarks>
         /// <param name='server'>
-        /// The identifier of the server to create the message in.
+        /// The identifier of the inbox (server) to create the message in.
         /// </param>
         /// <param name='messageCreateOptions'>
         /// The options with which to create the message.

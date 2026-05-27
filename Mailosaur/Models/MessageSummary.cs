@@ -16,7 +16,7 @@ namespace Mailosaur.Models
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets identifier for the server in which the message is
+        /// Gets or sets identifier for the inbox (server) in which the message is
         /// located.
         /// </summary>
         public string Server { get; set; }

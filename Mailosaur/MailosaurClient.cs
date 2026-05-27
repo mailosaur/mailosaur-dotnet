@@ -16,7 +16,7 @@ namespace Mailosaur
     public class MailosaurClient : IDisposable
     {
         /// <summary>
-        /// Operations for creating and managing your Mailosaur servers (virtual inboxes).
+        /// Operations for creating and managing your Mailosaur inboxes (servers).
         /// </summary>
         public Servers Servers { get; private set; }
 

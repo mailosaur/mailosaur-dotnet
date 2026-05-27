@@ -5,14 +5,14 @@ namespace Mailosaur.Models
         /// <summary>
         /// Initializes a new instance of the ServerCreateOptions class.
         /// </summary>
-        /// <param name="name">A name used to identify the server.</param>
+        /// <param name="name">A name used to identify the inbox (server).</param>
         public ServerCreateOptions(string name)
         {
             Name = name;
         }
 
         /// <summary>
-        /// Gets or sets a name used to identify the server.
+        /// Gets or sets a name used to identify the inbox (server).
         /// </summary>
         public string Name { get; set; }
 
