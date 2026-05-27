@@ -7,6 +7,10 @@ namespace Mailosaur.Operations
     using Mailosaur.Models;
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Operations for finding, retrieving, creating, forwarding, replying to, and deleting the
+    /// email and SMS messages received by your Mailosaur servers. Accessed via <c>client.Messages</c>.
+    /// </summary>
     public class Messages : OperationBase
     {
         /// <summary>
@@ -36,6 +40,13 @@ namespace Mailosaur.Operations
         /// <param name='receivedAfter'>
         /// Limits results to only messages received after this date/time.
         /// </param>
+        /// <returns>
+        /// The first <see cref="Message"/> matching the search criteria.
+        /// </returns>
+        /// <exception cref="MailosaurException">
+        /// Thrown with error code <c>no_messages_found</c> if no matching message exists, or
+        /// <c>search_timeout</c> if no matching message arrives before the timeout elapses.
+        /// </exception>
         public Message Get(string server, SearchCriteria criteria = null, int timeout = 10000, DateTime? receivedAfter = null)
             => Task.Run(async () => await GetAsync(server, criteria, timeout, receivedAfter)).UnwrapException<Message>();
 
@@ -58,6 +69,13 @@ namespace Mailosaur.Operations
         /// <param name='receivedAfter'>
         /// Limits results to only messages received after this date/time.
         /// </param>
+        /// <returns>
+        /// A task resolving to the first <see cref="Message"/> matching the search criteria.
+        /// </returns>
+        /// <exception cref="MailosaurException">
+        /// Thrown with error code <c>no_messages_found</c> if no matching message exists, or
+        /// <c>search_timeout</c> if no matching message arrives before the timeout elapses.
+        /// </exception>
         public async Task<Message> GetAsync(string server, SearchCriteria criteria = null, int timeout = 10000, DateTime? receivedAfter = null)
         {
             // Timeout defaulted to 10s, receivedAfter to 1h
@@ -81,6 +99,9 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the email message to be retrieved.
         /// </param>
+        /// <returns>
+        /// The full <see cref="Message"/>.
+        /// </returns>
         public Message GetById(string id)
             => Task.Run(async () => await GetByIdAsync(id)).UnwrapException<Message>();
 
@@ -94,11 +115,14 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the email message to be retrieved.
         /// </param>
+        /// <returns>
+        /// A task resolving to the full <see cref="Message"/>.
+        /// </returns>
         public Task<Message> GetByIdAsync(string id)
             => ExecuteRequest<Message>(HttpMethod.Get, $"api/messages/{id}");
 
         /// <summary>
-        ///  a message
+        /// Delete a message
         /// </summary>
         /// <remarks>
         /// Permanently deletes a message. This operation cannot be undone. Also
@@ -148,6 +172,9 @@ namespace Mailosaur.Operations
         /// Optionally limits results based on the direction (`Sent` or `Received`),
         /// with the default being `Received`.
         /// </param>
+        /// <returns>
+        /// A <see cref="MessageListResult"/> containing the message summaries.
+        /// </returns>
         public MessageListResult List(string server, int? page = default(int?), int? itemsPerPage = default(int?), DateTime? receivedAfter = null, string dir = null)
             => Task.Run(async () => await ListAsync(server, page, itemsPerPage, receivedAfter, dir)).UnwrapException<MessageListResult>();
 
@@ -176,6 +203,9 @@ namespace Mailosaur.Operations
         /// Optionally limits results based on the direction (`Sent` or `Received`),
         /// with the default being `Received`.
         /// </param>
+        /// <returns>
+        /// A task resolving to a <see cref="MessageListResult"/> containing the message summaries.
+        /// </returns>
         public Task<MessageListResult> ListAsync(string server, int? page = default(int?), int? itemsPerPage = default(int?), DateTime? receivedAfter = null, string dir = null)
             => ExecuteRequest<MessageListResult>(HttpMethod.Get, PagePath($"api/messages?server={server}", page, itemsPerPage, receivedAfter, dir));
 
@@ -242,6 +272,13 @@ namespace Mailosaur.Operations
         /// Optionally limits results based on the direction (`Sent` or `Received`),
         /// with the default being `Received`.
         /// </param>
+        /// <returns>
+        /// A <see cref="MessageListResult"/> containing the matching message summaries.
+        /// </returns>
+        /// <exception cref="MailosaurException">
+        /// Thrown with error code <c>search_timeout</c> if no matching message is found before
+        /// the timeout elapses, unless <paramref name="errorOnTimeout"/> is set to false.
+        /// </exception>
         public MessageListResult Search(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null, bool errorOnTimeout = true, string dir = null)
             => Task.Run(async () => await SearchAsync(server, criteria, page, itemsPerPage, timeout, receivedAfter, errorOnTimeout, dir)).UnwrapException<MessageListResult>();
 
@@ -280,6 +317,13 @@ namespace Mailosaur.Operations
         /// Optionally limits results based on the direction (`Sent` or `Received`),
         /// with the default being `Received`.
         /// </param>
+        /// <returns>
+        /// A task resolving to a <see cref="MessageListResult"/> containing the matching message summaries.
+        /// </returns>
+        /// <exception cref="MailosaurException">
+        /// Thrown with error code <c>search_timeout</c> if no matching message is found before
+        /// the timeout elapses, unless <paramref name="errorOnTimeout"/> is set to false.
+        /// </exception>
         public async Task<MessageListResult> SearchAsync(string server, SearchCriteria criteria, int? page = null, int? itemsPerPage = null, int? timeout = null, DateTime? receivedAfter = null, bool errorOnTimeout = true, string dir = null)
         {
             var pollCount = 0;
@@ -330,12 +374,9 @@ namespace Mailosaur.Operations
         /// <param name='messageCreateOptions'>
         /// The options with which to create the message.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// The newly-created <see cref="Message"/>.
+        /// </returns>
         public Message Create(string server, MessageCreateOptions messageCreateOptions)
             => Task.Run(async () => await CreateAsync(server, messageCreateOptions)).UnwrapException<Message>();
 
@@ -353,12 +394,9 @@ namespace Mailosaur.Operations
         /// <param name='messageCreateOptions'>
         /// The options with which to create the message.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to the newly-created <see cref="Message"/>.
+        /// </returns>
         public Task<Message> CreateAsync(string server, MessageCreateOptions messageCreateOptions)
             => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages?server={server}", messageCreateOptions);
 
@@ -374,12 +412,9 @@ namespace Mailosaur.Operations
         /// <param name='messageForwardOptions'>
         /// The options with which to forward the email.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// The forwarded <see cref="Message"/>.
+        /// </returns>
         public Message Forward(string id, MessageForwardOptions messageForwardOptions)
             => Task.Run(async () => await ForwardAsync(id, messageForwardOptions)).UnwrapException<Message>();
 
@@ -395,12 +430,9 @@ namespace Mailosaur.Operations
         /// <param name='messageForwardOptions'>
         /// The options with which to forward the email.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to the forwarded <see cref="Message"/>.
+        /// </returns>
         public Task<Message> ForwardAsync(string id, MessageForwardOptions messageForwardOptions)
             => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages/{id}/forward", messageForwardOptions);
 
@@ -417,12 +449,9 @@ namespace Mailosaur.Operations
         /// <param name='messageReplyOptions'>
         /// The options with which to reply to the email.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// The reply <see cref="Message"/>.
+        /// </returns>
         public Message Reply(string id, MessageReplyOptions messageReplyOptions)
             => Task.Run(async () => await ReplyAsync(id, messageReplyOptions)).UnwrapException<Message>();
 
@@ -439,12 +468,9 @@ namespace Mailosaur.Operations
         /// <param name='messageReplyOptions'>
         /// The options with which to reply to the email.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to the reply <see cref="Message"/>.
+        /// </returns>
         public Task<Message> ReplyAsync(string id, MessageReplyOptions messageReplyOptions)
             => ExecuteRequest<Message>(HttpMethod.Post, $"api/messages/{id}/reply", messageReplyOptions);
 
@@ -460,12 +486,9 @@ namespace Mailosaur.Operations
         /// <param name='options'>
         /// The options with which to generate previews.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A <see cref="PreviewListResult"/> containing the generated previews.
+        /// </returns>
         public PreviewListResult GeneratePreviews(string id, PreviewRequestOptions options)
             => Task.Run(async () => await GeneratePreviewsAsync(id, options)).UnwrapException<PreviewListResult>();
 
@@ -481,12 +504,9 @@ namespace Mailosaur.Operations
         /// <param name='options'>
         /// The options with which to generate previews.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to a <see cref="PreviewListResult"/> containing the generated previews.
+        /// </returns>
         public Task<PreviewListResult> GeneratePreviewsAsync(string id, PreviewRequestOptions options)
             => ExecuteRequest<PreviewListResult>(HttpMethod.Post, $"api/messages/{id}/screenshots", options);
     }

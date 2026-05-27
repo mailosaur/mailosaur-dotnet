@@ -6,7 +6,8 @@ namespace Mailosaur.Operations
     using System;
 
     /// <summary>
-    /// Usage operations.
+    /// Operations for inspecting your account's usage limits and recent transactional usage.
+    /// These endpoints require authentication with an account-level API key. Accessed via <c>client.Usage</c>.
     /// </summary>
     public class Usage : OperationBase
     {
@@ -24,12 +25,9 @@ namespace Mailosaur.Operations
         /// <remarks>
         /// Details the current limits and usage for your account.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// The <see cref="UsageAccountLimits"/> for your account.
+        /// </returns>
         public UsageAccountLimits Limits()
             => Task.Run(async () => await LimitsAsync()).UnwrapException<UsageAccountLimits>();
 
@@ -39,12 +37,9 @@ namespace Mailosaur.Operations
         /// <remarks>
         /// Details the current limits and usage for your account.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to the <see cref="UsageAccountLimits"/> for your account.
+        /// </returns>
         public Task<UsageAccountLimits> LimitsAsync()
             => ExecuteRequest<UsageAccountLimits>(HttpMethod.Get, $"api/usage/limits");
 
@@ -54,12 +49,9 @@ namespace Mailosaur.Operations
         /// <remarks>
         /// Retrieves the last 31 days of transactional usage.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A <see cref="UsageTransactionListResult"/> for the last 31 days.
+        /// </returns>
         public UsageTransactionListResult Transactions()
             => Task.Run(async () => await TransactionsAsync()).UnwrapException<UsageTransactionListResult>();
 
@@ -69,12 +61,9 @@ namespace Mailosaur.Operations
         /// <remarks>
         /// Retrieves the last 31 days of transactional usage.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to a <see cref="UsageTransactionListResult"/> for the last 31 days.
+        /// </returns>
         public Task<UsageTransactionListResult> TransactionsAsync()
             => ExecuteRequest<UsageTransactionListResult>(HttpMethod.Get, $"api/usage/transactions");
     }

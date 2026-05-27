@@ -4,6 +4,10 @@ namespace Mailosaur.Operations
     using System.Net.Http;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Operations for analyzing the content and deliverability of an email, including SpamAssassin
+    /// scoring and per-provider deliverability reports. Accessed via <c>client.Analysis</c>.
+    /// </summary>
     public class Analysis : OperationBase
     {
         /// <summary>
@@ -23,7 +27,10 @@ namespace Mailosaur.Operations
         /// <param name='email'>
         /// The identifier of the email to be analyzed.
         /// </param>
-        public SpamAnalysisResult Spam(string email) 
+        /// <returns>
+        /// A <see cref="SpamAnalysisResult"/> containing the spam score and filter results.
+        /// </returns>
+        public SpamAnalysisResult Spam(string email)
             => Task.Run<SpamAnalysisResult>(async () => await SpamAsync(email)).Result;
 
         /// <summary>
@@ -35,6 +42,9 @@ namespace Mailosaur.Operations
         /// <param name='email'>
         /// The identifier of the email to be analyzed.
         /// </param>
+        /// <returns>
+        /// A task resolving to a <see cref="SpamAnalysisResult"/> containing the spam score and filter results.
+        /// </returns>
         public Task<SpamAnalysisResult> SpamAsync(string email)
             => ExecuteRequest<SpamAnalysisResult>(HttpMethod.Get, $"api/analysis/spam/{email}");
         
@@ -47,7 +57,10 @@ namespace Mailosaur.Operations
         /// <param name='email'>
         /// The identifier of the email to be analyzed.
         /// </param>
-        public DeliverabilityReport Deliverability(string email) 
+        /// <returns>
+        /// A <see cref="DeliverabilityReport"/> for the email.
+        /// </returns>
+        public DeliverabilityReport Deliverability(string email)
             => Task.Run<DeliverabilityReport>(async () => await DeliverabilityAsync(email)).Result;
         
         /// <summary>
@@ -59,6 +72,9 @@ namespace Mailosaur.Operations
         /// <param name='email'>
         /// The identifier of the email to be analyzed.
         /// </param>
+        /// <returns>
+        /// A task resolving to a <see cref="DeliverabilityReport"/> for the email.
+        /// </returns>
         public Task<DeliverabilityReport> DeliverabilityAsync(string email)
             => ExecuteRequest<DeliverabilityReport>(HttpMethod.Get, $"api/analysis/deliverability/{email}");
     }

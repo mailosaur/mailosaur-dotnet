@@ -6,7 +6,9 @@ namespace Mailosaur.Operations
     using System;
 
     /// <summary>
-    /// Servers operations.
+    /// Operations for creating and managing your Mailosaur servers — the virtual inboxes that
+    /// group your tests together, each with its own domain and SMTP/POP3/IMAP credentials.
+    /// Accessed via <c>client.Servers</c>.
     /// </summary>
     public class Servers : OperationBase
     {
@@ -37,12 +39,9 @@ namespace Mailosaur.Operations
         /// Returns a list of your virtual SMTP servers. Servers are returned sorted in
         /// alphabetical order.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A <see cref="ServerListResult"/> containing your servers.
+        /// </returns>
         public ServerListResult List()
             => Task.Run(async () => await ListAsync()).UnwrapException<ServerListResult>();
 
@@ -53,13 +52,10 @@ namespace Mailosaur.Operations
         /// Returns a list of your virtual SMTP servers. Servers are returned sorted in
         /// alphabetical order.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
-        public Task<ServerListResult> ListAsync() 
+        /// <returns>
+        /// A task resolving to a <see cref="ServerListResult"/> containing your servers.
+        /// </returns>
+        public Task<ServerListResult> ListAsync()
             => ExecuteRequest<ServerListResult>(HttpMethod.Get, $"api/servers");
 
         /// <summary>
@@ -69,13 +65,11 @@ namespace Mailosaur.Operations
         /// Creates a new virtual SMTP server and returns it.
         /// </remarks>
         /// <param name='serverCreateOptions'>
+        /// Options used to create a new Mailosaur server.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// The newly-created <see cref="Server"/>.
+        /// </returns>
         public Server Create(ServerCreateOptions serverCreateOptions)
             => Task.Run(async () => await CreateAsync(serverCreateOptions)).UnwrapException<Server>();
 
@@ -86,14 +80,12 @@ namespace Mailosaur.Operations
         /// Creates a new virtual SMTP server and returns it.
         /// </remarks>
         /// <param name='serverCreateOptions'>
+        /// Options used to create a new Mailosaur server.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
-        public Task<Server> CreateAsync(ServerCreateOptions serverCreateOptions) 
+        /// <returns>
+        /// A task resolving to the newly-created <see cref="Server"/>.
+        /// </returns>
+        public Task<Server> CreateAsync(ServerCreateOptions serverCreateOptions)
             => ExecuteRequest<Server>(HttpMethod.Post, "api/servers", serverCreateOptions);
 
         /// <summary>
@@ -106,12 +98,9 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the server to be retrieved.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// The <see cref="Server"/>.
+        /// </returns>
         public Server Get(string id)
             => Task.Run(async () => await GetAsync(id)).UnwrapException<Server>();
 
@@ -125,13 +114,10 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the server to be retrieved.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
-        public Task<Server> GetAsync(string id) 
+        /// <returns>
+        /// A task resolving to the <see cref="Server"/>.
+        /// </returns>
+        public Task<Server> GetAsync(string id)
             => ExecuteRequest<Server>(HttpMethod.Get, $"api/servers/{id}");
 
         /// <summary>
@@ -144,13 +130,11 @@ namespace Mailosaur.Operations
         /// The identifier of the server to be updated.
         /// </param>
         /// <param name='server'>
+        /// The updated server.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// The updated <see cref="Server"/>.
+        /// </returns>
         public Server Update(string id, Server server)
             => Task.Run(async () => await UpdateAsync(id, server)).UnwrapException<Server>();
 
@@ -164,14 +148,12 @@ namespace Mailosaur.Operations
         /// The identifier of the server to be updated.
         /// </param>
         /// <param name='server'>
+        /// The updated server.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
-        public Task<Server> UpdateAsync(string id, Server server) 
+        /// <returns>
+        /// A task resolving to the updated <see cref="Server"/>.
+        /// </returns>
+        public Task<Server> UpdateAsync(string id, Server server)
             => ExecuteRequest<Server>(HttpMethod.Put, $"api/servers/{id}", server);
 
         /// <summary>
@@ -184,12 +166,6 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the server to be deleted.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
         public void Delete(string id)
             => Task.Run(async () => await DeleteAsync(id)).WaitAndUnwrapException();
 
@@ -203,12 +179,9 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the server to be deleted.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task that completes once the server has been deleted.
+        /// </returns>
         public Task DeleteAsync(string id)
             => ExecuteRequest(HttpMethod.Delete, $"api/servers/{id}");
     }

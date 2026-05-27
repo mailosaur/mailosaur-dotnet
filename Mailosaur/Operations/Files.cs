@@ -7,6 +7,10 @@ namespace Mailosaur.Operations
     using System.Threading.Tasks;
     using Mailosaur.Models;
 
+    /// <summary>
+    /// Operations for downloading the raw content associated with a message — file attachments,
+    /// the full EML source of an email, and rendered email previews. Accessed via <c>client.Files</c>.
+    /// </summary>
     public class Files : OperationBase
     {
         /// <summary>
@@ -27,6 +31,9 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the attachment to be downloaded.
         /// </param>
+        /// <returns>
+        /// A byte array containing the attachment's binary content.
+        /// </returns>
         public byte[] GetAttachment(string id)
             => Task.Run(async () => await GetAttachmentAsync(id)).UnwrapException<byte[]>();
 
@@ -40,6 +47,9 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the attachment to be downloaded.
         /// </param>
+        /// <returns>
+        /// A task resolving to a byte array containing the attachment's binary content.
+        /// </returns>
         public Task<byte[]> GetAttachmentAsync(string id)
             => ExecuteBytesRequest(HttpMethod.Get, $"api/files/attachments/{id}");
 
@@ -53,6 +63,9 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the email to be downloaded.
         /// </param>
+        /// <returns>
+        /// A byte array containing the raw EML content of the email.
+        /// </returns>
         public byte[] GetEmail(string id)
             => Task.Run(async () => await GetEmailAsync(id)).UnwrapException<byte[]>();
 
@@ -66,6 +79,9 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the email to be downloaded.
         /// </param>
+        /// <returns>
+        /// A task resolving to a byte array containing the raw EML content of the email.
+        /// </returns>
         public Task<byte[]> GetEmailAsync(string id)
             => ExecuteBytesRequest(HttpMethod.Get, $"api/files/email/{id}");
 
@@ -79,6 +95,12 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the preview to be downloaded.
         /// </param>
+        /// <returns>
+        /// A byte array containing the preview screenshot image.
+        /// </returns>
+        /// <exception cref="MailosaurException">
+        /// Thrown with error code <c>preview_timeout</c> if the preview is not generated within the time limit.
+        /// </exception>
         public byte[] GetPreview(string id)
             => Task.Run(async () => await GetPreviewAsync(id)).UnwrapException<byte[]>();
 
@@ -92,6 +114,12 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the preview to be downloaded.
         /// </param>
+        /// <returns>
+        /// A task resolving to a byte array containing the preview screenshot image.
+        /// </returns>
+        /// <exception cref="MailosaurException">
+        /// Thrown with error code <c>preview_timeout</c> if the preview is not generated within the time limit.
+        /// </exception>
         public Task<byte[]> GetPreviewAsync(string id)
             => GetScreenshotAsync(id);
 
