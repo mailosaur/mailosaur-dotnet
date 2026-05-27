@@ -5,7 +5,9 @@ namespace Mailosaur.Operations
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Devices operations.
+    /// Operations for managing virtual security devices and retrieving their current one-time
+    /// passwords (OTPs), used to automate testing of app-based multi-factor authentication.
+    /// Accessed via <c>client.Devices</c>.
     /// </summary>
     public class Devices : OperationBase
     {
@@ -23,12 +25,9 @@ namespace Mailosaur.Operations
         /// <remarks>
         /// Returns a list of your virtual security devices.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A <see cref="DeviceListResult"/> containing your devices.
+        /// </returns>
         public DeviceListResult List()
             => Task.Run(async () => await ListAsync()).UnwrapException<DeviceListResult>();
 
@@ -38,12 +37,9 @@ namespace Mailosaur.Operations
         /// <remarks>
         /// Returns a list of your virtual security devices.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to a <see cref="DeviceListResult"/> containing your devices.
+        /// </returns>
         public Task<DeviceListResult> ListAsync()
             => ExecuteRequest<DeviceListResult>(HttpMethod.Get, $"api/devices");
 
@@ -54,13 +50,11 @@ namespace Mailosaur.Operations
         /// Creates a new virtual security device and returns it.
         /// </remarks>
         /// <param name='deviceCreateOptions'>
+        /// Options used to create a new Mailosaur virtual security device.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// The newly-created <see cref="Device"/>.
+        /// </returns>
         public Device Create(DeviceCreateOptions deviceCreateOptions)
             => Task.Run(async () => await CreateAsync(deviceCreateOptions)).UnwrapException<Device>();
 
@@ -71,13 +65,11 @@ namespace Mailosaur.Operations
         /// Creates a new virtual security device and returns it.
         /// </remarks>
         /// <param name='deviceCreateOptions'>
+        /// Options used to create a new Mailosaur virtual security device.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to the newly-created <see cref="Device"/>.
+        /// </returns>
         public Task<Device> CreateAsync(DeviceCreateOptions deviceCreateOptions)
             => ExecuteRequest<Device>(HttpMethod.Post, "api/devices", deviceCreateOptions);
 
@@ -90,12 +82,9 @@ namespace Mailosaur.Operations
         /// <param name='query'>
         /// Either the unique identifier of the device, or a base32-encoded shared secret.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// An <see cref="OtpResult"/> containing the current one-time password.
+        /// </returns>
         public OtpResult Otp(string query)
             => Task.Run(async () => await OtpAsync(query)).UnwrapException<OtpResult>();
 
@@ -108,12 +97,9 @@ namespace Mailosaur.Operations
         /// <param name='query'>
         /// Either the unique identifier of the device, or a base32-encoded shared secret.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to an <see cref="OtpResult"/> containing the current one-time password.
+        /// </returns>
         public Task<OtpResult> OtpAsync(string query)
         {
             if (query.Contains("-"))
@@ -133,12 +119,6 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the device to be deleted.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
         public void Delete(string id)
             => Task.Run(async () => await DeleteAsync(id)).WaitAndUnwrapException();
 
@@ -151,12 +131,9 @@ namespace Mailosaur.Operations
         /// <param name='id'>
         /// The identifier of the device to be deleted.
         /// </param>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task that completes once the device has been deleted.
+        /// </returns>
         public Task DeleteAsync(string id)
             => ExecuteRequest(HttpMethod.Delete, $"api/devices/{id}");
     }

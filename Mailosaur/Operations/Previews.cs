@@ -5,7 +5,8 @@ namespace Mailosaur.Operations
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Previews operations.
+    /// Operations for discovering the email clients available for generating email previews
+    /// (screenshots of an email rendered in real clients). Accessed via <c>client.Previews</c>.
     /// </summary>
     public class Previews : OperationBase
     {
@@ -23,12 +24,9 @@ namespace Mailosaur.Operations
         /// <remarks>
         /// Returns the list of all email clients that can be used to generate email previews.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// An <see cref="EmailClientListResult"/> of available email clients.
+        /// </returns>
         public EmailClientListResult ListEmailClients()
             => Task.Run(async () => await ListEmailClientsAsync()).UnwrapException<EmailClientListResult>();
 
@@ -38,12 +36,9 @@ namespace Mailosaur.Operations
         /// <remarks>
         /// Returns the list of all email clients that can be used to generate email previews.
         /// </remarks>
-        /// <exception cref="MailosaurException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <return>
-        /// A response object containing the response body and response headers.
-        /// </return>
+        /// <returns>
+        /// A task resolving to an <see cref="EmailClientListResult"/> of available email clients.
+        /// </returns>
         public Task<EmailClientListResult> ListEmailClientsAsync()
             => ExecuteRequest<EmailClientListResult>(HttpMethod.Get, $"api/screenshots/clients");
     }

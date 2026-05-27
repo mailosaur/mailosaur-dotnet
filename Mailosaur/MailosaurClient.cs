@@ -7,14 +7,47 @@ namespace Mailosaur
     using Mailosaur.Models;
     using Mailosaur.Operations;
 
+    /// <summary>
+    /// The Mailosaur client — the main entry point to the Mailosaur API. Construct an instance with
+    /// your API key (or set the <c>MAILOSAUR_API_KEY</c> environment variable), then use the operations
+    /// namespaces (<see cref="Messages"/>, <see cref="Servers"/>, <see cref="Files"/>, <see cref="Devices"/>,
+    /// <see cref="Analysis"/>, <see cref="Previews"/>, <see cref="Usage"/>) to automate email and SMS testing.
+    /// </summary>
     public class MailosaurClient : IDisposable
     {
+        /// <summary>
+        /// Operations for creating and managing your Mailosaur servers (virtual inboxes).
+        /// </summary>
         public Servers Servers { get; private set; }
+
+        /// <summary>
+        /// Operations for finding, retrieving, creating, and managing email and SMS messages.
+        /// </summary>
         public Messages Messages { get; private set; }
+
+        /// <summary>
+        /// Operations for downloading attachments, EML source, and email preview screenshots.
+        /// </summary>
         public Files Files { get; private set; }
+
+        /// <summary>
+        /// Operations for analyzing email content and deliverability, including spam scoring.
+        /// </summary>
         public Analysis Analysis { get; private set; }
+
+        /// <summary>
+        /// Operations for inspecting account usage limits and recent transactional usage.
+        /// </summary>
         public Usage Usage { get; private set; }
+
+        /// <summary>
+        /// Operations for managing virtual security devices and retrieving their one-time passwords.
+        /// </summary>
         public Devices Devices { get; private set; }
+
+        /// <summary>
+        /// Operations for discovering the email clients available for generating email previews.
+        /// </summary>
         public Previews Previews { get; private set; }
 
         private readonly HttpClient _client;
